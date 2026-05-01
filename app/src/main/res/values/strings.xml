@@ -1,0 +1,88 @@
+<resources>
+    <string name="app_name">ScoreProf</string>
+    <string name="setup">Setup</string>
+    <string name="leagues">Leagues</string>
+    <string name="league">League</string>
+    <string name="league_name">League Name</string>
+    <string name="password">Password</string>
+    <string name="competitions">Competitions</string>
+    <string name="username">Username</string>
+    <string name="email">Email Address</string>
+    <string name="create_new_league">Create New League</string>
+    <string name="invite_others">Invite Others</string>
+    <string name="competition_screen_text">For each match click on the team you predict to win. Click on both teams to predict a draw.</string>
+    <string name="home_text_1">Welcome to ScoreProf.</string>
+    <string name="home_text_2">You can predict the winners for each match in a multitude of competitions of your choosing.</string>
+    <string name="home_text_3">Points are gained per match correctly predicted.</string>
+    <string name="home_text_4">Create your own league in Setup. Invite your friends to make their predictions too.</string>
+    <string name="home_text_5">Best of luck!</string>
+    <string name="create_league">Create League</string>
+    <string name="invite_others_by_email">Invite others by email</string>
+    <string name="rules">Rules</string>
+    <string name="contact">Ideas &amp; Bugs</string>
+    <string name="setup_text_1">Select the competitions you would like to see on your home screen.\n</string>
+    <string name="setup_text_2">Create your own leagues and invite friends to join you.</string>
+    <string name="preferred_language">Preferred language</string>
+    <string name="language_screen_text">Select the language you would like to use in the app.</string>
+    <string name="edit_league">Edit League</string>
+    <string name="matches">Matches</string>
+    <string name="help">Help</string>
+    <string name="category">Category</string>
+    <string name="selection">Selection</string>
+    <string name="summary">Summary</string>
+    <string name="subject">Subject</string>
+    <string name="details">Details</string>
+    <string name="feedback_toast">Feedback sent! Thank you.</string>
+    <string name="feedback_button">Send Feedback</string>
+    <string name="idea">Idea</string>
+    <string name="bug">Bug</string>
+    <string name="question">Question</string>
+    <string name="other">Other</string>
+    <string name="scoreprof_login">ScoreProf Login</string>
+    <string name="login">Login</string>
+    <string name="login_text">Note: If this is your first time logging in, the password you enter will be saved as your permanent password.</string>
+    <string name="help_question1">How do I start?</string>
+    <string name="help_answer1">Go to Setup, give yourself an in-game name, then select which competitions and leagues you want to be able to see.</string>
+    <string name="help_question2">How do I make a prediction?</string>
+    <string name="help_answer2">Go to the Matches screen and choose the competition matches you would like to predict. Once the matches page has opened, click on which team you think will win. If you think the match will be a draw, click on both team names. Selected teams should be highlighted in green.</string>
+    <string name="help_question3">How do I undo a prediction?</string>
+    <string name="help_answer3">Go to the Matches page of your prediction and click on the team selected green. It will unselect your prediction.</string>
+    <string name="help_question4">How do I earn points?</string>
+    <string name="help_answer4">You earn 1 point for every correct result (Home Win, Draw, or Away Win). The result is taken after the match is completed. For example, if the match goes to extra time and a shoot off, the result will be taken after those are complete. For knockout games it is no use choosing a draw.</string>
+    <string name="help_question5">When can I make predictions?</string>
+    <string name="help_answer5">You can make or change predictions any time up until one minute before the match kicks off.</string>
+    <string name="help_question6">Can I see my results?</string>
+    <string name="help_answer6">Whilst Match pages will open on the next available match, you can scroll up to see results. If your selected team remains green, your prediction was good. If not, the selection will turn red.</string>
+    <string name="help_question7">How do I join a friend\'s league?</string>
+    <string name="help_answer7">If your friend has sent you an invite, you can go to \'Setup\' > \'Leagues\', then select the league by checking the checkbox. Once you return to the home screen, you can then select the Leagues option to see your friends league with you now in it.</string>
+    <string name="help_question8">How do I change the language displayed?</string>
+    <string name="help_answer8">The application will default to the language defined on your phone, if it is available within the application. If you have recently changed the language settings on your phone and the language displayed in the application is not correct, go into the Setup screen and then return to the Home page. This will reinitialise the language displayed. If the application still doesn\'t display in your language, please log a ticket in the \'Ideas &amp; Bugs\' page and we will review for a future release.</string>
+    <string name="help_question9">How do I create a league?</string>
+    <string name="help_answer9">Go to \'Setup\' > \'Leagues\' and click the \'+\' button at the bottom of the list of leagues. You must give the league a name and select a single competition. You can then invite friends by inserting their emails into the email text field at the bottom of the page, and click \'Add\' to confirm the email is correct. Once you have added your friends\' emails, click on the Save button to create the league. You will be returned to the Setup Leagues screen. Ensure your new league is selected for you to see it in the application.</string>
+    <string name="help_question10">How do I edit a league?</string>
+    <string name="help_answer10">Go to \'Setup\' > \'Leagues\' and click the triple dot icon to the right of the league you wish to edit. Then choose \'Edit League\'. Remember to save your league once the edit is complete. Note, you can only edit leagues which you have created.</string>
+    <string name="help_question11">How do I delete a league?</string>
+    <string name="help_answer11">Go to \'Setup\' > \'Leagues\' and click the triple dot icon to the right of the league you wish to delete. Note, you can only delete leagues which you have created.</string>
+    <string name="help_question12">How do I report an issue or an idea?</string>
+    <string name="help_answer12">Go to \'Ideas &amp; Bugs\' and complete the template. We will respond as soon as we can.</string>
+    <string name="invite_users">Invite Users</string>
+    <string name="users_email">User\'s Email</string>
+    <string name="add">Add</string>
+    <string name="delete_league">Delete League</string>
+    <string name="delete_league_confirmation">Are you sure you want to delete</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="points">Pts</string>
+    <string name="win_percentage">Win%</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_content">
+    ScoreProf respects your privacy. \n\n
+    1. Information We Collect: We collect your email address to manage your account and predictions. \n
+    2. Third-Party Services: We use Google AdMob to display ads. Google may use device identifiers to personalize content. \n
+    3. Data Security: Your data is stored securely on our private servers. \n
+    4. Your Rights: You can request account deletion at any time by contacting support.
+    </string>
+    <string name="copyright">Copyright © 2026 ScoreProf</string>
+    <string name="email_validation_text">Please enter a valid email address</string>
+</resources>
