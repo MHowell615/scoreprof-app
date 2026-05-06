@@ -59,7 +59,7 @@
     <string name="help_answer6">Les pages des matchs s\'ouvrent automatiquement sur le prochain match disponible, mais vous pouvez faire défiler vers le haut pour consulter les résultats. Si l\'équipe que vous avez sélectionnée reste en vert, votre pronostic était correct. Dans le cas contraire, la sélection passera au rouge.</string>
     <string name="help_question7">Comment puis-je rejoindre la ligue d\'un ami ?</string>
     <string name="help_answer7">Si un de vos amis vous a envoyé une invitation, rendez-vous dans « Paramètres » > « Ligues », puis sélectionnez la ligue en cochant la case correspondante. Une fois de retour à l\'écran d\'accueil, sélectionnez l\'option « Ligues » pour voir la ligue de votre ami, à laquelle vous appartenez désormais.</string>
-    <string name="help_question8">How do I change the language displayed?</string>
+    <string name="help_question8">Comment puis-je changer la langue d\'affichage ?</string>
     <string name="help_answer8">L\'application utilisera par défaut la langue définie sur votre téléphone, si celle-ci est disponible dans l\'application. Si vous avez récemment modifié les paramètres de langue de votre téléphone et que la langue affichée dans l\'application n\'est pas la bonne, accédez à l\'écran de configuration, puis revenez à la page d\'accueil. Cela réinitialisera la langue affichée. Si l\'application ne s\'affiche toujours pas dans votre langue, veuillez créer un ticket sur la page « Idées et bugs » et nous examinerons votre demande en vue d\'une prochaine mise à jour.</string>
     <string name="help_question9">Comment créer une ligue ?</string>
     <string name="help_answer9">Allez dans « Paramètres » > « Ligues » et cliquez sur le bouton « + » situé en bas de la liste des ligues. Vous devez donner un nom à la ligue et sélectionner une seule compétition. Vous pouvez ensuite inviter des amis en saisissant leurs adresses e-mail dans le champ de texte situé en bas de la page, puis cliquer sur « Ajouter » pour confirmer que l\'adresse e-mail est correcte. Une fois que vous avez ajouté les adresses e-mail de vos amis, cliquez sur le bouton « Enregistrer » pour créer la ligue. Vous serez redirigé vers l\'écran « Configuration des ligues ». Assurez-vous que votre nouvelle ligue est sélectionnée pour pouvoir la voir dans l\'application.</string>
@@ -84,11 +84,11 @@
         <b>3. Contact Protection des Données :</b> Conformément à l\'Art. 37 du RGPD, notre point de contact pour les demandes de confidentialité est <b>support@muntjac-solutions.com</b>. \n\n
         <b>4. Conservation des données :</b> Nous conservons vos données conformément à la loi française : \n
         • <b>Compte et Contact :</b> 3 ans après la clôture du compte ou le dernier contact actif. \n
-        • <b>Invitations :</b> Les e-mails utilisés pour les invitations sont supprimés si elles ne sont pas acceptées sous 30 jours. \n
+        • <b>Invitations :</b> Les adresses e-mail utilisées pour les invitations sont supprimées si elles ne sont pas acceptées sous 30 jours. \n
         • <b>Obligations comptables :</b> 10 ans comme requis par le Code de commerce. \n
         • <b>Cookies/Analytique :</b> Maximum 13 mois. \n\n
         <b>5. Transferts internationaux :</b> Vos données sont hébergées par DigitalOcean (Londres, Royaume-Uni) et Amazon Web Services (Suède). Le Royaume-Uni bénéficie d\'une <b>décision d\'adéquation</b> de la Commission européenne. La Suède fait partie de l\'EEE. \n\n
-        <b>6. Vos droits :</b> Vous disposez d\'un droit d\'accès, de rectification ou de suppression de vos données. Contactez-nous ou la CNIL. \n\n
+        <b>6. Vos droits :</b> Vous disposez d\'un droit d\'accès, de rectification ou de suppression de vos données. Pour toute demande ou pour introduire une réclamation auprès de la CNIL, contactez <b>support@muntjac-solutions.com</b>. \n\n
         <b>7. Modifications :</b> Les modifications matérielles seront notifiées via notre section Actualités. \n\n
         <b>8. Politique complète :</b> https://www.muntjac-solutions.fr/privacy
     </string>
