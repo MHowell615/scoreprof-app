@@ -44,6 +44,8 @@ import java.util.UUID
 import androidx.browser.customtabs.CustomTabsIntent
 import android.net.Uri
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 
 @OptIn(ExperimentalFoundationApi::class) // Required for stickyHeader
 @Composable
@@ -246,57 +248,9 @@ fun HomeScreen(
                             intent.launchUrl(context, Uri.parse(url))
                         }
                     )
-                    /*Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.Red,
-                            contentColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = {
-                            // This intentionally crashes the app to test Firebase
-                            try {
-                                throw RuntimeException("ScoreProf Test Crash: v9")
-                            } catch (e: Exception) {
-                                Firebase.crashlytics.recordException(e)
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 40.dp)
-                    ) {
-                        Text("Force Test Crash", style = TextStyle(fontWeight = FontWeight.Bold))
-                    }*/
                 }
             }
         }
-
-                // --- PRIVACY POLICY POP-UP ---
-        /*if (showPrivacyDialog) {
-            AlertDialog(
-                onDismissRequest = { showPrivacyDialog = false },
-                title = {
-                    Text(text = stringResource(id = R.string.privacy_policy_title))
-                },
-                text = {
-                    // Column + ScrollState handles long text
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.privacy_policy_content),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = { showPrivacyDialog = false }) {
-                        Text("Close")
-                    }
-                }
-            )
-        }*/
     }
 }
 
@@ -331,12 +285,26 @@ fun HomeTopBar(
             horizontalArrangement = Arrangement.SpaceBetween // This pushes Logo Left and Icons Right
         ) {
             // 1. LOGO (Now on the Left)
-            Image(
-                painter = painterResource(id = R.drawable.with_padding),
-                contentDescription = "ScoreProf Logo",
-                modifier = Modifier.height(48.dp),
-                contentScale = ContentScale.Fit
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(id = R.drawable.scoreprof_launcher_round),
+                    contentDescription = "ScoreProf Logo",
+                    modifier = Modifier.height(48.dp),
+                    contentScale = ContentScale.Fit
+                )
+                //Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "ScoreProf",
+                    style = TextStyle(
+                        fontFamily = FontFamily.SansSerif,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 26.sp,
+                        letterSpacing = (-0.5).sp,
+                        color = Color(0xFFFFAD5A)
+                    )
+                )
+            }
 
             // 2. ICONS GROUP (On the Right)
             Row(verticalAlignment = Alignment.CenterVertically) {

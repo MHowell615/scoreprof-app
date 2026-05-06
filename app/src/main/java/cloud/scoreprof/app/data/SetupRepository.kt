@@ -5,6 +5,7 @@ import android.util.Log
 import cloud.scoreprof.app.BuildConfig
 import cloud.scoreprof.app.data.local.TokenManager
 import cloud.scoreprof.app.domain.model.Setup
+import cloud.scoreprof.app.R
 import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
@@ -102,13 +103,19 @@ class SetupRepositoryImpl @Inject constructor(
 
     override suspend fun sendInviteEmail(inviteeEmail: String, inviterName: String, leagueid: String, owneruserid: String) {
         // This will be the IP Hetzner gives you
-        val url = "https://api.scoreprof.cloud:3000/send-invite"
+        val url = "https://api.scoreprof.cloud/send-invite"
 
-        // Get the inviter's name from your existing 'setup' state
-        //val inviterName = _setup.value?.name ?: "A friend"
         val authKey = BuildConfig.SPROF_AUTH_KEY
-        val subject = "${inviterName} invited you to join league '$leagueid'"
-        val message = "Hi!\n\n${inviterName} has invited you to join the league '$leagueid' on the ScoreProf app.\n\nTo acccept this invitation and start playing, open the ScoreProf app select the league via Setup > Leagues.\n\nIf you don't have the app yet, you can download it here: [YOUR_GOOGLE_PLAY_STORE_LINK]\n\nHappy playing!\nThe ScoreProf Team"
+        val subject = context.getString(
+            R.string.invite_subject,
+            inviterName,
+            leagueid
+        )
+        val message = context.getString(
+            R.string.invite_message,
+            inviterName,
+            leagueid
+        )
 
         val jsonBody = JSONObject().apply {
             put("friendEmail", inviteeEmail) // Matches req.body.friendEmail in server.js
@@ -128,8 +135,13 @@ class SetupRepositoryImpl @Inject constructor(
             }
         )
 
-        // Ensure you have a RequestQueue initialized in your ViewModel
-        // If you don't have one, you can use Volley.newRequestQueue(getApplication())
+        // Set timeout to 15s to allow SES to process
+        request.retryPolicy = DefaultRetryPolicy(
+            15000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+
         requestQueue.add(request)
     }
 
@@ -220,102 +232,14 @@ class SetupRepositoryImpl @Inject constructor(
         }
     }
 
-
-    /*override suspend fun updateAllSetupOnServer(payload: SetupPayload) {
-        return suspendCancellableCoroutine { continuation ->
-            // 1. Use the base URL without query parameters.
-            val token = tokenManager.getToken() ?: ""
-            val url = "https://www.scoreprof.cloud/rpc/update_user_setup_all"
-
-            println("Sending consolidated setup update to server: $payload")
-
-            val jsonBody = JSONObject().apply {
-                put("user_token", token)
-                put("_name", payload.name)
-                put("_membersince", payload.memberSince)
-                put("_preferred_language", payload.preferredLanguage)
-                put("_competitions", JSONArray(json.encodeToString(payload.competitions)))
-                put("_userleagues", JSONArray(json.encodeToString(payload.leagues)))
-                put("_leagues", JSONArray(json.encodeToString(payload.leagues)))
-            }
-
-            // 2. Serialize the SetupPayload object into a JSON string.
-            val requestBody = jsonBody.toString()
-
-            val stringRequest =
-                object : Request<String>(Method.POST, url, { error ->
-                    if (error is AuthFailureError) {
-                        tokenManager.deleteToken()
-                        if (continuation.isActive) continuation.resumeWithException(IllegalStateException("SESSION_EXPIRED"))
-                        //return@Request
-                    }
-
-                    val responseBody = error.networkResponse?.data?.let { String(it, Charsets.UTF_8) }
-                    println("Server returned error: ${error.message}, Body: $responseBody")
-                    if (continuation.isActive) {
-                        continuation.resumeWithException(error)
-                    }
-                }) {
-                    override fun getHeaders(): MutableMap<String, String> = HashMap()
-
-                    override fun deliverResponse(response: String?) {
-                        println("Update successful: $response")
-                        if (continuation.isActive) {
-                            continuation.resume(Unit)
-                        }
-                    }
-
-                    override fun parseNetworkResponse(response: NetworkResponse?): Response<String> {
-                        // PostgREST returns 204 No Content for successful void functions.
-                        // Volley treats 204 as an error by default, so we handle it as a success.
-                        return try {
-                            if (response?.statusCode == 204 || response?.statusCode == 200) {
-                                Response.success(
-                                    "Success",
-                                    HttpHeaderParser.parseCacheHeaders(
-                                        response
-                                    )
-                                )
-                            } else {
-                                val responseData =
-                                    response?.data?.let { String(it, Charsets.UTF_8) }
-                                        ?: "No response body"
-                                Response.error(
-                                    ParseError(Exception("Server error with status code: ${response?.statusCode}, body: $responseData"))
-                                )
-                            }
-                        } catch (e: Exception) {
-                            Response.error(ParseError(e))
-                        }
-                    }
-
-                    override fun getBodyContentType(): String = "application/json; charset=utf-8"
-
-                    override fun getBody(): ByteArray = requestBody.toByteArray(Charsets.UTF_8)
-                }
-
-            stringRequest.retryPolicy = DefaultRetryPolicy(
-                INITIAL_TIMEOUT_MS,
-                MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-            )
-
-            continuation.invokeOnCancellation {
-                stringRequest.cancel()
-            }
-
-            requestQueue.add(stringRequest)
-        }
-    }*/
-
     override suspend fun sendSupportEmail(userEmail: String, category: String, subject: String, description: String): Boolean {
-        val url = "https://api.scoreprof.cloud:3000/send-support"
+        val url = "https://api.scoreprof.cloud/send-support"
         val authKey = BuildConfig.SPROF_AUTH_KEY
 
         val jsonBody = JSONObject().apply {
             put("userEmail", userEmail)
             put("category", category)
-            put("subject", subject)
+            put("subject", "Support Request: $category - $subject")
             put("description", description)
             put("authKey", BuildConfig.SPROF_AUTH_KEY)
         }
@@ -323,15 +247,22 @@ class SetupRepositoryImpl @Inject constructor(
         val request = JsonObjectRequest(
             Request.Method.POST, url, jsonBody,
             { response ->
-                println("Message sent successfully to support from $userEmail")
+                println("Support email request accepted by server")
             },
             { error ->
-                println("Failed to send message to support: ${error.message}")
+                val responseBody = error.networkResponse?.data?.let { String(it, Charsets.UTF_8) }
+                Log.e("SetupRepository", "Failed to send support email: $responseBody")
             }
         )
 
-        requestQueue.add(request)
+        // Set timeout to 15s to allow SES to process
+        request.retryPolicy = DefaultRetryPolicy(
+            15000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
 
+        requestQueue.add(request)
         return true
     }
 

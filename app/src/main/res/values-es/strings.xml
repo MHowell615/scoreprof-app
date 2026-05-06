@@ -80,4 +80,6 @@
     <string name="help_answer11">Ve a «Configuración» > «Ligas» y haz clic en el icono de los tres puntos situado a la derecha de la liga que quieras eliminar. Ten en cuenta que solo puedes eliminar las ligas que hayas creado tú mismo.</string>
     <string name="help_question12">¿Cómo puedo informar de un problema o sugerir una idea?</string>
     <string name="email_validation_text">Introduce una dirección de correo electrónico válida</string>
+    <string name="invite_subject">%1$s te ha invitado a unirte a la liga \'%2$s\'.</string>
+    <string name="invite_message">¡Hola!\n\n%1$s te ha invitado a unirte a la liga \'%2$s\' en la app ScoreProf.\n\nPara aceptar la invitación y empezar a jugar, abre la app ScoreProf y selecciona la liga en Configuración > Ligas.\n\nSi aún no tienes la app, puedes descargarla aquí: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\n¡Que disfrutes del juego!\n\nEl equipo de ScoreProf\n\n--- (English) ---\nHi! \n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nHappy playing!\nThe ScoreProf Team</string>
 </resources>

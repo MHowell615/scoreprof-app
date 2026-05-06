@@ -77,12 +77,42 @@
     <string name="forgot_password">Forgot Password</string>
     <string name="privacy_policy_title">Privacy Policy</string>
     <string name="privacy_policy_content">
-    ScoreProf respects your privacy. \n\n
-    1. Information We Collect: We collect your email address to manage your account and predictions. \n
-    2. Third-Party Services: We use Google AdMob to display ads. Google may use device identifiers to personalize content. \n
-    3. Data Security: Your data is stored securely on our private servers. \n
-    4. Your Rights: You can request account deletion at any time by contacting support.
+        ScoreProf respects your privacy. Muntjac Solutions is the Data Controller for this Service. \n\n
+        <b>1. Legal Basis (GDPR):</b> Our primary legal basis for processing your data (email address) is the <b>Performance of a Contract</b>. This data is necessary to provide your account and gaming features. We also rely on <b>Legitimate Interests</b> for security and <b>Consent</b> for personalized advertisements (handled via our consent provider). \n\n
+        <b>2. Data Controller:</b> Muntjac Solutions, 9 rue de Condé, Bureau 3, 33000 Bordeaux, France. SIRET: 104 419 619 00010. Registered with the RNE. \n\n
+        <b>3. Data Protection:</b> In accordance with Art. 37 of the GDPR, our point of contact for privacy inquiries is <b>support@muntjac-solutions.com</b>. \n\n
+        <b>4. Data Retention:</b> We retain your data according to French law: \n
+        • <b>Account &amp; Contact:</b> 3 years after account closure or last active contact. \n
+        • <b>Invitations:</b> Emails used for invites are deleted if not accepted within 30 days. \n
+        • <b>Accounting Records:</b> 10 years as required by the French Commercial Code. \n
+        • <b>Cookies/Analytics:</b> Maximum 13 months. \n\n
+        <b>5. International Transfers:</b> Data is primarily hosted in London, UK (DigitalOcean Limited) and Stockholm, Sweden (AWS EMEA SARL). The UK has an <b>adequacy decision</b> from the European Commission. Sweden is part of the EEA. \n\n
+        <b>6. Your Rights:</b> You have the right to access, rectify, or request erasure. Contact us or the CNIL. \n\n
+        <b>7. Policy Changes:</b> Material changes will be notified via our News section. \n\n
+        <b>8. Full Policy:</b> https://www.muntjac-solutions.com/privacy
     </string>
     <string name="copyright">Copyright © 2026 ScoreProf</string>
     <string name="email_validation_text">Please enter a valid email address</string>
+    <string name="invite_subject">%1$s invited you to join league \'%2$s\'</string>
+    <string name="invite_message">Hi!\n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nHappy playing!\nThe ScoreProf Team</string>
+    <string name="legal_notice_title">Legal Notice</string>
+    <string name="legal_notice_content">
+        In accordance with the provisions of Articles 6-III and 19 of Law No. 2004-575 of June 21, 2004 for Confidence in the Digital Economy (LCEN), users of ScoreProf are informed of these legal notices.\n\n
+        <b>Publisher:</b> Muntjac Solutions\n
+        <b>Publication Director:</b> Mark Howell, Founder\n
+        <b>Status:</b> Sole Proprietor (Unregulated Professional Practice)\n
+        <b>SIRET:</b> 104 419 619 00010\n
+        <b>Registration:</b> Registered with the National Business Registry (RNE)\n
+        <b>Headquarters:</b> 9 rue de Condé, Bureau 3, 33000 Bordeaux, France\n
+        <b>Phone:</b> 07 87 27 59 08\n
+        <b>Email:</b> contact@muntjac-solutions.com\n\n
+        <b>Data Protection:</b> For data privacy inquiries, see our Privacy Policy or contact support@muntjac-solutions.com.\n\n
+        <b>Hosting:</b> This application is hosted by:\n\n
+        <b>Digital Ocean Limited</b>\n
+        Suite 7 Savant House, 63-65 Camden High Street, London NW1 7JL, United Kingdom\n
+        Contact: https://www.digitalocean.com/company/contact/support\n\n
+        <b>Amazon Web Services Emea Sarl, Sverige Filial</b>\n
+        Malmskillnadsgatan 36, 111 57 Stockholm, Sweden\n
+        Contact: https://aws.amazon.com/fr/contact-us/?nc1=f_m
+    </string>
 </resources>

@@ -80,4 +80,6 @@
     <string name="help_answer11">Gehe zu „Konfiguration“ > „Ligen“ und klicke auf das Symbol mit den drei Punkten rechts neben der Liga, die du löschen möchtest. Beachte bitte, dass du nur Ligen löschen kannst, die du selbst erstellt hast.</string>
     <string name="help_question12">Wie melde ich ein Problem oder eine Idee?</string>
     <string name="email_validation_text">Bitte gib eine gültige E-Mail-Adresse ein</string>
+    <string name="invite_subject">%1$s hat Sie eingeladen, der Liga \'%2$s\' beizutreten.</string>
+    <string name="invite_message">Hallo!\n\n%1$s hat dich eingeladen, der Liga \'%2$s\' in der ScoreProf-App beizutreten.\n\nUm diese Einladung anzunehmen und mitzuspielen, öffne die ScoreProf-App und wähle die Liga unter Einstellungen > Ligen aus.\n\nFalls du die App noch nicht hast, kannst du sie hier herunterladen: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nViel Spaß beim Spielen! Dein ScoreProf-Team\n\n--- (English) ---\nHi! \n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nHappy playing!\nThe ScoreProf Team</string>
 </resources>

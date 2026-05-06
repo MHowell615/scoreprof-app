@@ -80,4 +80,6 @@
     <string name="help_question11">Come si elimina una lega?</string>
     <string name="help_answer11">Vai su \"Configurazione\" > \"Leghe\" e clicca sull\'icona con i tre puntini a destra della lega che desideri eliminare. Tieni presente che puoi eliminare solo le leghe che hai creato.</string>
     <string name="help_question12">Come faccio a segnalare un problema o a proporre un\'idea?</string>
+    <string name="invite_subject">%1$s ti ha invitato a unirti alla lega \'%2$s\'.</string>
+    <string name="invite_message">Ciao!\n\n%1$s ti ha invitato a unirti al campionato \'%2$s\' sull\'app ScoreProf.\n\nPer accettare l\'invito e iniziare a giocare, apri l\'app ScoreProf e seleziona il campionato tramite Impostazioni > Campionati.\n\nSe non hai ancora l\'app, puoi scaricarla qui: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nBuon divertimento!\nIl team di ScoreProf\n\n--- (English) ---\nHi! \n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nHappy playing!\nThe ScoreProf Team</string>
 </resources>

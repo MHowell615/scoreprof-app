@@ -14,8 +14,13 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.text.intl.Locale
+import cloud.scoreprof.app.BuildConfig
 import org.json.JSONObject
 import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 
 @HiltViewModel
@@ -217,13 +222,19 @@ class LoginViewModel @Inject constructor(
             }
 
             val url = "https://www.scoreprof.cloud/rpc/request_password_reset"
+            val authKey = BuildConfig.SPROF_AUTH_KEY
+            val language = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en"
 
-            // 2. Volley Request
-            val request = object : StringRequest(
-                Method.POST, url,
+            val jsonBody = JSONObject().apply {
+                put("email", email)
+                put("language", language)
+                put("authKey", authKey)
+            }
+
+            val request = JsonObjectRequest(
+                Request.Method.POST, url, jsonBody,
                 { response ->
                     _isLoading.value = false
-                    // We don't need to do much here as the UI handles the step change and Toast
                     println("ScoreProfAuthLog: Reset code requested for $email")
                 },
                 { error ->
@@ -234,14 +245,11 @@ class LoginViewModel @Inject constructor(
                         _eventFlow.emit(UiEvent.Error(message))
                     }
                 }
-            ) {
-                override fun getBody(): ByteArray = params.toString().toByteArray(Charsets.UTF_8)
-                override fun getBodyContentType(): String = "application/json; charset=utf-8"
-            }
-
+            )
+            // Set timeout to 15s to allow SES to process
             request.retryPolicy = DefaultRetryPolicy(
-                10000,
-                0,
+                15000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
             )
             requestQueue.add(request)
