@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">ScoreProf</string>
     <string name="setup">Setup</string>
     <string name="leagues">Leagues</string>
