@@ -21,7 +21,8 @@ data class Setup(
     val memberSince: ZonedDateTime? = null,
     val preferred_language: String,  // this should default to the user locale language if none is selected
     val competitions: List<UserCompetitionSelection>,
-    val leagues: List<UserLeagueSelection>
+    val leagues: List<UserLeagueSelection>,
+    val receive_email: Boolean = true
 )
 
 @Serializable
@@ -44,9 +45,9 @@ data class UserLeagueSelection(
     val competitionid: String?,
     @Serializable(with = UUIDSerializer::class)
     val owneruserid: UUID,
+    val leaguecode: String?,
     val name: String,
     val state: String? = "Active",
     val invited: Boolean? = false,
     val selected: Boolean? = false
 )
-

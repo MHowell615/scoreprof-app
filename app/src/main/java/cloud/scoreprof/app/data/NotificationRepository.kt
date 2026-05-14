@@ -27,6 +27,7 @@ interface NotificationRepository {
     suspend fun sendNotification(notification: SendNotification)
     suspend fun fetchNotifications(token: String, email: String): List<AppNotification>
     suspend fun markAsReadNotification(email: String, id: Int)
+    suspend fun acceptJoinRequest(token: String, leagueId: String, joinerId: String): Boolean
 }
 
 @Singleton
@@ -119,6 +120,73 @@ class NotificationRepositoryImpl @Inject constructor(
             _notifications = MutableStateFlow(response)
             //_notifications.value = response
             response.notifications
+        }
+    }
+
+    override suspend fun acceptJoinRequest(token: String, leagueId: String, joinerId: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val token = tokenManager.getToken() ?: ""
+            val url = "https://www.scoreprof.cloud/rpc/accept_join_request"
+
+            val jsonBody = try {
+                JSONObject().apply {
+                    put("user_token", token)
+                    put("_leagueid", leagueId)
+                    put("_joinerid", joinerId)
+                }
+            } catch (e: Exception) {
+                println("TEST: [NotificationRepository] JSON Construction failed on accepting join request: ${e.message}")
+                throw e
+            }
+
+            val requestBody = jsonBody.toString()
+
+            suspendCancellableCoroutine<String> { continuation ->
+                val stringRequest = object : StringRequest(
+                    Method.POST,
+                    url,
+                    { response ->
+                        if (continuation.isActive) {
+                            continuation.resume(response)
+                        }
+                    },
+                    { error ->
+                        val responseBody =
+                            error.networkResponse?.data?.let { String(it, Charsets.UTF_8) }
+                        println("Server error: ${error.message}, Body: $responseBody")
+                        if (continuation.isActive) {
+                            continuation.resumeWithException(error)
+                        }
+                    }
+                ) {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        return headers
+                    }
+
+                    override fun getBodyContentType(): String {
+                        return "application/json; charset=utf-8"
+                    }
+
+                    override fun getBody(): ByteArray {
+                        return requestBody.toByteArray(Charsets.UTF_8)
+                    }
+                }
+
+                stringRequest.retryPolicy = DefaultRetryPolicy(
+                    INITIAL_TIMEOUT_MS,
+                    MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+                )
+
+                continuation.invokeOnCancellation {
+                    stringRequest.cancel()
+                }
+
+                requestQueue.add(stringRequest)
+            }
+
+            true
         }
     }
 

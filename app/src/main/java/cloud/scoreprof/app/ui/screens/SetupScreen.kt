@@ -39,32 +39,22 @@ import cloud.scoreprof.app.ui.components.AdBanner
 fun SetupScreen(
     navController: NavHostController,
     setupViewModel: ListSetupViewModel,
-    //savedStateHandle: SavedStateHandle,
     modifier: Modifier = Modifier
 ) {
-    // Create the ViewModel here using the provided factory
-    //val setupViewModel: ListSetupViewModel = viewModel(factory = setupViewModelFactory)
-    val setupState by setupViewModel.setup.collectAsState()    // This local variable will hold the actual object or null
+    val setupState by setupViewModel.setup.collectAsState()
     val currentSetup = setupState
     val userid = setupState?.userid
     var newPassword by remember { mutableStateOf("") }
     val uiState by setupViewModel.uiState.collectAsState()
     val isLoading by setupViewModel.isLoading.collectAsState()
 
-    // Collect the lists from the ViewModel
     val competitions by setupViewModel.competitions.collectAsState()
     val leagues by setupViewModel.setupLeagues.collectAsState()
-    //val setup by setupViewModel.setup.collectAsState()
     var passwordVisible by remember { mutableStateOf(false) }
     val isPasswordTooShort = newPassword.isNotEmpty() && newPassword.length < 6
 
-    //val needsRefresh by setupViewModel.needsRefresh.collectAsState()
-
     DisposableEffect(Unit) {
         onDispose {
-            // If isLoading is true, the user is forcing a close during a save.
-            // If newPassword isn't blank, we just changed it.
-            // Only save profile if we aren't in the middle of a password swap.
             if (!setupViewModel.isLoading.value) {
                 setupViewModel.saveSetupScreenChanges()
             }
@@ -76,7 +66,7 @@ fun SetupScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Standard height for a top app bar
+                    .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
@@ -95,7 +85,7 @@ fun SetupScreen(
                     Text(
                         text = stringResource(id = R.string.setup),
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.weight(1f) // Ensures title takes up available space
+                        modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -112,7 +102,7 @@ fun SetupScreen(
                     onValueChange = { newEmail ->
                         setupViewModel.onSetupDetailChanged(
                             email = newEmail,
-                            name = currentSetup?.name ?: "" // pass the current name
+                            name = currentSetup?.name ?: ""
                         )
                     },
                     singleLine = true,
@@ -145,7 +135,7 @@ fun SetupScreen(
                                 IconButton(
                                     onClick = {
                                         setupViewModel.changePassword(newPassword)
-                                        newPassword = "" // Clear field after sending
+                                        newPassword = ""
                                     }) {
                                     Icon(
                                         imageVector = Icons.Sharp.SaveAlt,
@@ -159,7 +149,6 @@ fun SetupScreen(
                                 Icons.Filled.Visibility
                             else Icons.Filled.VisibilityOff
 
-                            // Toggle button to hide or display password
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                                 Icon(imageVector = image, if (passwordVisible) "Hide" else "Show")
                             }
@@ -184,12 +173,11 @@ fun SetupScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
-
                     value = currentSetup?.name ?: "",
                     label = { Text(stringResource(id = R.string.username)) },
                     onValueChange = { newName ->
                         setupViewModel.onSetupDetailChanged(
-                            email = currentSetup?.email ?: "", // pass the current email
+                            email = currentSetup?.email ?: "",
                             name = newName
                         )
                     },
@@ -202,9 +190,7 @@ fun SetupScreen(
 
             item {
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    //.padding(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     text = stringResource(id = R.string.setup_text_1),
                     style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
@@ -212,8 +198,7 @@ fun SetupScreen(
             }
             item {
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     text = stringResource(id = R.string.setup_text_2),
                     style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
@@ -258,9 +243,8 @@ fun SetupScreen(
                     ),
                     shape = RoundedCornerShape(8.dp),
                     onClick = {
-                        println("TEST: Navigating to setup_leagues_screen")
                         navController.navigate("setup_leagues_screen/$userid")
-                              },
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
@@ -282,7 +266,37 @@ fun SetupScreen(
                 }
             }
             item {
-                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = button_background,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    onClick = {
+                        navController.navigate("setup_privacy_screen/$userid")
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        stringResource(id = R.string.privacy),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.weight(1f)
+                    )
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = ("Forward")
+                    )
+                }
+            }
+            item {
+                //Spacer(modifier = Modifier.height(6.dp))
                 Box (
                     contentAlignment = Alignment.Center,
                     modifier = Modifier

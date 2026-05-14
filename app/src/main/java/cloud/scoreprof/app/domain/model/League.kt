@@ -67,6 +67,7 @@ data class UserLeagueUsers(
     @Serializable(with = UUIDSerializer::class)
     val owneruserid: UUID,
     val competitionid: String?,
+    val leaguecode: String?,
     val invited: Boolean? = false,
     val selected: Boolean? = false,
     val invitestatus: String?,

@@ -2,6 +2,7 @@ package cloud.scoreprof.app.ui.view_models
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +18,7 @@ import cloud.scoreprof.app.domain.model.Setup
 import cloud.scoreprof.app.domain.model.UserLeague
 import cloud.scoreprof.app.domain.model.UserLeagueUsers
 import cloud.scoreprof.app.ui.utils.UUIDSerializer
+import cloud.scoreprof.app.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -139,7 +141,7 @@ class CreateLeagueViewModel @Inject constructor(
     fun createLeague() {
         val currentLeagueName = _leagueName.value
         val currentSelectedCompetition = _selectedCompetition.value
-        println("TEST: currentLeagueName = $currentLeagueName, currentSelectedCompetition = $currentSelectedCompetition")
+        //println("TEST: currentLeagueName = $currentLeagueName, currentSelectedCompetition = $currentSelectedCompetition")
 
         // --- Validation ---
         if (currentLeagueName.isBlank() || userid == null || currentSelectedCompetition == null) {
@@ -154,6 +156,7 @@ class CreateLeagueViewModel @Inject constructor(
                 owneruserid = userid,
                 userid = userid,
                 competitionid = currentSelectedCompetition.competitionid,
+                leaguecode = "",
                 invited = true,
                 selected = true,
                 invitestatus = "Accepted",
@@ -161,21 +164,22 @@ class CreateLeagueViewModel @Inject constructor(
                 email = userEmail
             )
 
-            val inviteeStatuses = _invitedEmails.value.map { email ->
+            /*val inviteeStatuses = _invitedEmails.value.map { email ->
                 UserLeagueUsers(
                     userid = UUIDSerializer.EMPTY_UUID, // Shadow User trigger
                     leagueid = currentLeagueName,
                     owneruserid = userid,
                     competitionid = currentSelectedCompetition.competitionid,
+                    leaguecode = leagueCode,
                     invited = true,
                     selected = false,
                     invitestatus = "Pending",
                     state = "Active",
                     email = email
                 )
-            }
+            }*/
 
-            val allUserStatuses = listOf(ownerStatus) + inviteeStatuses
+            val allUserStatuses = listOf(ownerStatus) //+ inviteeStatuses
             val userPayload = UserLeague(userleagueusers = allUserStatuses)
 
             val ownerStats = League(
@@ -194,19 +198,14 @@ class CreateLeagueViewModel @Inject constructor(
 
             try {
                 // STEP 1: Call the repository. It returns the new league ID, or 0 on conflict.
-                leaguesRepository.createNewLeague(
+                val result = leaguesRepository.createNewLeague(
                     headerPayload,
                     userPayload,
                     userEmail
                 )
 
                 setupRepository.refreshSetupFromServer(userid)
-
-                sendInviteEmails(
-                    leagueid = headerPayload.leagueid
-                )
-
-                _saveResult.value = CreateLeagueResult.Success("League created and invites sent!")
+                _saveResult.value = CreateLeagueResult.Success( context.getString(R.string.league_created), result.leagueCode)
 
             } catch (e: Exception) {
                 // This catches unexpected errors (server down, bad response format, etc.).
@@ -237,7 +236,7 @@ class CreateLeagueViewModel @Inject constructor(
     sealed class CreateLeagueResult {
         object Idle : CreateLeagueResult() // The screen is waiting for user action
         object Loading : CreateLeagueResult() // The "Save" button was clicked, and we are saving
-        data class Success(val message: String) : CreateLeagueResult() // Save was successful
+        data class Success(val message: String, val leagueCode: String) : CreateLeagueResult() // Save was successful
         data class Error(val message: String) : CreateLeagueResult() // Save failed
     }
 }

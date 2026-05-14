@@ -18,6 +18,7 @@ import cloud.scoreprof.app.ui.utils.UUIDSerializer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
@@ -35,6 +36,9 @@ class EditLeagueViewModel @Inject constructor(
 
     private var _leagueHeader = MutableStateFlow<LeagueHeader?>(null)
     var leagueHeader: StateFlow<LeagueHeader?> = _leagueHeader
+
+    private val _leaguecode = MutableStateFlow("")
+    val leaguecode: StateFlow<String> = _leaguecode.asStateFlow()
 
     val leagueid: String = savedStateHandle.get<String>("leagueid") ?: ""
     // Temporary debug line
@@ -84,6 +88,15 @@ class EditLeagueViewModel @Inject constructor(
         }
     }
 
+    fun fetchLeagueCode(leagueId: String, ownerId: UUID) {
+        val users = _userLeagueUsers.value
+        if (users.isNotEmpty()) {
+            val code = users.firstOrNull()?.leaguecode ?: ""
+            _leaguecode.value = code
+            Log.d("EditLeagueVM", "Extracted league code from users list: $code")
+        }
+    }
+
     fun getLeagueDetails(leagueid: String, owneruserid: UUID) {
         viewModelScope.launch {
             try {
@@ -97,6 +110,7 @@ class EditLeagueViewModel @Inject constructor(
                 }
 
                 _userLeagueUsers.value = activeUsers
+                _leaguecode.value = activeUsers.firstOrNull { it.leaguecode?.isNotEmpty() == true }?.leaguecode ?: ""
 
                 // 3. Extract just the "Other" invited emails (excluding the owner)
                 // This is what populates the "Invites" list on your UI
@@ -224,6 +238,7 @@ class EditLeagueViewModel @Inject constructor(
         val currentSelectedCompetition = _selectedCompetition.value
         val currentInviteesInUI = _invitedEmails.value
         val existingHeader = _leagueHeader.value
+        val leaguecode = _leaguecode.value
         Log.d("EditLeagueVM", "VALIDATION CHECK: name='$currentLeagueName', userid=$userid, comp=${currentSelectedCompetition?.competitionid}")
 println("TEST: (EditLeagueViewModel) saveLeagueDetails() called for $leagueid, $owneruserid")
 println("TEST: (EditLeagueViewModel) saveLeagueDetails() existingHeader = $existingHeader")
@@ -288,6 +303,7 @@ println("TEST: (EditLeagueViewModel) saveLeagueDetails() existingHeader = $exist
                         leagueid = currentLeagueName,
                         owneruserid = owneruserid,
                         competitionid = currentSelectedCompetition.competitionid,
+                        leaguecode = leaguecode,
                         invited = true,
                         selected = false,
                         invitestatus = "Pending",
@@ -304,6 +320,7 @@ println("TEST: (EditLeagueViewModel) saveLeagueDetails() existingHeader = $exist
                             leagueid = currentLeagueName,
                             owneruserid = owneruserid,
                             competitionid = currentSelectedCompetition.competitionid,
+                            leaguecode = leaguecode,
                             invited = true,
                             selected = true,
                             invitestatus = "Accepted",

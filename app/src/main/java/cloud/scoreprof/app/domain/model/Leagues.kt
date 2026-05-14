@@ -15,6 +15,7 @@ data class Leagues(
     @PrimaryKey val id: Int,
     val leagueid: String,
     val competitionid: String?,
+    val leaguecode: String?,
     @Serializable(with = UUIDSerializer::class)
     val owneruserid: UUID,
     val name: String,

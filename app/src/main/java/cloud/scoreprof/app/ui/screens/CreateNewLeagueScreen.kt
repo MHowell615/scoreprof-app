@@ -18,16 +18,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
@@ -66,6 +73,9 @@ fun CreateNewLeagueScreen(
     val saveResult by viewModel.saveResult.collectAsState()
     val inviteStatus by viewModel.saveResult.collectAsState()
     val context = LocalContext.current
+    var showSuccessDialog by remember { mutableStateOf(false) }
+    var generatedLeagueCode by remember { mutableStateOf("") }
+    val clipboardManager = LocalClipboard.current
 
     val groupedData = remember(competitionsState) {
         competitionsState
@@ -97,16 +107,21 @@ fun CreateNewLeagueScreen(
         // Use a local variable for the result inside the 'when' for cleaner code
         when (val result = saveResult) {
             is CreateLeagueViewModel.CreateLeagueResult.Success -> {
+                generatedLeagueCode = result.leagueCode
+                showSuccessDialog = true
                 Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
-                navController.popBackStack()
             }
+
             is CreateLeagueViewModel.CreateLeagueResult.Error -> {
                 Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
                 viewModel.onResultConsumed() // Reset the error state
             }
+
             else -> {}
         }
     }
+
+
 
     Scaffold(
         topBar = {
@@ -174,6 +189,23 @@ fun CreateNewLeagueScreen(
                 Spacer(modifier = Modifier.height(16.dp))
             }
             item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .padding(vertical = 8.dp)
+                ) {
+                    AdBanner(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp),
+                        isMediumRectangle = false
+                    )
+                }
+            }
+            item {
                 Text(
                     text = stringResource(id = R.string.competitions),
                     style = TextStyle(
@@ -204,7 +236,8 @@ fun CreateNewLeagueScreen(
                                 text = sportType.uppercase(),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary),
+                                    color = MaterialTheme.colorScheme.primary
+                                ),
                                 modifier = Modifier.weight(1f)
                             )
                             Icon(
@@ -220,13 +253,18 @@ fun CreateNewLeagueScreen(
                     regions.forEach { (regionName, competitionList) ->
                         // --- LEVEL 2: REGION/COUNTRY HEADER ---
                         item(key = "region_${sportType}_$regionName") {
-                            val isRegionExpanded = expandedRegions["${sportType}_$regionName"] ?: false
+                            val isRegionExpanded =
+                                expandedRegions["${sportType}_$regionName"] ?: false
                             Surface(
-                                onClick = { expandedRegions["${sportType}_$regionName"] = !isRegionExpanded },
+                                onClick = {
+                                    expandedRegions["${sportType}_$regionName"] = !isRegionExpanded
+                                },
                                 color = sub_dropdown_background,
                                 contentColor = MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier.fillMaxWidth().padding(start = 8.dp)
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 8.dp)
                             ) {
                                 Row(
                                     modifier = Modifier.padding(12.dp),
@@ -236,7 +274,8 @@ fun CreateNewLeagueScreen(
                                         text = regionName,
                                         style = MaterialTheme.typography.bodyLarge.copy(
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary),
+                                            color = MaterialTheme.colorScheme.primary
+                                        ),
                                         modifier = Modifier.weight(1f)
                                     )
                                     Icon(
@@ -250,7 +289,9 @@ fun CreateNewLeagueScreen(
 
                         // --- LEVEL 3: COMPETITION BUTTONS ---
                         if (expandedRegions["${sportType}_$regionName"] == true) {
-                            items(competitionList, key = { "comp_${it.item.competitionid}" }) { competition ->
+                            items(
+                                competitionList,
+                                key = { "comp_${it.item.competitionid}" }) { competition ->
                                 SelectableRowWithCheckboxes(
                                     modifier = Modifier.animateItem(),
                                     item = competition.item,
@@ -268,7 +309,7 @@ fun CreateNewLeagueScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-            item {
+            /*item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     contentAlignment = Alignment.Center,
@@ -329,7 +370,8 @@ fun CreateNewLeagueScreen(
                     Text(
                         text = email,
                         modifier = Modifier
-                            .weight(1f))
+                            .weight(1f)
+                    )
                     IconButton(
                         onClick = {
                             viewModel.onEmailRemoved(email)
@@ -344,12 +386,89 @@ fun CreateNewLeagueScreen(
             // Add padding at the bottom of the list to ensure the FAB doesn't hide content
             item {
                 Spacer(modifier = Modifier.height(80.dp))
-            }
+            }*/
         }
     }
+
+
+    if (showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showSuccessDialog = false
+                navController.popBackStack() // Go back only when dismissed
+            },
+            title = {
+                Text(
+                    text = stringResource(R.string.league_created ),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
+            text = {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "Share this code with your friends so they can join:")
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Display the League Code prominently
+                    Surface(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = generatedLeagueCode,
+                            style = MaterialTheme.typography.displaySmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 4.sp
+                            ),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        // Trigger Android Share Sheet
+                        val sendIntent = android.content.Intent().apply {
+                            action = android.content.Intent.ACTION_SEND
+                            putExtra(
+                                android.content.Intent.EXTRA_TEXT,
+                                context.getString(R.string.share_league_msg)
+                                    /*"Join my ScoreProf league! Code: $generatedLeagueCode\n" +
+                                        "Download at: https://scoreprof.cloud"*/
+                            )
+                            type = "text/plain"
+                        }
+                        val shareIntent = android.content.Intent.createChooser(sendIntent, null)
+                        context.startActivity(shareIntent)
+                    }
+                ) {
+                    Text("Share")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        // Use the Android System Clipboard Service
+                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip = ClipData.newPlainText("League Code", generatedLeagueCode)
+                        clipboard.setPrimaryClip(clip)
+
+                        // Show a small feedback to the user
+                        Toast.makeText(context, context.getString(R.string.copy_to_clipboard), Toast.LENGTH_SHORT).show()
+
+                        showSuccessDialog = false
+                        navController.popBackStack()
+                    }
+                ) {
+                    Text("Copy & Close")
+                }
+            }
+        )
+    }
 }
-
-
 
 
 

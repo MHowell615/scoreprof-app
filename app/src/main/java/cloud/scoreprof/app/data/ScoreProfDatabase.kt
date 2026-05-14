@@ -39,7 +39,7 @@ import cloud.scoreprof.app.domain.model.UserPredictions
         UserPredictions::class,
         UserLeagueUsers::class
     ],
-    version = 7,
+    version = 10,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

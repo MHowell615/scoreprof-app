@@ -314,6 +314,7 @@ class ListSetupViewModel @Inject constructor(
                     leagueid = userLeague.leagueid,
                     competitionid = userLeague.competitionid,
                     owneruserid = userLeague.owneruserid,
+                    leaguecode = userLeague.leaguecode,
                     name = userLeague.name,
                     state = userLeague.state ?: "Active",
                     invited = userLeague.invited ?: false,
@@ -440,6 +441,13 @@ class ListSetupViewModel @Inject constructor(
             )
         }
     }
+
+    fun requestJoinLeague(joinCode: String) {
+        viewModelScope.launch {
+            setupRepository.requestJoinLeague(joinCode)
+        }
+    }
+
     fun saveChanges() {
         viewModelScope.launch(Dispatchers.IO) {
             val currentSetup = _setup.value
@@ -485,6 +493,7 @@ class ListSetupViewModel @Inject constructor(
                     leagueid = selectableItem.item.leagueid,
                     competitionid = selectableItem.item.competitionid,
                     owneruserid = selectableItem.item.owneruserid,
+                    leaguecode = selectableItem.item.leaguecode,
                     name = selectableItem.item.name,
                     state = selectableItem.item.state,
                     selected = selectableItem.isSelected,
@@ -591,6 +600,25 @@ class ListSetupViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             dao.insertSetup(updatedSetup)
             Log.d("ViewModel_Update", "Language change saved to database in the background.")
+        }
+    }
+
+    fun onPrivacySettingsChanged(receiveEmail: Boolean) {
+        val currentSetup = _setup.value ?: return
+
+        // 1. Mettre à jour l'état UI immédiatement
+        val updatedSetup = currentSetup.copy(receive_email = receiveEmail)
+        _setup.value = updatedSetup
+
+        // 2. Persister dans la BD locale et sur le serveur
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                dao.insertSetup(updatedSetup)
+                setupRepository.updateUserPrivacy(receiveEmail)
+                Log.d("ListSetupViewModel", "Privacy settings updated: $receiveEmail")
+            } catch (e: Exception) {
+                Log.e("ListSetupViewModel", "Failed to update privacy settings", e)
+            }
         }
     }
 

@@ -35,6 +35,8 @@ interface SetupRepository {
     suspend fun logout()
     suspend fun updateUserLeague(leagueid: String, owneruserid: UUID, isSelected: Boolean)
     suspend fun sendSupportEmail(userEmail: String, category: String, subject: String, description: String): Boolean
+    suspend fun updateUserPrivacy(receiveEmail: Boolean)
+    suspend fun requestJoinLeague(joinCode: String)
 }
 
 @Singleton
@@ -272,6 +274,78 @@ class SetupRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun requestJoinLeague(joinCode: String) {
+        return withContext(Dispatchers.IO) {
+            val token = tokenManager.getToken() ?: ""
+            val url = "https://www.scoreprof.cloud/rpc/request_join_league"
+            val jsonBody = try {
+                JSONObject().apply {
+                    put("_league_code", joinCode)
+                    put("user_token", token)
+                }
+            } catch (e: Exception) {
+                println("TEST: [SetupRepository] requestJoinLeague JSON Construction Failed: ${e.message}")
+                throw e
+            }
+
+            val requestBody = jsonBody.toString()
+
+            val result = suspendCancellableCoroutine<String> { continuation ->
+                val stringRequest = object : StringRequest(
+                    Method.POST,
+                    url,
+                    { response ->
+                        if (continuation.isActive) {
+                            continuation.resume(response)
+                        }
+                    },
+                    { error ->
+                        if (error is AuthFailureError) {
+                            tokenManager.deleteToken()
+                            if (continuation.isActive) continuation.resumeWithException(
+                                IllegalStateException("SESSION_EXPIRED")
+                            )
+                            //return@StringRequest
+                        }
+
+                        val responseBody =
+                            error.networkResponse?.data?.let { String(it, Charsets.UTF_8) }
+                        println("Server error: ${error.message}, Body: $responseBody")
+                        if (continuation.isActive) {
+                            continuation.resumeWithException(error)
+                        }
+                    }
+                ) {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        val headers = HashMap<String, String>()
+                        return headers
+                    }
+
+                    override fun getBodyContentType(): String {
+                        return "application/json; charset=utf-8"
+                    }
+
+                    override fun getBody(): ByteArray {
+                        return requestBody.toByteArray(Charsets.UTF_8)
+                    }
+                }
+
+                stringRequest.retryPolicy = DefaultRetryPolicy(
+                    INITIAL_TIMEOUT_MS,
+                    MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+                )
+
+                continuation.invokeOnCancellation {
+                    stringRequest.cancel()
+                }
+
+                requestQueue.add(stringRequest)
+                Log.d("SetupRepository", "requestJoinLeague request sent")
+            }
+        }
+    }
+
     override suspend fun activateAccount(email: String, preferredLanguage: String) {
         return withContext(Dispatchers.IO) {
             val token = tokenManager.getToken() ?: ""
@@ -483,6 +557,45 @@ class SetupRepositoryImpl @Inject constructor(
 
                 requestQueue.add(stringRequest)
                 Log.d("SetupRepository", "updateUserCompetition request sent")
+            }
+        }
+    }
+
+    override suspend fun updateUserPrivacy(receiveEmail: Boolean) {
+        return withContext(Dispatchers.IO) {
+            val token = tokenManager.getToken() ?: ""
+            val url = "https://www.scoreprof.cloud/rpc/update_user_privacy"
+            val jsonBody = try {
+                JSONObject().apply {
+                    put("user_token", token)
+                    put("_receive_email", receiveEmail)
+                }
+            } catch (e: Exception) {
+                Log.e("SetupRepository", "updateUserPrivacy JSON failed: ${e.message}")
+                throw e
+            }
+            val requestBody = jsonBody.toString()
+
+            suspendCancellableCoroutine<String> { continuation ->
+                val stringRequest = object : StringRequest(
+                    Method.POST,
+                    url,
+                    { response -> if (continuation.isActive) continuation.resume(response) },
+                    { error ->
+                        if (error is AuthFailureError) {
+                            tokenManager.deleteToken()
+                            if (continuation.isActive) continuation.resumeWithException(IllegalStateException("SESSION_EXPIRED"))
+                        }
+                        if (continuation.isActive) continuation.resumeWithException(error)
+                    }
+                ) {
+                    override fun getBodyContentType(): String = "application/json; charset=utf-8"
+                    override fun getBody(): ByteArray = requestBody.toByteArray(Charsets.UTF_8)
+                }
+
+                stringRequest.retryPolicy = DefaultRetryPolicy(INITIAL_TIMEOUT_MS, MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+                continuation.invokeOnCancellation { stringRequest.cancel() }
+                requestQueue.add(stringRequest)
             }
         }
     }

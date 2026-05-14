@@ -62,6 +62,9 @@ interface ScoreProfDao {
     )
     fun getLeagueTable(leagueid: String, owneruserid: String): Flow<List<LeagueTable>>
 
+    @Query("SELECT leaguecode FROM leagues WHERE leagueid = :leagueid AND owneruserid = :owneruserid")
+    fun getLeagueCode(leagueid: String, owneruserid: UUID): String
+
     @Query("SELECT * FROM leagues WHERE UPPER(state) = 'ACTIVE' ORDER BY id ASC")
     suspend fun getSetupLeagues(): List<Leagues>
 

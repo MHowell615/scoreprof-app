@@ -101,4 +101,36 @@ class NotificationViewModel @Inject constructor(
             }
         }
     }
+
+    fun acceptJoinRequest(notification: AppNotification) {
+        viewModelScope.launch {
+            try {
+                // We extract the leagueid and joinerid from the notification object
+                // Ensure your AppNotification model has these fields or they are in the 'data' JSON field
+                val success = notificationRepository.acceptJoinRequest(
+                    token = token,
+                    leagueId = notification.leagueid ?: "",
+                    joinerId = notification.joinerid ?: ""
+                )
+
+                if (success) {
+                    // Mark as read and remove from local list or refresh
+                    markAsRead(notification.email ?: "", notification.notificationid)
+                    // Refresh the list to remove the request
+                    _notifications.value = _notifications.value.filter {
+                        it.notificationid != notification.notificationid
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("NotificationVM", "Error accepting join request", e)
+            }
+        }
+    }
+
+    fun declineJoinRequest(notification: AppNotification) {
+        viewModelScope.launch {
+            // Simply mark as read or delete from server
+            markAsRead(notification.email ?: "", notification.notificationid)
+        }
+    }
 }

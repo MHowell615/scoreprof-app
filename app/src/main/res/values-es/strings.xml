@@ -55,7 +55,7 @@
     <string name="forgot_password">¿Has olvidado tu contraseña?</string>
     <string name="privacy_policy_title">Política de privacidad</string>
     <string name="privacy_policy_content">ScoreProf respeta tu privacidad. \n    1. Información que recopilamos: Recopilamos tu dirección de correo electrónico para gestionar tu cuenta y tus pronósticos. \n    2. Servicios de terceros: Utilizamos Google AdMob para mostrar anuncios. Google puede utilizar identificadores de dispositivos para personalizar el contenido. \n    3. Seguridad de los datos: Tus datos se almacenan de forma segura en nuestros servidores privados. \n    4. Tus derechos: Puedes solicitar la eliminación de tu cuenta en cualquier momento poniéndote en contacto con el servicio de asistencia.</string>
-    <string name="copyright">Copyright © 2026 PikaWin</string>
+    <string name="copyright">Copyright © 2026 Muntjac Solutions</string>
     <string name="help_question1">¿Por dónde empiezo?</string>
     <string name="help_answer1">Ve a «Configuración», elige un nombre de usuario y, a continuación, selecciona las competiciones y ligas que quieras poder ver.</string>
     <string name="help_question2">¿Cómo hago una predicción?</string>
@@ -69,11 +69,11 @@
     <string name="help_question6">¿Puedo ver mis resultados?</string>
     <string name="help_answer6">Aunque las páginas de los partidos se abrirán en el próximo partido disponible, puedes desplazarte hacia arriba para ver los resultados. Si el equipo que has seleccionado sigue apareciendo en verde, tu pronóstico ha sido acertado. Si no es así, la selección se volverá roja.</string>
     <string name="help_question7">¿Cómo me uno a la liga de un amigo?</string>
-    <string name="help_answer7">Si un amigo te ha enviado una invitación, puedes ir a «Configuración» > «Ligas» y seleccionar la liga marcando la casilla correspondiente. Cuando vuelvas a la pantalla de inicio, selecciona la opción «Ligas» para ver la liga de tu amigo, en la que ahora estás incluido.</string>
+    <string name="help_answer7">Tu amigo tendrá que compartir contigo el código de la liga. A continuación, ve a «Configuración» > «Ligas» e introduce el código de la liga en la sección «Unirse a una liga», situada en la parte superior de la pantalla. Esto enviará una solicitud a tu amigo a través de las notificaciones de la aplicación, que deberá aceptar.</string>
     <string name="help_question8">¿Cómo puedo cambiar el idioma de visualización?</string>
     <string name="help_answer8">La aplicación utilizará de forma predeterminada el idioma configurado en tu teléfono, siempre que esté disponible en la aplicación. Si has cambiado recientemente la configuración de idioma de tu teléfono y el idioma que se muestra en la aplicación no es el correcto, accede a la pantalla de configuración y, a continuación, vuelve a la página de inicio. Esto reiniciará el idioma que se muestra. Si la aplicación sigue sin mostrarse en tu idioma, envía una solicitud de asistencia en la página «Ideas y errores» y la tendremos en cuenta para una futura actualización.</string>
     <string name="help_question9">¿Cómo se crea una liga?</string>
-    <string name="help_answer9">Ve a «Configuración» > «Ligas» y haz clic en el botón «+» situado al final de la lista de ligas. Debes darle un nombre a la liga y seleccionar una sola competición. A continuación, puedes invitar a tus amigos introduciendo sus direcciones de correo electrónico en el campo de texto situado en la parte inferior de la página y hacer clic en «Añadir» para confirmar que el correo electrónico es correcto. Una vez que hayas añadido los correos electrónicos de tus amigos, haz clic en el botón «Guardar» para crear la liga. Volverás a la pantalla de configuración de ligas. Asegúrate de que tu nueva liga está seleccionada para poder verla en la aplicación.</string>
+    <string name="help_answer9">Ve a «Configuración» > «Ligas» y haz clic en el botón «+» situado al final de la lista de ligas. Debes asignarle un nombre a la liga y seleccionar una sola competición. A continuación, puedes invitar a tus amigos compartiendo el código de la liga, que se genera al guardarla. Volverás a la pantalla de configuración de ligas. Asegúrate de que tu nueva liga esté seleccionada para poder verla en la aplicación.</string>
     <string name="help_question10">¿Cómo edito una liga?</string>
     <string name="help_answer10">Ve a «Configuración» > «Ligas» y haz clic en el icono de los tres puntos situado a la derecha de la liga que quieras editar. A continuación, selecciona «Editar liga». Recuerda guardar la liga una vez que hayas terminado de editarla. Ten en cuenta que solo puedes editar las ligas que hayas creado tú mismo.</string>
     <string name="help_question11">¿Cómo elimino una liga?</string>
@@ -82,4 +82,35 @@
     <string name="email_validation_text">Introduce una dirección de correo electrónico válida</string>
     <string name="invite_subject">%1$s te ha invitado a unirte a la liga \'%2$s\'.</string>
     <string name="invite_message">¡Hola!\n\n%1$s te ha invitado a unirte a la liga \'%2$s\' en la app ScoreProf.\n\nPara aceptar la invitación y empezar a jugar, abre la app ScoreProf y selecciona la liga en Configuración > Ligas.\n\nSi aún no tienes la app, puedes descargarla aquí: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\n¡Que disfrutes del juego!\n\nEl equipo de ScoreProf\n\n--- (English) ---\nHi! \n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nHappy playing!\nThe ScoreProf Team</string>
+    <string name="legal_notice_content">\n        De conformidad con lo dispuesto en los artículos 6-III y 19 de la Ley n.º 2004-575, de 21 de junio de 2004, relativa a la confianza en la economía digital (LCEN), se informa a los usuarios de ScoreProf de los siguientes avisos legales.\n\n\n        <b>Editor:</b> Muntjac Solutions\n\n        <b>Director de publicación:</b> Mark Howell, fundador\n\n        <b>Estatus:</b> Empresario individual (ejercicio profesional no regulado)\n\n        <b>SIRET:</b> 104 419 619 00010\n\n        <b>Inscripción:</b> Inscrito en el Registro Nacional de Empresas (RNE)\n\n        <b>Sede social:</b> 9 rue de Condé, Oficina 3, 33000 Burdeos, Francia\n\n        <b>Teléfono:</b> 07 87 27 59 08\n\n        <b>Correo electrónico:</b> contact@muntjac-solutions.com\n\n\n        <b>Protección de datos:</b> Para consultas sobre la privacidad de los datos, consulte nuestra Política de privacidad o póngase en contacto con support@muntjac-solutions.com.\n\n\n        <b>Alojamiento:</b> Esta aplicación está alojada por:\n\n\n        <b>Digital Ocean Limited</b>\n\n        Suite 7 Savant House, 63-65 Camden High Street, Londres NW1 7JL, Reino Unido\n\n        Contacto: https://www.digitalocean.com/company/contact/support\n\n\n        <b>Amazon Web Services Emea Sarl, Sucursal de Suecia</b>\n\n        Malmskillnadsgatan 36, 111 57 Estocolmo, Suecia\n\n        Contacto: https://aws.amazon.com/fr/contact-us/?nc1=f_m</string>
+    <string name="privacy">Privacidad</string>
+    <string name="privacy_settings">Configuración de privacidad</string>
+    <string name="receive_emails">Recibe notificaciones sobre los partidos por correo electrónico</string>
+    <string name="allow_analytics">Permitir la recopilación de datos analíticos anónimos</string>
+    <string name="league_created">Liga creada</string>
+    <string name="league_code">Código de liga</string>
+    <string name="league_share">Comparte este código con tus amigos.</string>
+    <string name="join_league_title">Unirse a una Liga</string>
+    <string name="enter_code_hint">Introduce el código de la liga</string>
+    <string name="join_btn">Unirse</string>
+    <string name="league_created_success">¡Liga creada con éxito!</string>
+    <string name="share_league_msg">¡Únete a mi liga ScoreProf! Código: %1$s</string>
+    <string name="copy_to_clipboard">Copiar al portapapeles</string>
+    <string name="request_sent">Solicitud de unión enviada al propietario.</string>
+    <string name="notif_join_request_title">Solicitud de unión</string>
+    <string name="accept">Aceptar</string>
+    <string name="ignore">Ignorar</string>
+    <string name="reset_code_sent">Se ha enviado un código de seguridad a través de Brevo.</string>
+    <string name="legal_notice_title">Aviso legal</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="notification">Notificación</string>
+    <string name="short_password_msg">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="reset_password">Restablecer contraseña</string>
+    <string name="forgot_password_text1">Introduce tu dirección de correo electrónico para recibir un código de restablecimiento de 6 dígitos.</string>
+    <string name="reset_password_text1">Introduce el código que te han enviado por correo electrónico y tu nueva contraseña.</string>
+    <string name="send_reset_code">Enviar código de restablecimiento</string>
+    <string name="update_password">Actualizar contraseña</string>
+    <string name="back_to_login">Volver al inicio de sesión</string>
+    <string name="new_password">Nueva contraseña</string>
+    <string name="six_digit_code">Código de 6 dígitos</string>
 </resources>

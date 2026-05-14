@@ -166,9 +166,9 @@ class LoginViewModel @Inject constructor(
             try {
                 // 1. Prepare the JSON Body for PostgreSQL RPC
                 val params = JSONObject().apply {
-                    put("email", email.trim())
-                    put("code", code.trim())
-                    put("new_password", newPassword.trim())
+                    put("_email", email.trim())
+                    put("_code", code.trim())
+                    put("_new_password", newPassword.trim())
                 }
 
                 val url = "https://www.scoreprof.cloud/rpc/reset_password"
@@ -216,20 +216,23 @@ class LoginViewModel @Inject constructor(
     }
 
     fun requestReset(email: String) {
-        viewModelScope.launch {
-            val params = JSONObject().apply {
-                put("email", email)
-            }
+        val currentEmail = email.trim()
+        if (currentEmail.isBlank()) return
 
+        _isLoading.value = true // Start loader
+
+        viewModelScope.launch {
             val url = "https://www.scoreprof.cloud/rpc/request_password_reset"
             val authKey = BuildConfig.SPROF_AUTH_KEY
             val language = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en"
 
             val jsonBody = JSONObject().apply {
-                put("email", email)
-                put("language", language)
-                put("authKey", authKey)
+                put("email_input", email)
+                put("language_input", language)
+                put("auth_key_input", authKey)
             }
+
+            //println("TEST: [RequestReset] JSON: $jsonBody")
 
             val request = JsonObjectRequest(
                 Request.Method.POST, url, jsonBody,
@@ -239,7 +242,9 @@ class LoginViewModel @Inject constructor(
                 },
                 { error ->
                     _isLoading.value = false
+                    val statusCode = error.networkResponse?.statusCode
                     val serverData = error.networkResponse?.data?.let { String(it) }
+                    println("ScoreProfAuthLog: Reset Error [Status $statusCode]: $serverData")
                     val message = "Failed to send reset code. Please check your email and try again."
                     viewModelScope.launch {
                         _eventFlow.emit(UiEvent.Error(message))
@@ -248,7 +253,7 @@ class LoginViewModel @Inject constructor(
             )
             // Set timeout to 15s to allow SES to process
             request.retryPolicy = DefaultRetryPolicy(
-                15000,
+                20000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
             )

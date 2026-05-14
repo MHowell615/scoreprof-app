@@ -55,7 +55,7 @@
     <string name="forgot_password">Ha dimenticato la password</string>
     <string name="privacy_policy_title">Politica sulla riservatezza</string>
     <string name="privacy_policy_content">ScoreProf rispetta la tua privacy.\n\n1. Informazioni che raccogliamo: Raccogliamo il tuo indirizzo email per gestire il tuo account e le tue previsioni.\n\n2. Servizi di terze parti: Utilizziamo Google AdMob per visualizzare annunci pubblicitari. Google potrebbe utilizzare identificatori di dispositivo per personalizzare i contenuti.\n\n3. Sicurezza dei dati: I tuoi dati sono archiviati in modo sicuro sui nostri server privati.\n\n4. I tuoi diritti: Puoi richiedere la cancellazione del tuo account in qualsiasi momento contattando l\'assistenza.</string>
-    <string name="copyright">Copyright © 2026 PikaWin</string>
+    <string name="copyright">Copyright © 2026 Muntjac Solutions</string>
     <string name="email_validation_text">Si prega di inserire un indirizzo email valido</string>
     <string name="help_question1">Come comincio?</string>
     <string name="help_answer1">Vai su Configurazione, scegli un nome utente per il gioco, quindi seleziona le competizioni e i campionati che desideri visualizzare.</string>
@@ -70,11 +70,11 @@
     <string name="help_question6">Posso visualizzare i miei risultati?</string>
     <string name="help_answer6">Mentre le pagine delle partite si apriranno alla prima partita disponibile, puoi scorrere verso l\'alto per visualizzare i risultati. Se la squadra che hai selezionato rimane verde, la tuo pronostico era corretta. In caso contrario, la selezione diventerà rossa.</string>
     <string name="help_question7">Come faccio a unirmi alla lega di un amico?</string>
-    <string name="help_answer7">Se un tuo amico ti ha inviato un invito, puoi andare su \"Configurazione\" > \"Leghe\" e selezionare la lega desiderata spuntando la casella corrispondente. Una volta tornato alla schermata principale, potrai selezionare l\'opzione \"Leghe\" per visualizzare la lega del tuo amico, a cui ora partecipi anche tu.</string>
+    <string name="help_answer7">Il tuo amico dovrà comunicarti il codice del campionato. A quel punto, vai su “Configurazione” > ‘Leghe’ e inserisci il codice nella sezione “Partecipa a un lega” nella parte superiore dello schermo. In questo modo verrà inviata una richiesta al tuo amico tramite le notifiche dell\'app, che dovrà accettare.</string>
     <string name="help_question8">Come faccio a cambiare la lingua visualizzata?</string>
     <string name="help_answer8">L\'applicazione utilizzerà per impostazione predefinita la lingua definita sul telefono, se disponibile al suo interno. Se hai recentemente modificato le configurazione della lingua sul telefono e la lingua visualizzata nell\'applicazione non è corretta, accedi alla schermata Impostazioni e poi torna alla pagina iniziale. In questo modo la lingua visualizzata verrà ripristinata. Se l\'applicazione continua a non essere visualizzata nella tua lingua, segnala il problema nella pagina \"Idee e errori\" e lo prenderemo in considerazione per una futura versione.</string>
     <string name="help_question9">Come si crea una lega?</string>
-    <string name="help_answer9">Vai su \"Configurazione\" > \"Leghe\" e clicca sul pulsante \"+\" in fondo all\'elenco delle leghe. Devi assegnare un nome alla lega e selezionare una singola competizione. Puoi quindi invitare gli amici inserendo i loro indirizzi email nel campo di testo in fondo alla pagina e cliccare su \"Aggiungi\" per confermare che l\'indirizzo email sia corretto. Dopo aver aggiunto gli indirizzi email dei tuoi amici, clicca sul pulsante \"Salva\" per creare la lega. Verrai reindirizzato alla schermata \"Configurazione leghe\". Assicurati che la tua nuova lega sia selezionata per poterla visualizzare nell\'applicazione.</string>
+    <string name="help_answer9">Vai su “Configura” > ‘Leghe’ e clicca sul pulsante “+” in fondo all\'elenco dei leghe. Devi assegnare un nome alla lega e selezionare un unico torneo. A questo punto puoi invitare gli amici condividendo il codice della lega, che ti verrà fornito al momento del salvataggio. Verrai reindirizzato alla schermata “Configura leghe”. Assicurati che il tua nuova lega sia selezionato per poterlo visualizzare nell\'applicazione.</string>
     <string name="help_question10">Come si modifica una lega?</string>
     <string name="help_answer10">Vai su \"Configurzione\" > \"Leghe\" e clicca sull\'icona con i tre puntini a destra della lega che desideri modificare. Quindi seleziona \"Modifica lega\". Ricorda di salvare la lega una volta completata la modifica. Tieni presente che puoi modificare solo le leghe che hai creato.</string>
     <string name="help_question11">Come si elimina una lega?</string>
@@ -82,4 +82,35 @@
     <string name="help_question12">Come faccio a segnalare un problema o a proporre un\'idea?</string>
     <string name="invite_subject">%1$s ti ha invitato a unirti alla lega \'%2$s\'.</string>
     <string name="invite_message">Ciao!\n\n%1$s ti ha invitato a unirti al campionato \'%2$s\' sull\'app ScoreProf.\n\nPer accettare l\'invito e iniziare a giocare, apri l\'app ScoreProf e seleziona il campionato tramite Impostazioni > Campionati.\n\nSe non hai ancora l\'app, puoi scaricarla qui: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nBuon divertimento!\nIl team di ScoreProf\n\n--- (English) ---\nHi! \n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nHappy playing!\nThe ScoreProf Team</string>
+    <string name="legal_notice_content">\n        Ai sensi delle disposizioni degli articoli 6-III e 19 della legge n. 2004-575 del 21 giugno 2004 sulla fiducia nell\'economia digitale (LCEN), gli utenti di ScoreProf sono informati delle presenti note legali.\n\n\n        <b>Editore:</b> Muntjac Solutions\n\n        <b>Direttore della pubblicazione:</b> Mark Howell, Fondatore\n\n        <b>Status:</b> Imprenditore individuale (Attività professionale non regolamentata)\n\n        <b>SIRET:</b> 104 419 619 00010\n\n        <b>Registrazione:</b> Iscritto al Registro Nazionale delle Imprese (RNE)\n\n        <b>Sede legale:</b> 9 rue de Condé, Bureau 3, 33000 Bordeaux, Francia\n\n        <b>Telefono:</b> 07 87 27 59 08\n\n        <b>E-mail:</b> contact@muntjac-solutions.com\n\n\n        <b>Protezione dei dati:</b> Per domande sulla privacy dei dati, consulta la nostra Informativa sulla privacy o contatta support@muntjac-solutions.com.\n\n\n        <b>Hosting:</b> Questa applicazione è ospitata da:\n\n\n        <b>Digital Ocean Limited</b>\n\n        Suite 7 Savant House, 63-65 Camden High Street, Londra NW1 7JL, Regno Unito\n\n        Contatto: https://www.digitalocean.com/company/contact/support\n\n\n        <b>Amazon Web Services Emea Sarl, Filiale Svezia</b>\n\n        Malmskillnadsgatan 36, 111 57 Stoccolma, Svezia\n\n        Contatto: https://aws.amazon.com/fr/contact-us/?nc1=f_m</string>
+    <string name="privacy">Privacy</string>
+    <string name="privacy_settings">Impostazioni sulla privacy</string>
+    <string name="receive_emails">Ricevi le notifiche relative ai giochi via e-mail</string>
+    <string name="allow_analytics">Consenti la raccolta anonima dei dati analitici</string>
+    <string name="league_created">Lega creata</string>
+    <string name="league_code">Codice della Lega</string>
+    <string name="league_share">Condividi questo codice con i tuoi amici.</string>
+    <string name="join_league_title">Unisciti a una Lega</string>
+    <string name="enter_code_hint">Inserisci il codice della lega</string>
+    <string name="join_btn">Unisciti</string>
+    <string name="league_created_success">Lega creata con successo!</string>
+    <string name="share_league_msg">Unisciti alla mia lega ScoreProf! Codice: %1$s</string>
+    <string name="copy_to_clipboard">Copia negli appunti</string>
+    <string name="request_sent">Richiesta di partecipazione inviata al proprietario.</string>
+    <string name="notif_join_request_title">Richiesta di partecipazione</string>
+    <string name="accept">Accetta</string>
+    <string name="ignore">Ignora</string>
+    <string name="reset_code_sent">Un codice di sicurezza è stato inviato tramite Brevo.</string>
+    <string name="legal_notice_title">Note legali</string>
+    <string name="notifications">Notifiche</string>
+    <string name="notification">Notifica</string>
+    <string name="short_password_msg">La password deve contenere almeno 6 caratteri</string>
+    <string name="reset_password">Reimposta password</string>
+    <string name="forgot_password_text1">Inserisci il tuo indirizzo e-mail per ricevere un codice di reimpostazione di 6 cifre.</string>
+    <string name="reset_password_text1">Inserisci il codice che ti è stato inviato via e-mail e la tua nuova password.</string>
+    <string name="send_reset_code">Invia codice di ripristino</string>
+    <string name="update_password">Aggiorna password</string>
+    <string name="back_to_login">Torna alla pagina di accesso</string>
+    <string name="new_password">Nuova password</string>
+    <string name="six_digit_code">Codice a 6 cifre</string>
 </resources>

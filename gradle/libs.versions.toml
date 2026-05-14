@@ -20,6 +20,7 @@ material3 = "1.4.0"
 secrets-plugin = "2.0.1"
 uiGraphics = "1.10.6"
 foundation = "1.10.6"
+ui = "1.11.1"
 
 [libraries]
 # Core & Lifecycle
@@ -59,6 +60,7 @@ play-services-ads = { group = "com.google.android.gms", name = "play-services-ad
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "uiGraphics" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

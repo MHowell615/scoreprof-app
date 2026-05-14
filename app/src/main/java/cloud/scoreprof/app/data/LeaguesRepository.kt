@@ -34,6 +34,11 @@ import org.json.JSONObject
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 
+data class LeagueCreationResult(
+    val newId: String,
+    val leagueCode: String
+)
+
 interface LeaguesRepository {
     suspend fun getLeagues(userid: String): List<Leagues>
     fun getLeagueTable(leagueid: String, owneruserid: String, sortBy: String): Flow<List<LeagueTable>>
@@ -43,7 +48,7 @@ interface LeaguesRepository {
         leagueHeader: LeagueHeader,
         userLeague: UserLeague,
         userEmail: String
-    ): String
+    ): LeagueCreationResult
     suspend fun inviteUserToLeague(leagueid: String, userEmail: String)
     suspend fun getEditLeague(leagueid: String, owneruserid: UUID): LeagueHeader?
     suspend fun saveEditLeague(
@@ -62,6 +67,9 @@ interface LeaguesRepository {
     )
     suspend fun softDeleteLeague(leagueid: String, owneruserid: UUID)
     suspend fun softDeleteLeagueInvitee(leagueid: String, owneruserid: UUID, email: String)
+    fun generateLeagueCode(length: Int = 7): String
+    companion object
+
 }
 
 @Singleton
@@ -137,6 +145,14 @@ class LeaguesRepositoryImpl @Inject constructor(
             // Step 4: Return the data from the database.
             localLeagues
         }
+    }
+
+    override fun generateLeagueCode(length: Int): String {
+        // We exclude 0, O, 1, and I to prevent user entry errors
+        val allowedChars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"
+        return (1..length)
+            .map { allowedChars.random() }
+            .joinToString("")
     }
 
     override fun getLeagueTable(leagueid: String, owneruserid: String, sortBy: String): Flow<List<LeagueTable>> {
@@ -257,10 +273,11 @@ class LeaguesRepositoryImpl @Inject constructor(
 
     override suspend fun createNewLeague(
         leagueHeader: LeagueHeader,userLeague: UserLeague, userEmail: String
-    ): String {
+    ): LeagueCreationResult {
         return withContext(Dispatchers.IO) {
             val token = tokenManager.getToken() ?: ""
             val url = "https://www.scoreprof.cloud/rpc/create_new_league"
+
 
             val jsonBody = try {
                 JSONObject().apply {
@@ -307,7 +324,7 @@ class LeaguesRepositoryImpl @Inject constructor(
             }
 
             // now update the email invitees onto the server
-            userLeague.userleagueusers.forEach {
+            /*userLeague.userleagueusers.forEach {
                 if (it.email != userEmail) {
                     updateLeagueInvitee(
                         leagueid = leagueHeader.leagueid,
@@ -317,12 +334,18 @@ class LeaguesRepositoryImpl @Inject constructor(
                         selected = false
                     )
                 }
-            }
+            }*/
 
             // the following id is not equivalent to the leagueid
             // id = INT sequence
             // leagueid = short set of chars as a unique code for the league
-            val _newid : String = result
+            //val _newid : String = result
+            val jsonResponse = JSONObject(result)
+            val leagueCode = jsonResponse.optString("league_code", "")
+            val _newid = jsonResponse.optString("new_id", "")
+
+            // DAO has Setup data for the user, which includes a subset called Leagues.
+            // This subset contains id and leaguecode which will both need updating.
 
             // 2. Local DAO Sync
             dao.insertLeagueHeader(leagueHeader)
@@ -332,10 +355,10 @@ class LeaguesRepositoryImpl @Inject constructor(
 
             setupRepository.refreshSetupFromServer(leagueHeader.owneruserid)
 
-            // Note: You mentioned DAO doesn't have UserLeagues,
-            // but if you have a local table for it, insert here.
-
-            _newid
+            LeagueCreationResult(
+                newId = _newid,
+                leagueCode = leagueCode
+            )
         }
     }
 

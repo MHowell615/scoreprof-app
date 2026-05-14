@@ -158,7 +158,7 @@ fun HomeScreen(
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(6.dp),
+                            .padding(4.dp),
                         textAlign = TextAlign.Center,
                         text = stringResource(id = id),
                         style = TextStyle(
@@ -220,6 +220,44 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth()
+                        .padding(bottom = 6.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Make the Privacy Policy clickable
+                    Text(
+                        text = stringResource(R.string.privacy_policy_title),
+                        style = footerStyle.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.clickable {
+                            val lang = preferredLanguage
+                            val url = if (lang == "fr") "https://www.muntjac-solutions.fr/privacy" else "https://www.muntjac-solutions.com/privacy"
+                            val intent = CustomTabsIntent.Builder()
+                                .setShowTitle(true)
+                                .build()
+                            intent.launchUrl(context, Uri.parse(url))
+                        }
+                    )
+                    Text(
+                        text = " | ",
+                        style = footerStyle,
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    )
+                    // Make the Legal Notice clickable
+                    Text(
+                        text = stringResource(R.string.legal_notice_title),
+                        style = footerStyle.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.clickable {
+                            val lang = preferredLanguage
+                            val url = if (lang == "fr") "https://www.muntjac-solutions.fr/legal" else "https://www.muntjac-solutions.com/legal"
+                            val intent = CustomTabsIntent.Builder()
+                                .setShowTitle(true)
+                                .build()
+                            intent.launchUrl(context, Uri.parse(url))
+                        }
+                    )
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth()
                         .padding(bottom = 24.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
@@ -227,26 +265,6 @@ fun HomeScreen(
                     Text(
                         text = stringResource(R.string.copyright),
                         style = footerStyle
-                    )
-
-                    Text(
-                        text = " | ",
-                        style = footerStyle,
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                    )
-
-                    // Make the Privacy Policy clickable
-                    Text(
-                        text = stringResource(R.string.privacy_policy_title),
-                        style = footerStyle.copy(fontWeight = FontWeight.Bold),
-                        modifier = Modifier.clickable {
-                            val lang = preferredLanguage
-                            val url = if (lang == "en") "https://scoreprof.cloud/privacy" else "https://scoreprof.cloud/$lang/privacy"
-                            val intent = CustomTabsIntent.Builder()
-                                .setShowTitle(true)
-                                .build()
-                            intent.launchUrl(context, Uri.parse(url))
-                        }
                     )
                 }
             }
@@ -293,7 +311,7 @@ fun HomeTopBar(
                     contentScale = ContentScale.Fit
                 )
                 //Spacer(modifier = Modifier.width(8.dp))
-                Text(
+                /*Text(
                     text = "ScoreProf",
                     style = TextStyle(
                         fontFamily = FontFamily.SansSerif,
@@ -303,7 +321,7 @@ fun HomeTopBar(
                         letterSpacing = (-0.5).sp,
                         color = Color(0xFFFFAD5A)
                     )
-                )
+                )*/
             }
 
             // 2. ICONS GROUP (On the Right)
@@ -360,10 +378,14 @@ fun HomeTopBar(
                                         showMenu = false
                                         if (notification.type == NotificationType.LEAGUE_INVITE) {
                                             navController.navigate(
-                                                "notifications_screen/${notification.notificationid}/${notification.email}"
+                                                "notifications_screen/${notification.notificationid}"
+                                            )
+                                        } else if (notification.type == NotificationType.JOIN_REQUEST) {
+                                            navController.navigate(
+                                                "notifications_screen/${notification.notificationid}"
                                             )
                                         } else {
-                                            navController.navigate("setup_league_screen/$userid")
+                                            navController.navigate("notifications_screen")
                                         }
                                     }
                                 )

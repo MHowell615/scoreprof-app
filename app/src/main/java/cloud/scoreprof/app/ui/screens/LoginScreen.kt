@@ -96,7 +96,7 @@ fun LoginScreen(
         ) {
             Text(text = stringResource(R.string.scoreprof_login), style = MaterialTheme.typography.headlineMedium)
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(26.dp))
 
             OutlinedTextField(
                 value = email,
@@ -129,7 +129,7 @@ fun LoginScreen(
                 supportingText = {
                     if (isPasswordTooShort) {
                         Text(
-                            "Password must be at least 6 characters",
+                            stringResource(R.string.short_password_msg),
                             color = MaterialTheme.colorScheme.error
                         )
                     }

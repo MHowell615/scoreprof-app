@@ -54,11 +54,11 @@
     <string name="help_question6">Can I see my results?</string>
     <string name="help_answer6">Whilst Match pages will open on the next available match, you can scroll up to see results. If your selected team remains green, your prediction was good. If not, the selection will turn red.</string>
     <string name="help_question7">How do I join a friend\'s league?</string>
-    <string name="help_answer7">If your friend has sent you an invite, you can go to \'Setup\' > \'Leagues\', then select the league by checking the checkbox. Once you return to the home screen, you can then select the Leagues option to see your friends league with you now in it.</string>
+    <string name="help_answer7">Your friend will need to share the league code with you. You then go to \'Setup\' > \'Leagues\', and enter the league code into the \'Join a league\' section at the top of the screen. This will make a request to your friend via their in-app notifications, which they will need to accept.</string>
     <string name="help_question8">How do I change the language displayed?</string>
     <string name="help_answer8">The application will default to the language defined on your phone, if it is available within the application. If you have recently changed the language settings on your phone and the language displayed in the application is not correct, go into the Setup screen and then return to the Home page. This will reinitialise the language displayed. If the application still doesn\'t display in your language, please log a ticket in the \'Ideas &amp; Bugs\' page and we will review for a future release.</string>
     <string name="help_question9">How do I create a league?</string>
-    <string name="help_answer9">Go to \'Setup\' > \'Leagues\' and click the \'+\' button at the bottom of the list of leagues. You must give the league a name and select a single competition. You can then invite friends by inserting their emails into the email text field at the bottom of the page, and click \'Add\' to confirm the email is correct. Once you have added your friends\' emails, click on the Save button to create the league. You will be returned to the Setup Leagues screen. Ensure your new league is selected for you to see it in the application.</string>
+    <string name="help_answer9">Go to \'Setup\' > \'Leagues\' and click the \'+\' button at the bottom of the list of leagues. You must give the league a name and select a single competition. You can then invite friends by sharing the league code, which is provided on saving the league. You will be returned to the Setup Leagues screen. Ensure your new league is selected for you to see it in the application.</string>
     <string name="help_question10">How do I edit a league?</string>
     <string name="help_answer10">Go to \'Setup\' > \'Leagues\' and click the triple dot icon to the right of the league you wish to edit. Then choose \'Edit League\'. Remember to save your league once the edit is complete. Note, you can only edit leagues which you have created.</string>
     <string name="help_question11">How do I delete a league?</string>
@@ -91,10 +91,10 @@
         <b>7. Policy Changes:</b> Material changes will be notified via our News section. \n\n
         <b>8. Full Policy:</b> https://www.muntjac-solutions.com/privacy
     </string>
-    <string name="copyright">Copyright © 2026 ScoreProf</string>
+    <string name="copyright">Copyright © 2026 Muntjac Solutions</string>
     <string name="email_validation_text">Please enter a valid email address</string>
     <string name="invite_subject">%1$s invited you to join league \'%2$s\'</string>
-    <string name="invite_message">Hi!\n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nHappy playing!\nThe ScoreProf Team</string>
+    <string name="invite_message">Hi!\n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nDon\'t want these invites? You can opt-out at: https://www.muntjac-solutions.com/opt-out\n\nHappy playing!\nThe ScoreProf Team\n\n---\nLegal Notice: https://www.muntjac-solutions.com/legal</string>
     <string name="legal_notice_title">Legal Notice</string>
     <string name="legal_notice_content">
         In accordance with the provisions of Articles 6-III and 19 of Law No. 2004-575 of June 21, 2004 for Confidence in the Digital Economy (LCEN), users of ScoreProf are informed of these legal notices.\n\n
@@ -115,4 +115,34 @@
         Malmskillnadsgatan 36, 111 57 Stockholm, Sweden\n
         Contact: https://aws.amazon.com/fr/contact-us/?nc1=f_m
     </string>
+    <string name="privacy">Privacy</string>
+    <string name="privacy_settings">Privacy Settings</string>
+    <string name="receive_emails">Receive game notifications via email</string>
+    <string name="allow_analytics">Allow anonymous analytics collection</string>
+    <string name="league_created">League created</string>
+    <string name="league_code">League code</string>
+    <string name="league_share">Share this code with your friends.</string>
+    <string name="join_league_title">Join a League</string>
+    <string name="enter_code_hint">Enter league code</string>
+    <string name="join_btn">Join</string>
+    <string name="league_created_success">League created successfully!</string>
+    <string name="share_league_msg">Join my ScoreProf league! Code: %1$s</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="request_sent">Join request sent to owner.</string>
+    <string name="notif_join_request_title">Join Request</string>
+    <string name="accept">Accept</string>
+    <string name="ignore">Ignore</string>
+    <string name="reset_code_sent">A security code has been sent via Brevo.</string>
+    <string name="notifications">Notifications</string>
+    <string name="notification">Notification</string>
+    <string name="short_password_msg">Password must be at least 6 characters</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="forgot_password_text1">Enter your email address to receive a 6-digit reset code.</string>
+    <string name="reset_password_text1">Enter the code sent to your email and your new password.</string>
+    <string name="send_reset_code">Send Reset Code</string>
+    <string name="update_password">Update Password</string>
+    <string name="back_to_login">Back to Login</string>
+    <string name="new_password">New Password</string>
+    <string name="six_digit_code">6-Digit Code</string>
+    <!-- <string name="league_code">Codice della Lega</string> -->
 </resources>

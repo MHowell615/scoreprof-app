@@ -61,6 +61,7 @@ import cloud.scoreprof.app.ui.view_models.VersionViewModel
 import cloud.scoreprof.app.ui.screens.ForcedUpdateScreen
 import cloud.scoreprof.app.ui.screens.ForgotPasswordScreen
 import cloud.scoreprof.app.ui.screens.NotificationScreen
+import cloud.scoreprof.app.ui.screens.SetupPrivacyScreen
 import cloud.scoreprof.app.ui.view_models.LoginViewModel
 import cloud.scoreprof.app.ui.view_models.NotificationViewModel
 import com.google.android.gms.ads.MobileAds
@@ -323,10 +324,9 @@ fun AppNavigation(
                 }
 
                 composable(
-                    "notifications_screen/{notificationid}/{email}",
+                    "notifications_screen/{notificationid}",
                     arguments = listOf(
-                        navArgument("notificationid") { type = NavType.IntType },
-                        navArgument("email") { type = NavType.StringType }
+                        navArgument("notificationid") { type = NavType.IntType }
                     )
                 ) { backStackEntry ->
                     val parentEntry = remember(backStackEntry) {
@@ -403,6 +403,26 @@ fun AppNavigation(
                     }
 
                     SetupCompetitionsScreen(
+                        navController = navController,
+                        setupViewModel = setupViewModel,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                composable("setup_privacy_screen/{userid}") { backStackEntry ->
+                    val parentEntry = remember(backStackEntry) {
+                        navController.getBackStackEntry("main_graph/{userid}/{email}")
+                    }
+                    val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
+                    val setupState by setupViewModel.setup.collectAsState()
+                    val useridString = backStackEntry.arguments?.getString("userid")
+                    val userid = try {
+                        UUID.fromString(useridString)
+                    } catch (e: Exception) {
+                        null
+                    }
+
+                    SetupPrivacyScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
                         modifier = Modifier.fillMaxSize()

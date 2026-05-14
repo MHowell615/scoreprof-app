@@ -23,7 +23,8 @@ data class AppNotification(
     val type: NotificationType,
     val lastmodified: String,
     val title: String? = null,
-    val message: String? = null
+    val message: String? = null,
+    val joinerid: String?
 )
 
 @Serializable
@@ -48,5 +49,9 @@ data class SendNotification(
 
 enum class NotificationType {
     LEAGUE_INVITE,
-    GENERAL
+    JOIN_REQUEST,
+    GENERAL;
+
+    // Helper to check if it's an actionable request
+    fun isActionable(): Boolean = this == JOIN_REQUEST || this == LEAGUE_INVITE
 }

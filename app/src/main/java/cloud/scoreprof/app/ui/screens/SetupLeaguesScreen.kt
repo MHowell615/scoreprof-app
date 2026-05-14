@@ -3,11 +3,13 @@ package cloud.scoreprof.app.ui.screens
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,14 +42,20 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import cloud.scoreprof.app.domain.model.Leagues
+import cloud.scoreprof.app.ui.components.AdBanner
 import com.google.firebase.crashlytics.crashlytics
 import com.google.firebase.Firebase
 
@@ -71,6 +79,7 @@ fun SetupLeaguesScreen(
     val userid = setup?.userid
     val username = setup?.name ?: ""
     val email = setup?.email ?: ""
+    var joinCode by remember { mutableStateOf("")}
 
     // Log anonymous context to Crashlytics to help debug if this screen fails
     LaunchedEffect(userid) {
@@ -130,7 +139,59 @@ fun SetupLeaguesScreen(
                 .padding(horizontal = 4.dp)
         ) {
             item {
-                Spacer(modifier = Modifier.height(16.dp))
+                //Spacer(modifier = Modifier.height(12.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Join a League",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(top = 6.dp)
+                        ) {
+                            OutlinedTextField(
+                                value = joinCode, // State variable
+                                onValueChange = { if (it.length <= 10) joinCode = it.uppercase() },
+                                label = { Text("Enter Code") },
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedContainerColor = Color.White,
+                                    unfocusedContainerColor = Color.White,
+                                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                    focusedLabelColor = MaterialTheme.colorScheme.primary
+                                ),
+                                modifier = Modifier.weight(1f),
+                                singleLine = true
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = { setupViewModel.requestJoinLeague(joinCode) },
+                                enabled = joinCode.length >= 5
+                            ) {
+                                Text("Join")
+                            }
+                        }
+                    }
+                }
+            }
+            item {
+                //Spacer(modifier = Modifier.height(4.dp))
+                Box( contentAlignment = Alignment.Center ) {
+                    AdBanner(
+                        modifier = Modifier.fillMaxWidth(),
+                        isMediumRectangle = true
+                    )
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.height(14.dp))
                 Text(
                     text = stringResource(id = R.string.leagues),
                     style = TextStyle(
@@ -138,8 +199,43 @@ fun SetupLeaguesScreen(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
                     ),
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(bottom = 10.dp)
                 )
+            }
+            item {
+                //Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = button_background,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    onClick = {
+
+                        //println("TEST: userid=$userid")
+                        if (userid != null) {
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                key = "competitions",
+                                value = ArrayList(competitions.map { it.item })
+                            )
+                            navController.navigate("create_new_league/${userid}/${username}/{$email}")
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp)
+                ) {
+                    Text(
+                        text = "+",
+                        textAlign = TextAlign.Center,
+                        style = TextStyle(
+                            fontSize = 28.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
             }
             items(
                 activeLeagues,
@@ -149,6 +245,7 @@ fun SetupLeaguesScreen(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+
                             // 1. The main selectable area (Checkboxes + Name)
                             // We use weight(1f) to push the action icons to the right
                             Row(modifier = Modifier.weight(1f)) {
@@ -217,7 +314,7 @@ fun SetupLeaguesScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            item {
+            /*item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     colors = ButtonDefaults.buttonColors(
@@ -250,7 +347,7 @@ fun SetupLeaguesScreen(
                         modifier = Modifier.weight(1f)
                     )
                 }
-            }
+            }*/
         }
     }
 }

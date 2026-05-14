@@ -9,11 +9,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import cloud.scoreprof.app.R
 import cloud.scoreprof.app.ui.view_models.LoginViewModel
 
 @Composable
@@ -38,17 +40,17 @@ fun ForgotPasswordScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = if (step == 1) "Forgot Password" else "Reset Password",
+                text = if (step == 1) stringResource(R.string.forgot_password) else stringResource(R.string.reset_password),
                 style = MaterialTheme.typography.headlineMedium
             )
 
             if (step == 1) {
-                Text("Enter your email address to receive a 6-digit reset code.")
+                Text(stringResource(R.string.forgot_password_text1))
 
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email Address") },
+                    label = { Text(stringResource(R.string.email)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -60,27 +62,27 @@ fun ForgotPasswordScreen(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = email.contains("@")
                 ) {
-                    Text("Send Reset Code")
+                    Text(stringResource(R.string.send_reset_code))
                 }
             } else {
-                Text("Enter the code sent to your email and your new password.")
+                Text(stringResource(R.string.reset_password_text1))
 
                 OutlinedTextField(
                     value = code,
                     onValueChange = { code = it },
-                    label = { Text("6-Digit Code") },
+                    label = { Text(stringResource(R.string.six_digit_code)) },
                     modifier = Modifier.fillMaxWidth()
                 )
 
                 OutlinedTextField(
                     value = newPassword,
                     onValueChange = { newPassword = it },
-                    label = { Text("New Password") },
+                    label = { Text(stringResource(R.string.new_password)) },
                     isError = isPasswordTooShort,
                     supportingText = {
                         if (isPasswordTooShort) {
                             Text(
-                                "Password must be at least 6 characters",
+                                stringResource(R.string.short_password_msg),
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
@@ -109,12 +111,12 @@ fun ForgotPasswordScreen(
                     modifier = Modifier.fillMaxWidth(),
                     enabled = code.length == 6 && newPassword.length >= 6
                 ) {
-                    Text("Update Password")
+                    Text(stringResource(R.string.update_password))
                 }
             }
 
             TextButton(onClick = { navController.popBackStack() }) {
-                Text("Back to Login")
+                Text(stringResource(R.string.back_to_login))
             }
         }
     }

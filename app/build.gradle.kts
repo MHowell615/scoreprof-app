@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.compose.ui)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.material3)

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.relocation.BringIntoViewRequester
@@ -55,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import cloud.scoreprof.app.R
+import cloud.scoreprof.app.data.ScoreProfDao
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.dropdown_background
 import cloud.scoreprof.app.ui.theme.sub_dropdown_background
@@ -114,12 +116,16 @@ fun SetupEditLeagueScreen(
     val selectedCompetition by editLeagueViewModel.selectedCompetition.collectAsState()
     val leagueHeader by editLeagueViewModel.leagueHeader.collectAsState()
     val leagueName by editLeagueViewModel.leagueName.collectAsState()
-
+    val leaguecode by editLeagueViewModel.leaguecode.collectAsState()
     val inviteEmailInput by editLeagueViewModel.inviteEmailInput.collectAsState()
     val invitedEmails by editLeagueViewModel.invitedEmails.collectAsState()
     val saveResult by editLeagueViewModel.saveResult.collectAsState()
     val inviteStatus by editLeagueViewModel.saveResult.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(leagueid, owneruserid) {
+        editLeagueViewModel.fetchLeagueCode(leagueid, owneruserid)
+    }
 
     LaunchedEffect(key1 = leagueid, key2 = owneruserid) {
         editLeagueViewModel.onEvent(EditLeagueViewModel.LeagueEvent.GetLeagueDetails(
@@ -223,9 +229,55 @@ fun SetupEditLeagueScreen(
                     textStyle = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(12.dp))
             }
             item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 2.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.league_code),
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = leaguecode,
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.league_share),
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    )
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.height(14.dp))
+                Box( contentAlignment = Alignment.Center ) {
+                    AdBanner(
+                        modifier = Modifier.fillMaxWidth(),
+                        isMediumRectangle = true
+                    )
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.height(14.dp))
                 Text(
                     text = stringResource(id = R.string.competitions),
                     style = TextStyle(
@@ -322,23 +374,8 @@ fun SetupEditLeagueScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                        .padding(vertical = 8.dp)
-                ) {
-                    AdBanner(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp),
-                        isMediumRectangle = false
-                    )
-                }
-            }
+
+            /*
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
@@ -407,12 +444,12 @@ fun SetupEditLeagueScreen(
                         Icon(Icons.Default.Close, contentDescription = "Remove Email")
                     }
                 }
-            }
+            }*/
 
             // Add padding at the bottom of the list to ensure the FAB doesn't hide content
-            item {
+            /*item {
                 Spacer(modifier = Modifier.height(80.dp))
-            }
+            }*/
         }
     }
 }
