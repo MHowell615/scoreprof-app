@@ -17,8 +17,8 @@ data class AppNotification(
     val email: String,
     val leagueid: String?,
     @Serializable(with = UUIDSerializer::class)
-    val owneruserid: UUID,
-    val ownername: String,
+    val owneruserid: UUID?,
+    val ownername: String?,
     val isread: Boolean = false,
     val type: NotificationType,
     val lastmodified: String,

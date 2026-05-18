@@ -21,8 +21,8 @@ android {
         minSdk = 30
         // Target SDK should match compileSdk
         targetSdk = 36
-        versionCode = 4
-        versionName = "Version 4.0"
+        versionCode = 5
+        versionName = "1.0.5"
         buildConfigField("String", "SPROF_AUTH_KEY", "\"${project.findProperty("SPROF_AUTH_KEY") ?: ""}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

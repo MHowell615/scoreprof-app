@@ -384,6 +384,10 @@ fun HomeTopBar(
                                             navController.navigate(
                                                 "notifications_screen/${notification.notificationid}"
                                             )
+                                        } else if (notification.type == NotificationType.GENERAL) {
+                                            navController.navigate(
+                                                "notifications_screen/${notification.notificationid}"
+                                            )
                                         } else {
                                             navController.navigate("notifications_screen")
                                         }
