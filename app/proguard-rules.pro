@@ -40,3 +40,6 @@
 # 3. Protect Hilt
 # While Hilt is usually good, this prevents its generated factories from being stripped
 -keep class * extends androidx.lifecycle.ViewModel { *; }
+
+# Keep your data models so the API can read them
+-keep class cloud.scoreprof.app.data.** { *; }

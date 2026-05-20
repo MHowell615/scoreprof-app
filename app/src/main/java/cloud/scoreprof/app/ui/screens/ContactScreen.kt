@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cloud.scoreprof.app.R
@@ -123,12 +124,23 @@ fun ContactScreen(
 
             OutlinedTextField(
                 value = details,
-                onValueChange = { details = it },
+                onValueChange = {
+                    if (it.length <= 250) details = it
+                },
                 label = { Text(stringResource(id = R.string.details)) },
+                supportingText = {
+                    Text(
+                        text = "${details.length} / 250",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.End,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
-                minLines = 5
+                minLines = 5,
+                isError = details.length >= 250
             )
 
             Button(
@@ -137,10 +149,10 @@ fun ContactScreen(
 
                     setupViewModel.sendFeedback(categoryString, subject, details)
 
-                    makeText(
+                    android.widget.Toast.makeText(
                         navController.context,
-                        R.string.feedback_toast,
-                        LENGTH_LONG
+                        navController.context.getString(R.string.feedback_toast),
+                        android.widget.Toast.LENGTH_LONG
                     ).show()
 
                     navController.popBackStack()

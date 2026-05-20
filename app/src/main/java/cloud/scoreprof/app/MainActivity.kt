@@ -251,7 +251,11 @@ fun AppNavigation(
             ) {
                 composable("home") { navBackStackEntry ->
                     val parentEntry = remember (navBackStackEntry) {
-                        navController.getBackStackEntry("main_graph/{userid}/{email}")
+                        try {
+                            navController.getBackStackEntry("main_graph/{userid}/{email}")
+                        } catch (e: Exception) {
+                            navBackStackEntry
+                        }
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
 

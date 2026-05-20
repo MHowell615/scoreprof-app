@@ -113,4 +113,5 @@
     <string name="back_to_login">Torna alla pagina di accesso</string>
     <string name="new_password">Nuova password</string>
     <string name="six_digit_code">Codice a 6 cifre</string>
+    <string name="no_upcoming_matches">Nessuna partita in programma</string>
 </resources>

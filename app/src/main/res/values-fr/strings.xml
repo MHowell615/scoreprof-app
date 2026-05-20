@@ -145,4 +145,5 @@
     <string name="back_to_login">Retour à la connexion</string>
     <string name="new_password">Nouveau mot de passe</string>
     <string name="six_digit_code">Code à 6 chiffres</string>
+    <string name="no_upcoming_matches">Aucun match à venir</string>
 </resources>

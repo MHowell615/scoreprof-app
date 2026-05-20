@@ -144,5 +144,6 @@
     <string name="back_to_login">Back to Login</string>
     <string name="new_password">New Password</string>
     <string name="six_digit_code">6-Digit Code</string>
+    <string name="no_upcoming_matches">No upcoming matches</string>
     <!-- <string name="league_code">Codice della Lega</string> -->
 </resources>
