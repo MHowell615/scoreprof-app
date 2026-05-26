@@ -14,15 +14,16 @@ data class Setup(
     @PrimaryKey val id: Int,
     val version: Int,
     val email: String,
-    val name: String ?= null,
+    val name: String? = null,
     @Serializable(with = UUIDSerializer::class)
     val userid: UUID,
     @Serializable(with = ZonedDateTimeSerializer::class)
     val memberSince: ZonedDateTime? = null,
-    val preferred_language: String,  // this should default to the user locale language if none is selected
+    val preferred_language: String,
     val competitions: List<UserCompetitionSelection>,
     val leagues: List<UserLeagueSelection>,
-    val receive_email: Boolean = true
+    val receive_email: Boolean = true,
+    val is_ads_removed: Boolean = false
 )
 
 @Serializable

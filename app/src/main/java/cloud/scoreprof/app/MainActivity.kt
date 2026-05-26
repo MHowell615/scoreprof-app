@@ -73,7 +73,6 @@ import com.google.android.ump.ConsentRequestParameters
 import com.google.android.ump.UserMessagingPlatform
 
 @OptIn(ExperimentalSerializationApi::class)
-
 @Serializable
 data class NavigationConfig(
     val version: Int,
@@ -119,6 +118,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // 1. Enable modern edge-to-edge behavior
+        enableEdgeToEdge()
 
         val appUpdateManager = AppUpdateManagerFactory.create(this)
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
@@ -129,7 +131,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 appUpdateManager.startUpdateFlowForResult(
                     appUpdateInfo,
-                    updateLauncher, // Use the launcher instead of 'this' and a request code
+                    updateLauncher,
                     AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
                 )
             }
@@ -145,53 +147,37 @@ class MainActivity : ComponentActivity() {
             params,
             {
                 UserMessagingPlatform.loadAndShowConsentFormIfRequired(this) { loadAndShowError ->
-                    // Consent has been gathered or isn't required
                     if (consentInformation.canRequestAds()) {
                         initializeMobileAdsSdk()
                     }
                 }
             },
             { requestConsentError ->
-                // Consent gathering failed
                 Log.w("MainActivity", "${requestConsentError.errorCode}: ${requestConsentError.message}")
-                // Even if consent fails, we try to initialize for non-personalized ads
                 initializeMobileAdsSdk()
             }
         )
 
-        // Check if consent is already available on startup
         if (consentInformation.canRequestAds()) {
             initializeMobileAdsSdk()
         }
 
         runBlocking {
             dao.getSetup().firstOrNull()?.preferred_language?.let { langCode ->
-                // Create a single Locale object from our two-letter code (e.g., "fr").
                 val locale = Locale.forLanguageTag(langCode)
-
-                // Create a LocaleListCompat containing ONLY our desired locale.
                 val appLocale = LocaleListCompat.create(locale)
-
-                // Set this as the app's locale list. This will override the system's [en-FR].
                 AppCompatDelegate.setApplicationLocales(appLocale)
-
-                Log.d("MainActivity_Locale", "Initial locale set synchronously to: $langCode")
             }
         }
 
-        enableEdgeToEdge()
         setContent {
-            //val setupViewModel: ListSetupViewModel = hiltViewModel()
-
             TestNavigationTheme {
-                // Scaffold ensures your UI doesn't overlap with system bars
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        AppNavigation(
-                            //setupViewModel = setupViewModel
-                            tokenManager = tokenManager
-                        )
-                    }
+                // Let the Scaffold handle all system bar insets automatically
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    AppNavigation(tokenManager = tokenManager)
                 }
             }
         }
@@ -203,7 +189,6 @@ class MainActivity : ComponentActivity() {
         if (isMobileAdsInitializeCalled.getAndSet(true)) {
             return
         }
-        // Initialize the Mobile Ads SDK.
         MobileAds.initialize(this) { initializationStatus ->
             Log.d("MainActivity", "Ads SDK Initialized: $initializationStatus")
         }
@@ -214,33 +199,24 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation(
     tokenManager: TokenManager
 ) {
-    // This will no longer crash because we made the ID optional in the VM
     val versionViewModel: VersionViewModel = hiltViewModel()
-
     val navController = rememberNavController()
-
     val isUpdateRequired by versionViewModel.isUpdateRequired.collectAsState()
     val updateUrl by versionViewModel.updateUrl.collectAsState()
 
     if (isUpdateRequired) {
         ForcedUpdateScreen(updateUrl)
     } else {
-
-        val startDestination = "login" //if (tokenManager.hasToken()) "main_graph_root" else "login"
-
+        val startDestination = "login"
         NavHost(navController = navController, startDestination = startDestination) {
-
-            // --- LOGIN ---
             composable("login") {
                 LoginScreen(onLoginSuccess = { userid, email ->
-                    // Navigate and pass the real UUID to the graph
                     navController.navigate("main_graph/$userid/$email") {
                         popUpTo("login") { inclusive = true }
                     }
                 }, navController = navController)
             }
 
-            // --- MAIN APP ---
             navigation(
                 startDestination = "home",
                 route = "main_graph/{userid}/{email}",
@@ -263,37 +239,27 @@ fun AppNavigation(
                         setupViewModel.navigationEvents.collect { event ->
                             when (event) {
                                 is ListSetupViewModel.NavigationEvent.ToLogin -> {
-                                    Log.d(
-                                        "Navigation",
-                                        "Session expired event received. Navigating to Login."
-                                    )
                                     navController.navigate("login") {
-                                        // Clear the backstack so the user can't "back" into the home screen
                                         popUpTo(0) { inclusive = true }
                                     }
                                 }
-
                                 else -> {}
                             }
                         }
                     }
 
                     val useridString = navBackStackEntry.arguments?.getString("userid")
-                    // Convert String back to UUID
                     val currentUserid = remember(useridString) {
                         useridString?.let { UUID.fromString(it) }
                     }
                     val email = navBackStackEntry.arguments?.getString("email")
 
-                    // 2. ONLY trigger data loading when we have a valid ID from the route
                     LaunchedEffect(currentUserid) {
                         if (currentUserid != null) {
-                            // This triggers the fetch that gets you past the loading screen
                             setupViewModel.loadInitialDataForUser(currentUserid)
                         }
                     }
 
-                    val currentSetup by setupViewModel.setup.collectAsState()
                     HomeScreen(
                         setupViewModel = setupViewModel,
                         navController = navController,
@@ -305,21 +271,14 @@ fun AppNavigation(
 
                 composable(
                     "competitions_screen/{userid}",
-                    arguments = listOf(
-                        navArgument("userid") { type = NavType.StringType }
-                    )
+                    arguments = listOf(navArgument("userid") { type = NavType.StringType })
                 ) { navBackStackEntry ->
                     val parentEntry = remember(navBackStackEntry) {
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
                     val useridString = navBackStackEntry.arguments?.getString("userid")
-                    // Convert String back to UUID
-                    val currentUserid = remember(useridString) {
-                        useridString?.let { UUID.fromString(it) }
-                    }
-                    val email = navBackStackEntry.arguments?.getString("email")
-
+                    
                     CompetitionsScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -329,25 +288,15 @@ fun AppNavigation(
 
                 composable(
                     "notifications_screen/{notificationid}",
-                    arguments = listOf(
-                        navArgument("notificationid") { type = NavType.IntType }
-                    )
+                    arguments = listOf(navArgument("notificationid") { type = NavType.IntType })
                 ) { backStackEntry ->
                     val parentEntry = remember(backStackEntry) {
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
                     val notificationViewModel: NotificationViewModel = hiltViewModel()
-
                     val notificationid = backStackEntry.arguments?.getInt("notificationid") ?: 0
-                    //val email = backStackEntry.arguments?.getString("email") ?: ""
 
-                    val useridString = backStackEntry.arguments?.getString("userid")
-                    val userid = try {
-                        UUID.fromString(useridString)
-                    } catch (e: Exception) {
-                        null
-                    }
                     NotificationScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -358,21 +307,12 @@ fun AppNavigation(
 
                 composable(
                     "setup_screen/{userid}",
-                    arguments = listOf(
-                        navArgument("userid") { type = NavType.StringType }
-                    )
+                    arguments = listOf(navArgument("userid") { type = NavType.StringType })
                 ) { backStackEntry ->
                     val parentEntry = remember(backStackEntry) {
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
-                    val setupState by setupViewModel.setup.collectAsState()
-                    val useridString = backStackEntry.arguments?.getString("userid")
-                    val userid = try {
-                        UUID.fromString(useridString)
-                    } catch (e: Exception) {
-                        null
-                    }
                     SetupScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -385,7 +325,6 @@ fun AppNavigation(
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
-                    val setupState by setupViewModel.setup.collectAsState()
                     LanguagesScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -398,14 +337,6 @@ fun AppNavigation(
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
-                    val setupState by setupViewModel.setup.collectAsState()
-                    val useridString = backStackEntry.arguments?.getString("userid")
-                    val userid = try {
-                        UUID.fromString(useridString)
-                    } catch (e: Exception) {
-                        null
-                    }
-
                     SetupCompetitionsScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -418,14 +349,6 @@ fun AppNavigation(
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
-                    val setupState by setupViewModel.setup.collectAsState()
-                    val useridString = backStackEntry.arguments?.getString("userid")
-                    val userid = try {
-                        UUID.fromString(useridString)
-                    } catch (e: Exception) {
-                        null
-                    }
-
                     SetupPrivacyScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -438,14 +361,6 @@ fun AppNavigation(
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
-                    val setupState by setupViewModel.setup.collectAsState()
-                    val useridString = navBackStackEntry.arguments?.getString("userid")
-                    val userid = try {
-                        UUID.fromString(useridString)
-                    } catch (e: Exception) {
-                        null
-                    }
-
                     SetupLeaguesScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -465,28 +380,17 @@ fun AppNavigation(
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
-                    val setupState by setupViewModel.setup.collectAsState()
                     val editLeagueViewModel: EditLeagueViewModel = hiltViewModel()
                     val leagueid = backStackEntry.arguments?.getString("leagueid") ?: ""
-
                     val owneruseridString = backStackEntry.arguments!!.getString("owneruserid")
                     val useridString = backStackEntry.arguments!!.getString("userid")
-                    val owneruserid = try {
-                        owneruseridString?.let { UUID.fromString(it) }
-                    } catch (e: Exception) {
-                        null
-                    }
-                    val userid = try {
-                        useridString?.let { UUID.fromString(it) }
-                    } catch (e: Exception) {
-                        null
-                    }
+                    val owneruserid = try { owneruseridString?.let { UUID.fromString(it) } } catch (e: Exception) { null }
+                    val userid = try { useridString?.let { UUID.fromString(it) } } catch (e: Exception) { null }
 
                     if (owneruserid != null && userid != null) {
                         LaunchedEffect(leagueid, owneruserid) {
                             editLeagueViewModel.getLeagueDetails(leagueid, owneruserid)
                         }
-
                         SetupEditLeagueScreen(
                             navController = navController,
                             leagueid = leagueid,
@@ -498,15 +402,10 @@ fun AppNavigation(
                             modifier = Modifier.fillMaxSize()
                         )
                     } else {
-                        // Optional: Show an error or redirect if the UUIDs are invalid
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text("Invalid User IDs")
                         }
                     }
-
                 }
 
                 composable(
@@ -520,30 +419,20 @@ fun AppNavigation(
                         navController.getBackStackEntry("main_graph/{userid}/{email}")
                     }
                     val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
-                    val setupState by setupViewModel.setup.collectAsState()
                     val viewModel: ListMatchesViewModel = hiltViewModel()
                     val competitionId = backStackEntry.arguments!!.getString("competitionId")
                     val competitions by setupViewModel.competitions.collectAsState()
                     val userid = backStackEntry.arguments!!.getString("userid")
-                    if (userid!!.isEmpty()) {
-                        // If the ID is missing from the route, show a loader or error
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
+                    
+                    if (userid.isNullOrEmpty()) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             CircularProgressIndicator()
                         }
                     } else {
-                        val competitionName = competitions
-                            .find { it.item.competitionid == competitionId }?.item?.name
-                            ?: "Competition"
+                        val competitionName = competitions.find { it.item.competitionid == competitionId }?.item?.name ?: "Competition"
                         if (competitionId != null) {
                             LaunchedEffect(key1 = competitionId) {
-                                viewModel.onEvent(
-                                    ListMatchesViewModel.MatchEvent.LoadMatchesForCompetition(
-                                        competitionId
-                                    )
-                                )
+                                viewModel.onEvent(ListMatchesViewModel.MatchEvent.LoadMatchesForCompetition(competitionId))
                             }
                             ListMatchesScreen(
                                 competitionid = competitionId,
@@ -557,39 +446,34 @@ fun AppNavigation(
                 }
 
                 composable(
-                    route = "league_screen/{leagueid}/{owneruserid}",
+                    route = "league_screen/{leagueid}/{owneruserid}/{leaguename}",
                     arguments = listOf(
                         navArgument("leagueid") { type = NavType.StringType },
-                        navArgument("owneruserid") { type = NavType.StringType }
+                        navArgument("owneruserid") { type = NavType.StringType },
+                        navArgument("leaguename") { type = NavType.StringType }
                     )
                 ) { backStackEntry ->
                     val listLeagueViewModel: ListLeagueViewModel = hiltViewModel()
+                    val listSetupViewModel: ListSetupViewModel = hiltViewModel()
                     val leagueid = backStackEntry.arguments?.getString("leagueid") ?: ""
                     val owneruseridString = backStackEntry.arguments?.getString("owneruserid")
-                    val owneruserid = try {
-                        UUID.fromString(owneruseridString)
-                    } catch (e: Exception) {
-                        null
-                    }
+                    val owneruserid = try { UUID.fromString(owneruseridString) } catch (e: Exception) { null }
+                    val leaguename = backStackEntry.arguments?.getString("leaguename") ?: ""
 
                     LaunchedEffect(leagueid, owneruserid) {
                         if (leagueid.isNotEmpty() && owneruserid != null) {
-                            listLeagueViewModel.onEvent(
-                                ListLeagueViewModel.LeagueEvent.LoadLeagueTable(
-                                    leagueid = leagueid,
-                                    owneruserid = owneruserid
-                                )
-                            )
+                            listLeagueViewModel.onEvent(ListLeagueViewModel.LeagueEvent.LoadLeagueTable(leagueid, owneruserid))
                         }
                     }
 
-                    if (leagueid != null && owneruserid != null) {
+                    if (leagueid != null && owneruserid != null && leaguename != null) {
                         ListLeagueScreen(
                             leagueid = leagueid,
                             owneruserid = owneruserid,
-                            leaguename = leagueid,
+                            leaguename = leaguename,
                             navController = navController,
                             leagueViewModel = listLeagueViewModel,
+                            setupViewModel = listSetupViewModel,
                             modifier = Modifier.fillMaxSize()
                         )
                     }
@@ -616,24 +500,28 @@ fun AppNavigation(
 
                 composable(
                     "leagues_screen/{userid}",
-                    arguments = listOf(
-                        navArgument("userid") { type = NavType.StringType }
-                    )
+                    arguments = listOf(navArgument("userid") { type = NavType.StringType })
                 ) {
                     val listLeaguesViewModel: ListLeaguesViewModel = hiltViewModel()
+                    val parentEntry = remember (it) {
+                        navController.getBackStackEntry("main_graph/{userid}/{email}")
+                    }
+                    val setupViewModel: ListSetupViewModel = hiltViewModel(parentEntry)
                     LeaguesScreen(
                         navController = navController,
-                        //savedStateHandle = it.savedStateHandle,
                         leaguesViewModel = listLeaguesViewModel,
+                        setupViewModel = setupViewModel,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
 
                 composable("help_screen") {
                     val listHelpViewModel: ListHelpViewModel = hiltViewModel()
+                    val listSetupViewModel: ListSetupViewModel = hiltViewModel()
                     HelpScreen(
                         navController = navController,
                         helpViewModel = listHelpViewModel,
+                        setupViewModel = listSetupViewModel,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -667,7 +555,3 @@ fun NavBackStackEntry.sharedViewModel(navController: NavHostController): ListSet
     }
     return hiltViewModel(parentEntry)
 }
-
-
-
-

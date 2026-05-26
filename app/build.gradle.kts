@@ -13,16 +13,14 @@ plugins {
 
 android {
     namespace = "cloud.scoreprof.app"
-    // Use SDK 36 as you specified
     compileSdk = 36
 
     defaultConfig {
         applicationId = "cloud.scoreprof.app"
         minSdk = 30
-        // Target SDK should match compileSdk
         targetSdk = 36
-        versionCode = 6
-        versionName = "1.0.6"
+        versionCode = 7
+        versionName = "1.0.7"
         buildConfigField("String", "SPROF_AUTH_KEY", "\"${project.findProperty("SPROF_AUTH_KEY") ?: ""}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -80,6 +78,9 @@ dependencies {
     // Ads
     implementation("com.google.android.gms:play-services-ads:23.0.0")
 
+    // Billing (In-App Purchases)
+    implementation("com.android.billingclient:billing-ktx:7.1.1")
+
     // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation("androidx.compose.ui:ui")
@@ -90,7 +91,6 @@ dependencies {
 
     // Firebase (Import the BoM)
     implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
-    //implementation("androidx.browser:browser:1.8.0")
 
     // Anonymized Analytics and Crashlytics
     implementation("com.google.firebase:firebase-analytics")

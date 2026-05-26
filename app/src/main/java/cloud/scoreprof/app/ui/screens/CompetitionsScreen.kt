@@ -31,8 +31,6 @@ import cloud.scoreprof.app.ui.theme.dropdown_background
 import cloud.scoreprof.app.ui.theme.sub_dropdown_background
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 import java.util.UUID
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -42,32 +40,20 @@ fun CompetitionsScreen(
     passedUserId: String? = null,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val scope = rememberCoroutineScope()
     val setupState by setupViewModel.setup.collectAsState()
     val userid = remember(setupState?.userid, passedUserId) {
         setupState?.userid ?: passedUserId?.let { UUID.fromString(it) }
     }
     val competitionsState by setupViewModel.competitions.collectAsState()
 
-    LaunchedEffect(userid) {
-        println("TEST: competitionsState: $competitionsState")
-        println("TEST: : setupState: $setupState")
-    }
-
     val groupedData = remember(competitionsState) {
         val collator = java.text.Collator.getInstance()
-
         competitionsState
             .filter { it.isSelected }
             .groupBy { it.item.sport_type ?: "Other" }
             .mapValues { sportEntry ->
-                // 1. Group by Country/Region
                 val byRegion = sportEntry.value.groupBy { it.item.region ?: "International" }
-
-                // 2. Sort the Region Names (Keys) using the locale-aware Collator
-                // 3. Sort the Competitions (Values) within each region by country_ranking
                 byRegion.toSortedMap(collator::compare).mapValues { regionEntry ->
                     regionEntry.value.sortedBy { competitionSelection ->
                         competitionSelection.item.country_ranking ?: Int.MAX_VALUE
@@ -82,7 +68,6 @@ fun CompetitionsScreen(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                // Trigger a silent refresh from the server
                 if (userid != null) {
                     setupViewModel.refreshData()
                 }
@@ -99,14 +84,12 @@ fun CompetitionsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Standard height for a top app bar
+                    .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back"
@@ -115,26 +98,25 @@ fun CompetitionsScreen(
                 Text(
                     text = stringResource(id = R.string.matches),
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f) // Ensures title takes up available space
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
     ) { innerPadding ->
         LazyColumn(
             Modifier
+                .padding(innerPadding)
                 .padding(horizontal = 4.dp)
                 .fillMaxWidth(),
-            contentPadding = innerPadding,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             groupedData.forEach { (sportType, regions) ->
-                // --- LEVEL 1: SPORT HEADER ---
                 item(key = "sport_$sportType") {
                     val isSportExpanded = expandedSports[sportType] ?: false
                     Surface(
                         onClick = { expandedSports[sportType] = !isSportExpanded },
                         color = dropdown_background,
-                        contentColor = MaterialTheme.colorScheme.primary, //Color.White,
+                        contentColor = MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -160,7 +142,6 @@ fun CompetitionsScreen(
 
                 if (expandedSports[sportType] == true) {
                     regions.forEach { (regionName, competitionList) ->
-                        // --- LEVEL 2: REGION/COUNTRY HEADER ---
                         item(key = "region_${sportType}_$regionName") {
                             val isRegionExpanded = expandedRegions["${sportType}_$regionName"] ?: false
                             Surface(
@@ -190,7 +171,6 @@ fun CompetitionsScreen(
                             }
                         }
 
-                        // --- LEVEL 3: COMPETITION BUTTONS ---
                         if (expandedRegions["${sportType}_$regionName"] == true) {
                             items(
                                 competitionList,
@@ -237,7 +217,8 @@ fun CompetitionsScreen(
                 Box(contentAlignment = Alignment.Center) {
                     AdBanner(
                         modifier = Modifier.fillMaxWidth(),
-                        isMediumRectangle = true
+                        isMediumRectangle = true,
+                        showAds = setupState?.is_ads_removed == false
                     )
                 }
             }

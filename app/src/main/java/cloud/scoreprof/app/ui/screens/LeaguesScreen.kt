@@ -36,42 +36,33 @@ import cloud.scoreprof.app.R
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.view_models.ListLeaguesViewModel
+import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 
 @Composable
 fun LeaguesScreen(
     navController: NavHostController,
     leaguesViewModel: ListLeaguesViewModel,
+    setupViewModel: ListSetupViewModel,
     modifier: Modifier = Modifier
 ) {
     val leagues by leaguesViewModel.leagues.collectAsState()
+    val setupState by setupViewModel.setup.collectAsState()
 
-    /*val activeSelectedLeagues: StateFlow<List<UserLeagueSelection>> = _leagues
-        .map { list ->
-            list.filter { it.isSelected }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )*/
-println("TEST: leagues = $leagues")
+    println("TEST: leagues = $leagues")
     val filteredLeagues = leagues.filter {
-        //it.selected //&&
         it.state?.uppercase() != "DELETED"
     }
 
     Scaffold(
         topBar = {
-            // A custom top bar using a Row
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Standard height for a top app bar
+                    .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
-                // Navigation Icon
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -79,11 +70,10 @@ println("TEST: leagues = $leagues")
                     )
                 }
 
-                // Title
                 Text(
                     text = stringResource(id = R.string.leagues),
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f) // Ensures title takes up available space
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -110,9 +100,8 @@ println("TEST: leagues = $leagues")
                         onClick = {
                             val leagueid = league.leagueid
                             val owneruserid = league.owneruserid
-                            league.id.let { id ->
-                                navController.navigate("league_screen/${leagueid}/${owneruserid}")
-                            }
+                            val leaguename = league.name
+                            navController.navigate("league_screen/${leagueid}/${owneruserid}/${leaguename}")
                         },
                         modifier = Modifier
                             .padding(4.dp)
@@ -135,21 +124,25 @@ println("TEST: leagues = $leagues")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp)
-                        .padding(vertical = 8.dp)
-                ) {
-                    AdBanner(
+            
+            if (setupState?.is_ads_removed == false) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(100.dp),
-                        isMediumRectangle = false
-                    )
+                            .height(150.dp)
+                            .padding(vertical = 8.dp)
+                    ) {
+                        AdBanner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp),
+                            isMediumRectangle = false,
+                            showAds = true
+                        )
+                    }
                 }
             }
          }

@@ -22,7 +22,6 @@ import androidx.navigation.NavController
 import cloud.scoreprof.app.ui.view_models.LoginViewModel
 import kotlinx.coroutines.flow.collectLatest
 import java.util.UUID
-import cloud.scoreprof.app.BuildConfig
 import cloud.scoreprof.app.R
 import cloud.scoreprof.app.ui.components.AdBanner
 import android.util.Patterns
@@ -40,7 +39,7 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     val isPasswordTooShort = password.isNotEmpty() && password.length < 6
     val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    var hasAttemptedLogin by remember { mutableStateOf(false) } // Optional: only show error after click
+    var hasAttemptedLogin by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -48,11 +47,9 @@ fun LoginScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is LoginViewModel.UiEvent.LoginSuccess -> {
-                    println("ScoreProfDebug: Login Success! Navigating with ID: ${event.userId}")
                     onLoginSuccess(event.userId, event.email)
                 }
                 is LoginViewModel.UiEvent.Error -> {
-                    // Show Snackbar or Toast
                     snackbarHostState.showSnackbar(event.message)
                 }
             }
@@ -60,12 +57,17 @@ fun LoginScreen(
     }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             Surface(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.surface
             ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    //Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding() // Correct edge-to-edge handling
+                ) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -76,7 +78,7 @@ fun LoginScreen(
                             painter = painterResource(id = R.drawable.scoreprof_launcher_round),
                             contentDescription = "ScoreProf Logo",
                             modifier = Modifier
-                                .height(100.dp) // Adjusted height for a cleaner look
+                                .height(100.dp)
                                 .fillMaxWidth(),
                             contentScale = ContentScale.Fit
                         )
@@ -91,8 +93,7 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally//,
-            //verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = stringResource(R.string.scoreprof_login), style = MaterialTheme.typography.headlineMedium)
 
@@ -143,9 +144,8 @@ fun LoginScreen(
                         Icons.Filled.Visibility
                     else Icons.Filled.VisibilityOff
 
-                    // Toggle button to hide or display password
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(imageVector = image, if (passwordVisible) "Hide" else "Show")
+                        Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide" else "Show")
                     }
                 },
                 textStyle = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.primary),
@@ -168,7 +168,7 @@ fun LoginScreen(
             } else {
                 Button(
                     onClick = {
-                        hasAttemptedLogin = true // Trigger validation display
+                        hasAttemptedLogin = true
                         if (isEmailValid && !isPasswordTooShort && email.isNotEmpty()) {
                             viewModel.onPasswordChange(passwordInput)
                             viewModel.login()
@@ -183,26 +183,13 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.weight(1f))
             TextButton(
-                onClick = {
-                    // Navigate to a new ForgotPasswordScreen
-                    navController.navigate("forgot_password")
-                }
-                //modifier = Modifier.align(Alignment.CenterHorizontally)
+                onClick = { navController.navigate("forgot_password") }
             ) {
                 Text(
                     text = stringResource(id = R.string.forgot_password),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(contentAlignment = Alignment.Center) {
-                AdBanner(
-                    modifier = Modifier.fillMaxWidth(),
-                    isMediumRectangle = true
-                )
-            }
         }
     }
 }
-
-

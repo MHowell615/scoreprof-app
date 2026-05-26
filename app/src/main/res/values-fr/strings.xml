@@ -146,4 +146,21 @@
     <string name="new_password">Nouveau mot de passe</string>
     <string name="six_digit_code">Code à 6 chiffres</string>
     <string name="no_upcoming_matches">Aucun match à venir</string>
+    <string name="premium_title">Premium</string>
+    <string name="remove_ads_btn">Supprimer toutes les publicités (abonnement mensuel)</string>
+    <string name="remove_ads_desc">Profitez d\'une expérience fluide et sans publicité tout en contribuant à couvrir les frais de maintenance et d\'hébergement de ScoreProf.</string>
+    <string name="receive_emails_desc">Gérez les invitations aux ligues et les mises à jour des matchs qui vous sont envoyées par e-mail.</string>
+    <string name="allow_analytics_desc">Aidez-nous à améliorer ScoreProf grâce à des données d\'utilisation anonymes.</string>
+    <string name="legal_docs_title">Documents juridiques</string>
+    <string name="account_mgmt_title">Gestion des comptes</string>
+    <string name="request_deletion_title">Demander la suppression de mon compte</string>
+    <string name="deletion_desc">Conformément au RGPD, vous disposez d\'un droit à l\'oubli. Pour demander la suppression définitive de votre compte et de toutes les données associées, veuillez contacter support@muntjac-solutions.com.</string>
+    <string name="privacy_policy_label">Politique de confidentialité</string>
+    <string name="legal_notice_label">Mentions légales</string>
+    <string name="notif_invited_title">Vous êtes invité !</string>
+    <string name="notif_invite_msg_body">Vous avez reçu une invitation de %1$s pour rejoindre la ligue : %2$s. Pour y participer, confirmez votre adhésion dans la section « Configurer les ligues ».</string>
+    <string name="go_to_setup_leagues_btn">Aller à la configuration des ligues</string>
+    <string name="close_btn">Fermer</string>
+    <string name="connection_error">Impossible de charger les matchs. Vérifiez votre connexion.</string>
+    <string name="retry">Réessayer</string>
 </resources>

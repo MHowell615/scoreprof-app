@@ -1,5 +1,6 @@
 package cloud.scoreprof.app.ui.screens
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.*
@@ -8,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,6 +37,7 @@ fun SetupPrivacyScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .statusBarsPadding()
                     .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -63,8 +66,44 @@ fun SetupPrivacyScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
+            // --- PREMIUM SECTION ---
+            if (setupState?.is_ads_removed == false) {
+                item {
+                    Text(
+                        text = stringResource(id = R.string.premium_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ElevatedButton(
+                        onClick = { 
+                            if (context is Activity) {
+                                setupViewModel.triggerRemoveAdsPurchase(context)
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.elevatedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    ) {
+                        Icon(Icons.Default.Star, contentDescription = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(id = R.string.remove_ads_btn))
+                    }
+                    Text(
+                        text = stringResource(id = R.string.remove_ads_desc),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 4.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
             // Email Notifications Toggle
-            item {
+            /*item {
                 Column {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -82,12 +121,12 @@ fun SetupPrivacyScreen(
                         )
                     }
                     Text(
-                        text = "Manage league invitations and game updates sent to your email.",
+                        text = stringResource(id = R.string.receive_emails_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            }
+            }*/
 
             // Analytics Toggle
             item {
@@ -108,7 +147,7 @@ fun SetupPrivacyScreen(
                         )
                     }
                     Text(
-                        text = "Helps us improve ScoreProf with anonymous usage data.",
+                        text = stringResource(id = R.string.allow_analytics_desc),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -119,14 +158,13 @@ fun SetupPrivacyScreen(
             item {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text(
-                    text = "Legal Documents",
+                    text = stringResource(id = R.string.legal_docs_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 
-                // Privacy Policy Row
                 TextButton(
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.muntjac-solutions.com/privacy"))
@@ -139,13 +177,12 @@ fun SetupPrivacyScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Privacy Policy", style = MaterialTheme.typography.bodyLarge)
+                        Text(stringResource(id = R.string.privacy_policy_title), style = MaterialTheme.typography.bodyLarge)
                         Spacer(Modifier.weight(1f))
                         Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                     }
                 }
 
-                // Legal Notice Row
                 TextButton(
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.muntjac-solutions.com/legal"))
@@ -158,7 +195,7 @@ fun SetupPrivacyScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Legal Notice (Mentions Légales)", style = MaterialTheme.typography.bodyLarge)
+                        Text(stringResource(id = R.string.legal_notice_title), style = MaterialTheme.typography.bodyLarge)
                         Spacer(Modifier.weight(1f))
                         Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                     }
@@ -169,19 +206,19 @@ fun SetupPrivacyScreen(
             item {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text(
-                    text = "Account Management",
+                    text = stringResource(id = R.string.account_mgmt_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Request Account Deletion",
+                    text = stringResource(id = R.string.request_deletion_title),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.error
                 )
                 Text(
-                    text = "In accordance with GDPR, you have the right to be forgotten. To request the permanent removal of your account and all associated data, please contact support@muntjac-solutions.com.",
+                    text = stringResource(id = R.string.deletion_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 4.dp)
                 )

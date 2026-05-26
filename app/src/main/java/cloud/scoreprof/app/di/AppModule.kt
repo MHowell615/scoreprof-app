@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.room.Room
 import cloud.scoreprof.app.BuildConfig
+import cloud.scoreprof.app.data.BillingManager
 import cloud.scoreprof.app.data.LanguageRepository
 import cloud.scoreprof.app.data.LanguageRepositoryImpl
 import cloud.scoreprof.app.data.LeaguesRepository
@@ -49,11 +50,6 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
-/**
- * This module contains all the @Provides functions.
- * These are functions that have a body and manually create instances of objects.
- * Since it contains no abstract methods, it can be an 'object'.
- */
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseAndUseCaseModule {
@@ -67,28 +63,13 @@ object DatabaseAndUseCaseModule {
         val currentVersion = BuildConfig.VERSION_CODE
         val lastVersion = prefs.getInt("last_run_version", -1)
 
-        Log.d("SPROF_DEBUG", "Database Init - Current: $currentVersion, Last Stored: $lastVersion")
-
-        // IF THE VERSION CHANGED, WIPE EVERYTHING
         if (lastVersion != currentVersion) {
-            println("SPROF_DEBUG: Version change detected ($lastVersion -> $currentVersion). Wiping local cache.")
-
-            // 1. Clear SharedPreferences (except critical things like login if you want)
-            // Note: If you want to keep them logged in, don't clear the token
-            //prefs.edit().remove("cached_leagues").apply()
             prefs.edit().clear().apply()
-
-            // 2. Clear TokenManager
             context.getSharedPreferences("secure_prefs", Context.MODE_PRIVATE).edit().clear().apply()
-
-            // 3. Delete the actual database file to force a clean reconstruction
             context.deleteDatabase(ScoreProfDatabase.DATABASE_NAME)
-
-            // 4. Save the new version code
             prefs.edit().putInt("last_run_version", currentVersion).apply()
         }
 
-        Log.d(TAG, "Hilt is calling: provideScoreProfDatabase")
         return Room.databaseBuilder(
             context,
             ScoreProfDatabase::class.java,
@@ -101,7 +82,6 @@ object DatabaseAndUseCaseModule {
     @Provides
     @Singleton
     fun provideScoreProfDao(database: ScoreProfDatabase): ScoreProfDao {
-        Log.d(TAG, "Hilt is calling: provideScoreProfDao")
         return database.scoreProfDao()
     }
 
@@ -111,7 +91,6 @@ object DatabaseAndUseCaseModule {
         repository: MatchRepository,
         tokenManager: TokenManager
     ): MatchesUseCases {
-        Log.d(TAG, "Hilt is calling: provideMatchesUseCases")
         val userId = tokenManager.getUserId() ?: ""
         return MatchesUseCases(
             getMatches = GetMatchesUseCase(repository),
@@ -124,7 +103,6 @@ object DatabaseAndUseCaseModule {
     @Provides
     @Singleton
     fun provideLanguagesUseCases(repository: LanguageRepository): LanguagesUseCases {
-        Log.d(TAG, "Hilt is calling: provideLanguagesUseCases")
         return LanguagesUseCases(
             getLanguages = GetLanguagesUseCase(repository),
             loadAndCacheLanguages = LoadAndCacheLanguagesUseCase(repository)
@@ -134,7 +112,6 @@ object DatabaseAndUseCaseModule {
     @Provides
     @Singleton
     fun provideSetupUseCases(repository: SetupRepository): SetupUseCases {
-        Log.d(TAG, "Hilt is calling: provideSetupUseCases")
         return SetupUseCases(
             getSetup = GetSetupUseCase(repository),
             loadAndCacheSetup = LoadAndCacheSetupUseCase(repository),
@@ -146,7 +123,6 @@ object DatabaseAndUseCaseModule {
     @Provides
     @Singleton
     fun provideLeaguesUseCases(repository: LeaguesRepository): LeaguesUseCases {
-        Log.d(TAG, "Hilt is calling: provideLeaguesUseCases")
         return LeaguesUseCases(
             getLeagues = GetLeaguesUseCase(repository),
             getLeagueTable = GetLeagueTableUseCase(repository),
@@ -157,14 +133,13 @@ object DatabaseAndUseCaseModule {
     @Provides
     @Singleton
     fun provideTokenManager(@ApplicationContext context: Context): TokenManager {
-        return TokenManager(context) // Or however you initialize your TokenManager
+        return TokenManager(context)
     }
 
     @Provides
     @Singleton
     fun provideJson(): Json {
         return Json {
-            // Configure your JSON settings here
             ignoreUnknownKeys = true
             coerceInputValues = true
             isLenient = true
@@ -177,14 +152,14 @@ object DatabaseAndUseCaseModule {
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences("scoreprof_prefs", Context.MODE_PRIVATE)
     }
+
+    @Provides
+    @Singleton
+    fun provideBillingManager(@ApplicationContext context: Context): BillingManager {
+        return BillingManager(context)
+    }
 }
 
-
-/**
- * This module contains all the @Binds functions.
- * These are abstract functions that tell Hilt which implementation to use for an interface.
- * Because it contains abstract methods, it MUST be an 'abstract class'.
- */
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
@@ -231,5 +206,3 @@ abstract class RepositoryModule {
         NotificationRepositoryImpl: NotificationRepositoryImpl
     ): NotificationRepository
 }
-
-

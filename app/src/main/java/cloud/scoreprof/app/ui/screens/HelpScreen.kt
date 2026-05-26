@@ -1,5 +1,6 @@
 package cloud.scoreprof.app.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -8,39 +9,33 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import cloud.scoreprof.app.R
 import cloud.scoreprof.app.domain.model.QuestionAnswer
+import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.theme.dropdown_background
 import cloud.scoreprof.app.ui.view_models.ListHelpViewModel
-import androidx.compose.ui.platform.LocalContext
+import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 
 @Composable
 fun HelpScreen(
     navController: NavHostController,
     helpViewModel: ListHelpViewModel,
+    setupViewModel: ListSetupViewModel,
     modifier: Modifier = Modifier
 ) {
-
     val context = LocalContext.current
+    val setupState by setupViewModel.setup.collectAsState()
+    
     val faqList = remember {
         (1..12).map { i ->
             val questionResId = context.resources.getIdentifier(
@@ -51,78 +46,27 @@ fun HelpScreen(
             )
 
             QuestionAnswer(
-                question = context.getString(questionResId),
-                answer = context.getString(answerResId)
+                question = if (questionResId != 0) context.getString(questionResId) else "Question $i",
+                answer = if (answerResId != 0) context.getString(answerResId) else "Answer $i"
             )
         }
     }
 
-    /*val faqList = listOf(
-        QuestionAnswer(
-            question = stringResource(R.string.help_question1),
-            answer = stringResource(R.string.help_answer1)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question2),
-            answer = stringResource(R.string.help_answer2)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question3),
-            answer = stringResource(R.string.help_answer3)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question4),
-            answer = stringResource(R.string.help_answer4)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question5),
-            answer = stringResource(R.string.help_answer5)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question6),
-            answer = stringResource(R.string.help_answer6)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question7),
-            answer = stringResource(R.string.help_answer7)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question8),
-            answer = stringResource(R.string.help_answer8)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question9),
-            answer = stringResource(R.string.help_answer9)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question10),
-            answer = stringResource(R.string.help_answer10)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question11),
-            answer = stringResource(R.string.help_answer11)
-        ),
-        QuestionAnswer(
-            question = stringResource(R.string.help_question12),
-            answer = stringResource(R.string.help_answer12)
-        )
-    )*/
-
     var expandedIndex by remember { mutableIntStateOf(-1) }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Standard height for a top app bar
+                    .statusBarsPadding() // Modern edge-to-edge handling
+                    .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back"
@@ -131,13 +75,16 @@ fun HelpScreen(
                 Text(
                     text = stringResource(id = R.string.help),
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f) // Ensures title takes up available space
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier.padding(innerPadding).fillMaxSize().padding(horizontal = 8.dp),
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             itemsIndexed(faqList) { index, item ->
@@ -166,8 +113,7 @@ fun HelpScreen(
                             )
                         }
 
-                        // Use AnimatedVisibility for a smooth slide-down effect
-                        androidx.compose.animation.AnimatedVisibility(visible = isOpen) {
+                        AnimatedVisibility(visible = isOpen) {
                             Column {
                                 Spacer(modifier = Modifier.height(8.dp))
                                 HorizontalDivider(
@@ -184,6 +130,19 @@ fun HelpScreen(
                         }
                     }
                 }
+            }
+            
+            // Ad Banner at the bottom of the help list
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                    AdBanner(
+                        modifier = Modifier.fillMaxWidth(),
+                        isMediumRectangle = true,
+                        showAds = setupState?.is_ads_removed == false
+                    )
+                }
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
@@ -36,7 +37,7 @@ fun <T> SelectableRowWithCheckboxes(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth().padding(start = 12.dp)
-            .height(48.dp)
+            .heightIn(min = 48.dp)
     ) {
         Row(
             modifier = modifier
@@ -50,13 +51,16 @@ fun <T> SelectableRowWithCheckboxes(
                 style = TextStyle(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    lineHeight = 20.sp
                 ),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                softWrap = true
             )
             Checkbox(
                 checked = isSelected,
-                onCheckedChange = onCheckedChange
+                onCheckedChange = onCheckedChange,
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }

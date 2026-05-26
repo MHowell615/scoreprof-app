@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,7 @@ fun ContactScreen(
     setupViewModel: ListSetupViewModel,
     modifier: Modifier = Modifier
 ) {
+    val setupState by setupViewModel.setup.collectAsState()
     var categoryResId by remember { mutableStateOf(R.string.idea) }
     var subject by remember { mutableStateOf("") }
     var details by remember { mutableStateOf("") }
@@ -78,7 +80,7 @@ fun ContactScreen(
                 Text(
                     text = stringResource(id = R.string.contact),
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f) // Ensures title takes up available space
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -146,15 +148,12 @@ fun ContactScreen(
             Button(
                 onClick = {
                     val categoryString = navController.context.getString(categoryResId)
-
                     setupViewModel.sendFeedback(categoryString, subject, details)
-
                     android.widget.Toast.makeText(
                         navController.context,
                         navController.context.getString(R.string.feedback_toast),
                         android.widget.Toast.LENGTH_LONG
                     ).show()
-
                     navController.popBackStack()
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -162,12 +161,16 @@ fun ContactScreen(
             ) {
                 Text(stringResource(id = R.string.feedback_button))
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Box(contentAlignment = Alignment.Center) {
-                AdBanner(
-                    modifier = Modifier.fillMaxWidth(),
-                    isMediumRectangle = true
-                )
+            
+            if (setupState?.is_ads_removed == false) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                    AdBanner(
+                        modifier = Modifier.fillMaxWidth(),
+                        isMediumRectangle = true,
+                        showAds = true
+                    )
+                }
             }
         }
     }

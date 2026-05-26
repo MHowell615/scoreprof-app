@@ -48,8 +48,6 @@ fun SetupScreen(
     val uiState by setupViewModel.uiState.collectAsState()
     val isLoading by setupViewModel.isLoading.collectAsState()
 
-    val competitions by setupViewModel.competitions.collectAsState()
-    val leagues by setupViewModel.setupLeagues.collectAsState()
     var passwordVisible by remember { mutableStateOf(false) }
     val isPasswordTooShort = newPassword.isNotEmpty() && newPassword.length < 6
 
@@ -62,10 +60,12 @@ fun SetupScreen(
     }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .statusBarsPadding() // Modern edge-to-edge handling
                     .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -150,7 +150,7 @@ fun SetupScreen(
                             else Icons.Filled.VisibilityOff
 
                             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                                Icon(imageVector = image, if (passwordVisible) "Hide" else "Show")
+                                Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide" else "Show")
                             }
                         }
                     },
@@ -230,7 +230,7 @@ fun SetupScreen(
                     )
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = ("Forward")
+                        contentDescription = "Forward"
                     )
                 }
             }
@@ -261,7 +261,7 @@ fun SetupScreen(
                     )
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = ("Forward")
+                        contentDescription = "Forward"
                     )
                 }
             }
@@ -291,12 +291,12 @@ fun SetupScreen(
                     )
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = ("Forward")
+                        contentDescription = "Forward"
                     )
                 }
             }
             item {
-                //Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Box (
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -307,7 +307,8 @@ fun SetupScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(100.dp),
-                        isMediumRectangle = true
+                        isMediumRectangle = true,
+                        showAds = setupState?.is_ads_removed == false
                     )
                 }
             }

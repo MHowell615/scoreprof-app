@@ -41,8 +41,6 @@ import androidx.compose.runtime.mutableStateMapOf
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.dropdown_background
 import cloud.scoreprof.app.ui.theme.sub_dropdown_background
-import kotlin.collections.component1
-import kotlin.collections.component2
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,6 +50,7 @@ fun SetupCompetitionsScreen(
     modifier: Modifier = Modifier
 ) {
     val competitions by setupViewModel.competitions.collectAsState()
+    val setupState by setupViewModel.setup.collectAsState()
     val userid = setupViewModel.userid
 
     val groupedAllCompetitions = remember(competitions) {
@@ -71,7 +70,7 @@ fun SetupCompetitionsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Standard height for a top app bar
+                    .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
@@ -87,7 +86,7 @@ fun SetupCompetitionsScreen(
                 Text(
                     text = stringResource(id = R.string.competitions),
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f) // Ensures title takes up available space
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -101,7 +100,6 @@ fun SetupCompetitionsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = stringResource(id = R.string.competitions),
-                    //style = MaterialTheme.typography.titleMedium,
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Bold,
@@ -111,13 +109,12 @@ fun SetupCompetitionsScreen(
                 )
             }
             groupedAllCompetitions.forEach { (sportType, regions) ->
-                // --- LEVEL 1: SPORT HEADER ---
                 item(key = "sport_$sportType") {
                     val isSportExpanded = expandedSports[sportType] ?: false
                     Surface(
                         onClick = { expandedSports[sportType] = !isSportExpanded },
                         color = dropdown_background,
-                        contentColor = MaterialTheme.colorScheme.primary, //Color.White,
+                        contentColor = MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
@@ -144,7 +141,6 @@ fun SetupCompetitionsScreen(
 
                 if (expandedSports[sportType] == true) {
                     regions.forEach { (regionName, competitionList) ->
-                        // --- LEVEL 2: REGION/COUNTRY HEADER ---
                         item(key = "region_${sportType}_$regionName") {
                             val isRegionExpanded =
                                 expandedRegions["${sportType}_$regionName"] ?: false
@@ -178,7 +174,6 @@ fun SetupCompetitionsScreen(
                             }
                         }
 
-                        // --- LEVEL 3: COMPETITION BUTTONS ---
                         if (expandedRegions["${sportType}_$regionName"] == true) {
                             items(competitionList, key = { "setup_${it.item.competitionid}" }) { selectableCompetition ->
                                 SelectableRowWithCheckboxes(
@@ -204,7 +199,8 @@ fun SetupCompetitionsScreen(
                 Box(contentAlignment = Alignment.Center) {
                     AdBanner(
                         modifier = Modifier.fillMaxWidth(),
-                        isMediumRectangle = true
+                        isMediumRectangle = true,
+                        showAds = setupState?.is_ads_removed == false
                     )
                 }
             }

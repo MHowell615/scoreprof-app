@@ -1,20 +1,11 @@
 package cloud.scoreprof.app.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import cloud.scoreprof.app.R
+import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.utils.SelectableRowWithCheckboxes
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 
@@ -37,24 +29,26 @@ fun LanguagesScreen(
     setupViewModel: ListSetupViewModel,
     modifier: Modifier = Modifier
 ) {
+    val setupState by setupViewModel.setup.collectAsState()
+    val languages by setupViewModel.languages.collectAsState()
+
     LaunchedEffect(Unit) {
         setupViewModel.loadLanguages()
     }
 
-    val languages by setupViewModel.languages.collectAsState()
-
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Standard height for a top app bar
+                    .statusBarsPadding() // Modern Edge-to-Edge fix
+                    .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
                 IconButton(onClick = {
-                    //setupViewModel.saveChanges()
                     navController.popBackStack()
                 }) {
                     Icon(
@@ -65,7 +59,7 @@ fun LanguagesScreen(
                 Text(
                     text = stringResource(id = R.string.preferred_language),
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f) // Ensures title takes up available space
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -74,6 +68,7 @@ fun LanguagesScreen(
             modifier = Modifier
                 .padding(contentPadding)
                 .padding(horizontal = 16.dp)
+                .fillMaxSize()
         ) {
             item {
                 Text(
@@ -83,16 +78,14 @@ fun LanguagesScreen(
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.primary
                     ),
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(bottom = 16.dp, top = 8.dp)
                 )
             }
 
-            items(languages.sortedBy { it.item.languageName }) { language -> // Changed 'languages' to 'availableLanguages'
-                // The 'SelectableRowWithCheckboxes' seems to be using the wrong ViewModel logic
-                // based on the composable name. I'll correct this too.
+            items(languages.sortedBy { it.item.languageName }) { language ->
                 SelectableRowWithCheckboxes(
-                    item = language, // Pass the whole language object
-                    name = language.item.languageName, // Get the name directly from the language object
+                    item = language,
+                    name = language.item.languageName,
                     isSelected = language.isSelected,
                     onCheckedChange = {
                         setupViewModel.onLanguageChanged(language.item)
@@ -100,8 +93,21 @@ fun LanguagesScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
+
+            // Ad Banner for free users
+            if (setupState?.is_ads_removed == false) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                        AdBanner(
+                            modifier = Modifier.fillMaxWidth(),
+                            isMediumRectangle = true,
+                            showAds = true
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+            }
         }
     }
 }
-
-

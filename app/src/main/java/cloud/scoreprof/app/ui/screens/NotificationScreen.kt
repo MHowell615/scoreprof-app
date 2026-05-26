@@ -1,22 +1,10 @@
 package cloud.scoreprof.app.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import cloud.scoreprof.app.domain.model.NotificationType
 import cloud.scoreprof.app.R
+import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 import cloud.scoreprof.app.ui.view_models.NotificationViewModel
 
@@ -39,9 +28,7 @@ fun NotificationScreen(
     notificationViewModel: NotificationViewModel,
     notificationId: Int
 ) {
-    // You can fetch the specific notification details from the ViewModel
-    // For now, let's show the invitation explanation:
-    val setupState by setupViewModel.setup.collectAsState()    // This local variable will hold the actual object or null
+    val setupState by setupViewModel.setup.collectAsState()
     val userid = setupState?.userid
 
     LaunchedEffect(notificationId) {
@@ -49,7 +36,6 @@ fun NotificationScreen(
     }
     val notification by notificationViewModel.currentNotification.collectAsState()
 
-    // 2. Auto-mark as read once the notification is loaded
     LaunchedEffect(notification) {
         notification?.let {
             if (!it.isread) {
@@ -59,27 +45,27 @@ fun NotificationScreen(
     }
 
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp) // Standard height for a top app bar
+                    .statusBarsPadding() // Modern Edge-to-Edge fix
+                    .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = stringResource(id = R.string.close_btn)
                     )
                 }
                 Text(
                     text = stringResource(R.string.notifications),
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f) // Ensures title takes up available space
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -90,37 +76,34 @@ fun NotificationScreen(
                 .padding(padding)
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             val currentNotification = notification
             if (currentNotification != null) {
                 item {
-                    // Title dynamic based on type
                     val title = when (currentNotification.type) {
                         NotificationType.JOIN_REQUEST -> stringResource(R.string.notif_join_request_title)
-                        NotificationType.LEAGUE_INVITE -> "You've been invited!"
+                        NotificationType.LEAGUE_INVITE -> stringResource(R.string.notif_invited_title)
                         else -> stringResource(R.string.notification)
                     }
                     Text(text = title, style = MaterialTheme.typography.headlineMedium)
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Message dynamic based on type
                     val message = when (currentNotification.type) {
-                        NotificationType.JOIN_REQUEST ->
-                            "${currentNotification.message ?: "Someone wants to join your league."}"
-                        NotificationType.LEAGUE_INVITE ->
-                            "You have a pending invitation from ${currentNotification.ownername} to join the league: ${currentNotification.leagueid}. " +
-                                    "To participate, confirm your acceptance in the Setup Leagues section."
+                        NotificationType.JOIN_REQUEST -> currentNotification.message ?: ""
+                        NotificationType.LEAGUE_INVITE -> stringResource(
+                            id = R.string.notif_invite_msg_body,
+                            currentNotification.ownername ?: "Someone",
+                            currentNotification.leagueid ?: ""
+                        )
                         else -> currentNotification.message ?: ""
                     }
 
                     Text(text = message, textAlign = TextAlign.Center)
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
 
-
                 item {
-                    // Action Buttons dynamic based on type
                     when (currentNotification.type) {
                         NotificationType.JOIN_REQUEST -> {
                             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -135,8 +118,7 @@ fun NotificationScreen(
                                         notificationViewModel.declineJoinRequest(currentNotification)
                                         navController.popBackStack()
                                     },
-                                    // Use a different color for decline/ignore
-                                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                    colors = ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.error
                                     )
                                 ) {
@@ -148,20 +130,33 @@ fun NotificationScreen(
                             Button(onClick = {
                                 navController.navigate("setup_leagues_screen/$userid")
                             }) {
-                                Text("Go to Setup Leagues")
+                                Text(stringResource(id = R.string.go_to_setup_leagues_btn))
                             }
                         }
                         else -> {
                             Button(onClick = { navController.popBackStack() }) {
-                                Text("Close")
+                                Text(stringResource(id = R.string.close_btn))
                             }
                         }
                     }
                 }
-
             } else {
                 item {
-                    CircularProgressIndicator() // Wait for DB fetch
+                    CircularProgressIndicator()
+                }
+            }
+
+            // Ad Banner for free users
+            if (setupState?.is_ads_removed == false) {
+                item {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                        AdBanner(
+                            modifier = Modifier.fillMaxWidth(),
+                            isMediumRectangle = true,
+                            showAds = true
+                        )
+                    }
                 }
             }
         }

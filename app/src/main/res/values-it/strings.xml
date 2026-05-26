@@ -114,4 +114,21 @@
     <string name="new_password">Nuova password</string>
     <string name="six_digit_code">Codice a 6 cifre</string>
     <string name="no_upcoming_matches">Nessuna partita in programma</string>
+    <string name="premium_title">Premium</string>
+    <string name="remove_ads_btn">Rimuovi tutti gli annunci (Abbonamento mensile)</string>
+    <string name="remove_ads_desc">Goditi un\'esperienza di navigazione pulita e senza pubblicità, contribuendo al contempo a sostenere i costi di manutenzione e di gestione dei server di ScoreProf.</string>
+    <string name="receive_emails_desc">Gestisci gli inviti ai campionati e gli aggiornamenti sulle partite che ricevi via e-mail.</string>
+    <string name="allow_analytics_desc">Aiutaci a migliorare ScoreProf fornendoci dati di utilizzo anonimi.</string>
+    <string name="legal_docs_title">Documenti legali</string>
+    <string name="account_mgmt_title">Gestione degli account</string>
+    <string name="request_deletion_title">Richiesta di cancellazione dell\'account</string>
+    <string name="deletion_desc">Ai sensi del GDPR, hai il diritto all\'oblio. Per richiedere la cancellazione definitiva del tuo account e di tutti i dati ad esso associati, ti preghiamo di contattare support@muntjac-solutions.com.</string>
+    <string name="privacy_policy_label">Informativa sulla privacy</string>
+    <string name="legal_notice_label">Note legali</string>
+    <string name="notif_invited_title">Sei stato invitato!</string>
+    <string name="notif_invite_msg_body">Hai ricevuto un invito in sospeso da %1$s per entrare a far parte della lega: %2$s. Per partecipare, conferma la tua adesione nella sezione “Imposta leghe”.</string>
+    <string name="go_to_setup_leagues_btn">Vai a “Imposta leghe”</string>
+    <string name="close_btn">Chiudi</string>
+    <string name="connection_error">Impossibile caricare le partite. Controlla la connessione.</string>
+    <string name="retry">Riprova</string>
 </resources>

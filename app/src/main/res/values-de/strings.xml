@@ -114,4 +114,21 @@
     <string name="new_password">Neues Passwort</string>
     <string name="six_digit_code">6-stelliger Code</string>
     <string name="no_upcoming_matches">Keine bevorstehenden Spiele</string>
+    <string name="premium_title">Premium</string>
+    <string name="remove_ads_btn">Alle Anzeigen entfernen (Monatsabonnement)</string>
+    <string name="remove_ads_desc">Genießen Sie ein übersichtliches, werbefreies Erlebnis und unterstützen Sie gleichzeitig die Wartungs- und Serverkosten von ScoreProf.</string>
+    <string name="receive_emails_desc">Verwalte Liga-Einladungen und Spielaktualisierungen, die an deine E-Mail-Adresse gesendet werden.</string>
+    <string name="allow_analytics_desc">Hilft uns, ScoreProf anhand anonymisierter Nutzungsdaten zu verbessern.</string>
+    <string name="legal_docs_title">Rechtsdokumente</string>
+    <string name="account_mgmt_title">Kundenbetreuung</string>
+    <string name="request_deletion_title">Konto löschen</string>
+    <string name="deletion_desc">Gemäß der DSGVO haben Sie das Recht auf Vergessenwerden. Um die dauerhafte Löschung Ihres Kontos und aller damit verbundenen Daten zu beantragen, wenden Sie sich bitte an support@muntjac-solutions.com.</string>
+    <string name="privacy_policy_label">Datenschutzerklärung</string>
+    <string name="legal_notice_label">Rechtliche Hinweise (Mentions Légales)</string>
+    <string name="notif_invited_title">Du bist eingeladen!</string>
+    <string name="notif_invite_msg_body">Du hast eine ausstehende Einladung von %1$s, der Liga %2$s beizutreten. Um teilzunehmen, bestätige deine Teilnahme im Bereich „Ligen konfiguration“.</string>
+    <string name="go_to_setup_leagues_btn">Zu „Ligen konfiguration“ gehen</string>
+    <string name="close_btn">Schließen</string>
+    <string name="connection_error">Die Spiele können nicht geladen werden. Bitte überprüfe deine Verbindung.</string>
+    <string name="retry">Erneut versuchen</string>
 </resources>

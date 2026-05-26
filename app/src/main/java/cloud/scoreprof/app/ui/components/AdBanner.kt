@@ -1,5 +1,6 @@
 package cloud.scoreprof.app.ui.components
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,44 +12,32 @@ import com.google.android.gms.ads.AdView
 @Composable
 fun AdBanner(
     modifier: Modifier = Modifier,
-    isMediumRectangle: Boolean = false
+    isMediumRectangle: Boolean = false,
+    showAds: Boolean = true
 ) {
+    if (!showAds) {
+        // Return an empty box if ads are disabled for this user
+        Box(modifier = modifier)
+        return
+    }
+
     AndroidView(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         factory = { context ->
             AdView(context).apply {
-                // Set size based on the parameter
-                setAdSize(
-                    if (isMediumRectangle)
-                        AdSize.MEDIUM_RECTANGLE
-                    else
-                        AdSize.LARGE_BANNER
-                )
-                adUnitId = "ca-app-pub-3940256099942544/6300978111"
+                setAdSize(if (isMediumRectangle) AdSize.MEDIUM_RECTANGLE else AdSize.LARGE_BANNER)
+                adUnitId = "ca-app-pub-3940256099942544/6300978111" // Test ID
                 val adRequest = AdRequest.Builder()
                     .addKeyword("Sport")
                     .addKeyword("Football")
                     .addKeyword("Soccer")
                     .addKeyword("Rugby")
-                    .addKeyword("Sports Gear")
-                    .addKeyword("Sports Betting")
                     .addKeyword("Match Scores")
                     .addKeyword("Tournament")
-                    .addKeyword("Sports News")
-                    .addKeyword("Sports Betting Odds")
-                    .addKeyword("Sports Betting Predictions")
-                    .addKeyword("Team Jersey")
-                    .addKeyword("Sports Kits")
-                    .addKeyword("Sports Apparel")
-                    .addKeyword("Sports Accessories")
-                    .addKeyword("Sports Shoes")
                     .build()
                 loadAd(adRequest)
             }
         },
-        update = { adView ->
-            // No update logic needed for static rectangle
-        }
+        update = { /* No update logic needed */ }
     )
 }

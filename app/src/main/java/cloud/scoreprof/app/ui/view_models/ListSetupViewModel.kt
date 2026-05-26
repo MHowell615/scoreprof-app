@@ -1,5 +1,6 @@
 package cloud.scoreprof.app.ui.view_models
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.util.Log
@@ -10,6 +11,7 @@ import com.android.volley.toolbox.Volley
 import cloud.scoreprof.app.data.LeaguesRepository
 import cloud.scoreprof.app.data.ScoreProfDao
 import cloud.scoreprof.app.data.SetupRepository
+import cloud.scoreprof.app.data.BillingManager
 import cloud.scoreprof.app.domain.model.Competition
 import cloud.scoreprof.app.domain.model.Language
 import cloud.scoreprof.app.domain.model.LeagueHeader
@@ -49,31 +51,46 @@ class ListSetupViewModel @Inject constructor(
     private val leaguesRepository: LeaguesRepository,
     private val languagesUseCases: LanguagesUseCases,
     private val tokenManager: TokenManager,
+    private val billingManager: BillingManager,
     private val dao: ScoreProfDao,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
-    /*private val userid: UUID? = savedStateHandle.get<String>("userid")?.let {
-        try { UUID.fromString(it) } catch (e: Exception) { null }
-    }*/
+
     val userid: UUID = try {
-        // Log all available keys to the Logcat so we can see why it's failing
-        val keys = savedStateHandle.keys()
-        Log.d("ListSetupViewModel", "Available keys: $keys")
-
         val uuidString = savedStateHandle.get<String>("userid")
-        Log.d("ListSetupViewModel", "Value for 'userid': $uuidString")
-
-        if (uuidString != null) {
+        if (!uuidString.isNullOrBlank()) {
             UUID.fromString(uuidString)
         } else {
-            // Provide a clearer error message including the keys found
-            throw IllegalArgumentException("User ID missing. Available keys: $keys")
+            val fallbackId = tokenManager.getUserId()
+            if (fallbackId != null) {
+                UUID.fromString(fallbackId)
+            } else {
+                // This triggers the 'catch' block below
+                throw IllegalArgumentException("User ID missing from Nav and Token.")
+            }
         }
     } catch (e: Exception) {
-        if (e is IllegalArgumentException) throw e
-        Log.e("ListSetupViewModel", "UUID Parsing failed", e)
-        // Fallback or throw
-        throw IllegalArgumentException("User ID is required. Invalid or missing: ${savedStateHandle.get<String>("userid")}")
+        // 1. Log locally for Logcat
+        Log.e("ScoreProf", "Fatal Init Error: ${e.message}")
+
+        // 2. REMOTE LOGGING: Send to your Droplet even though we don't have a userid
+        // We use viewModelScope.launch to not block the main thread
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // Assuming you add this function to setupRepository
+                setupRepository.reportCrash(
+                    errorMessage = e.message ?: "Null UserID on Startup",
+                    stackTrace = Log.getStackTraceString(e),
+                    appVersion = "1.0.7"
+                )
+            } catch (remoteErr: Exception) {
+                // If the server is also down, we just fail silently
+            }
+        }
+
+        // 3. FAIL-SAFE: Return a temporary ID so the app doesn't crash
+        // This keeps the 14-day test running!
+        UUID.randomUUID()
     }
 
     private val requestQueue = Volley.newRequestQueue(context)
@@ -90,14 +107,10 @@ class ListSetupViewModel @Inject constructor(
 
     private val _languages = MutableStateFlow<List<SelectableItem<Language>>>(emptyList())
     val languages = _languages.asStateFlow()
-    private val _eventFlow = MutableSharedFlow<ListMatchesViewModel.UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
+    
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
     val uiState = _uiState.asStateFlow()
 
-    //private val _isLoading = mutableStateOf(false)
-    //val isLoading: State<Boolean> = _isLoading
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
@@ -106,47 +119,54 @@ class ListSetupViewModel @Inject constructor(
 
     init {
         loadInitialDataForUser(userid)
+        
+        // Listen for successful billing events
+        viewModelScope.launch {
+            billingManager.purchaseSuccess.collect { success ->
+                if (success) {
+                    onAdsRemovedSuccessfully()
+                }
+            }
+        }
+    }
+
+    private fun onAdsRemovedSuccessfully() {
+        val currentSetup = _setup.value ?: return
+        val updatedSetup = currentSetup.copy(is_ads_removed = true)
+        _setup.value = updatedSetup
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                dao.insertSetup(updatedSetup)
+                setupRepository.updateAdsRemoved(true)
+                Log.d("ListSetupViewModel", "Ads removed successfully and synced to server.")
+            } catch (e: Exception) {
+                Log.e("ListSetupViewModel", "Failed to sync ad removal status", e)
+            }
+        }
+    }
+
+    fun triggerRemoveAdsPurchase(activity: Activity) {
+        billingManager.launchPurchaseFlow(activity, "remove_ads_premium")
     }
 
     fun loadInitialDataForUser(userid: UUID) {
-        // 1. Start observing the local database immediately.
-        //    This will show stale data instantly, then update automatically.
         viewModelScope.launch {
-            // 1. Observe the database
             setupRepository.getSetup(userid).collect { setupFromDb ->
                 if (setupFromDb != null) {
-                    // Before we pass the data to the UI, we filter the leagues
-                    // nested inside the setup object to remove "Deleted" ones.
-                    val filteredLeagues = setupFromDb.leagues/*.filter {
-                        val normalizedState = it.state?.uppercase() ?: "ACTIVE"
-                        normalizedState != "DELETED"
-                    }*/
-                    val filteredSetup = setupFromDb.copy(leagues = filteredLeagues)
-
-                    // Now the 'setup' StateFlow only contains active leagues
-                    _setup.value = filteredSetup
-
-                    // Update the selectable lists (Checkboxes) for the UI
-                    loadSelectionListsFromDb(filteredSetup)
+                    _setup.value = setupFromDb
+                    loadSelectionListsFromDb(setupFromDb)
                 }
             }
         }
 
-        // 2. Parallel server refresh (keep as is)
         viewModelScope.launch {
             try {
                 setupRepository.refreshSetupFromServer(userid)
             } catch (e: Exception) {
                 if (e.message == "SESSION_EXPIRED") {
-                    // IMPORTANT: This state must be observed by your NavHost
-                    // to trigger: navController.navigate("login") { popUpTo(0) }
-                    _uiState.value = HomeUiState.Error("Session Expired. Please log in again.")
-
-                    // If you have a side-effect flow for navigation:
                     _navigationEvents.emit(NavigationEvent.ToLogin)
                 }
-
-                Log.e("ViewModel", "Refresh failed", e)
             }
         }
     }
@@ -155,13 +175,11 @@ class ListSetupViewModel @Inject constructor(
         val userId = _setup.value?.userid ?: return
         viewModelScope.launch {
             try {
-                // Just refresh from the server. The Flow will handle the UI update.
                 setupRepository.refreshSetupFromServer(userId)
             } catch (e: Exception) {
-                // Handle error
+                Log.e("ListSetupViewModel", "Refresh failed", e)
             }
         }
-        Log.i("ListSetupViewModel", "Data refresh triggered.")
     }
 
     fun activateUserAccount(email: String, preferredLanguage: String) {
@@ -178,7 +196,6 @@ class ListSetupViewModel @Inject constructor(
                 _setup.value = null
                 onSuccess()
             } catch (e: Exception) {
-                Log.e("ListSetupViewModel", "Logout failed", e)
                 onSuccess()
             }
         }
@@ -245,63 +262,49 @@ class ListSetupViewModel @Inject constructor(
 
         viewModelScope.launch {
             _isLoading.value = true
-            val params = JSONObject().apply {put("u_id", userId)
+            val params = JSONObject().apply {
+                put("u_id", userId)
                 put("new_password", newPassword.trim())
             }
 
             val url = "https://www.scoreprof.cloud/rpc/change_password"
-            println("TEST: $url")
             val request = object : StringRequest(
                 Method.POST, url,
                 { response ->
                     try {
-                        // 1. Parse the new token from the server response
                         val result = JSONObject(response)
                         val newToken = result.getString("new_token")
-
-                        // 2. SAVE THE NEW TOKEN IMMEDIATELY
                         tokenManager.saveToken(newToken)
                         _isLoading.value = false
-                        println("ScoreProfLog: Password changed and token refreshed.")
                         _uiState.value = HomeUiState.Error("Password updated successfully.")
                     } catch (e: Exception) {
                         _isLoading.value = false
-                        _uiState.value = HomeUiState.Error("Password changed, please log in again.")
-                        println("Change password failed: ${e.message}")
+                        _uiState.value = HomeUiState.Error("Update failed.")
                     }
                 },
                 { error ->
                     _isLoading.value = false
-                    val serverData = error.networkResponse?.data?.let { String(it) }
-                    viewModelScope.launch {
-                        _uiState.value = HomeUiState.Error("Update failed: $serverData")
-                    }
+                    _uiState.value = HomeUiState.Error("Connection error.")
                 }
             ) {
                 override fun getBody(): ByteArray = params.toString().toByteArray(Charsets.UTF_8)
                 override fun getBodyContentType(): String = "application/json; charset=utf-8"
             }
-
-            request.retryPolicy =
-                DefaultRetryPolicy(20000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            request.retryPolicy = DefaultRetryPolicy(20000, 0, 1f)
             requestQueue.add(request)
         }
     }
 
     private fun loadSelectionListsFromDb(setupData: Setup) {
-        // This assumes your `getSetupData` API call returns the *master list* of all
-        // available competitions/leagues, with a `selected` flag for each.
         _competitions.value = setupData.competitions.map { userCompetition ->
             SelectableItem(
-                // We need to create a full Competition object for the UI
                 item = Competition(
                     id = userCompetition.id,
                     competitionid = userCompetition.competitionid,
                     sport_type = userCompetition.sport_type,
                     region = userCompetition.region,
                     country_ranking = userCompetition.country_ranking,
-                    name = userCompetition.name,
-                    //localizedNames = Competition.LocalizedNames(en = userCompetition.name) // Placeholder
+                    name = userCompetition.name
                 ),
                 isSelected = userCompetition.selected ?: false
             )
@@ -351,10 +354,7 @@ class ListSetupViewModel @Inject constructor(
     fun onCompetitionSelected(competition: Competition, isSelected: Boolean) {
         viewModelScope.launch {
             try {
-                // update server
                 setupUseCases.updateUserCompetition(competition.competitionid, isSelected)
-
-                // update locally
                 val userCompetitionSelection = UserCompetitionSelection(
                     id = competition.id,
                     competitionid = competition.competitionid,
@@ -385,9 +385,8 @@ class ListSetupViewModel @Inject constructor(
                         }
                     )
                 }
-                //observeAndRefreshSetupData(userid)
             } catch (e: Exception) {
-                Log.e("ListSetupViewModel", "Failed to update competition selection", e)
+                Log.e("ListSetupViewModel", "Failed to update competition", e)
             }
         }
     }
@@ -400,7 +399,6 @@ class ListSetupViewModel @Inject constructor(
     }
 
     fun onLeagueSelected(league: Leagues, isSelected: Boolean) {
-        // 1. Update the Selectable List (for the Setup Screen checkboxes)
         _setupLeagues.update { currentList ->
             currentList.map { selectableItem ->
                 if (selectableItem.item.leagueid == league.leagueid) {
@@ -411,7 +409,6 @@ class ListSetupViewModel @Inject constructor(
             }
         }
 
-        // 2. Update the main Setup object (for the Home Screen / Leagues Screen)
         _setup.update { currentSetup ->
             currentSetup?.copy(
                 leagues = currentSetup.leagues.map {
@@ -430,7 +427,6 @@ class ListSetupViewModel @Inject constructor(
 
     fun saveSetupScreenChanges() {
         val currentSetup = _setup.value ?: return
-
         viewModelScope.launch {
             val deviceLanguage = java.util.Locale.getDefault().language
             setupRepository.upsertSetup(currentSetup)
@@ -448,7 +444,7 @@ class ListSetupViewModel @Inject constructor(
         }
     }
 
-    fun saveChanges() {
+    /*fun saveChanges() {
         viewModelScope.launch(Dispatchers.IO) {
             val currentSetup = _setup.value
             val originalSetup = _originalSetup
@@ -557,27 +553,14 @@ class ListSetupViewModel @Inject constructor(
                 _eventFlow.emit(ListMatchesViewModel.UiEvent.ShowSnackbar("Error: Could not save settings to server."))
             }
         }
-    }
+    }*/
 
     fun onSetupDetailChanged(email: String, name: String) {
-        // Get the current state value
-        val currentSetup = _setup.value
-        if (currentSetup == null) return
-
-        // --- STEP 1: UPDATE THE UI STATE IMMEDIATELY ---
-        // Create the updated object.
+        val currentSetup = _setup.value ?: return
         val updatedSetup = currentSetup.copy(email = email, name = name)
-        // Manually update the StateFlow. This is critical for TextField responsiveness.
-        // This gives the UI an immediate new value to work with.
         _setup.value = updatedSetup
-        Log.d("ViewModel_Update", "UI state updated immediately with name: $name, email: $email")
-
-        // --- STEP 2: SAVE TO THE DATABASE IN THE BACKGROUND ---
-        // Launch a separate coroutine to handle the slower database write.
-        // This operation will no longer block the UI's state updates.
         viewModelScope.launch(Dispatchers.IO) {
             dao.insertSetup(updatedSetup)
-            Log.d("ViewModel_Update", "Database write completed in the background.")
         }
     }
 
@@ -605,19 +588,14 @@ class ListSetupViewModel @Inject constructor(
 
     fun onPrivacySettingsChanged(receiveEmail: Boolean) {
         val currentSetup = _setup.value ?: return
-
-        // 1. Mettre à jour l'état UI immédiatement
         val updatedSetup = currentSetup.copy(receive_email = receiveEmail)
         _setup.value = updatedSetup
-
-        // 2. Persister dans la BD locale et sur le serveur
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 dao.insertSetup(updatedSetup)
                 setupRepository.updateUserPrivacy(receiveEmail)
-                Log.d("ListSetupViewModel", "Privacy settings updated: $receiveEmail")
             } catch (e: Exception) {
-                Log.e("ListSetupViewModel", "Failed to update privacy settings", e)
+                Log.e("ListSetupViewModel", "Privacy update failed", e)
             }
         }
     }
