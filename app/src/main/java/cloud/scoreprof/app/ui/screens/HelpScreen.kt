@@ -35,21 +35,28 @@ fun HelpScreen(
 ) {
     val context = LocalContext.current
     val setupState by setupViewModel.setup.collectAsState()
-    
-    val faqList = remember {
-        (1..12).map { i ->
-            val questionResId = context.resources.getIdentifier(
-                "help_question$i", "string", context.packageName
-            )
-            val answerResId = context.resources.getIdentifier(
-                "help_answer$i", "string", context.packageName
-            )
 
-            QuestionAnswer(
-                question = if (questionResId != 0) context.getString(questionResId) else "Question $i",
-                answer = if (answerResId != 0) context.getString(answerResId) else "Answer $i"
-            )
+    val faqList = (1..12).map { i ->
+        val (questionRes, answerRes) = when (i) {
+            1 -> R.string.help_question1 to R.string.help_answer1
+            2 -> R.string.help_question2 to R.string.help_answer2
+            3 -> R.string.help_question3 to R.string.help_answer3
+            4 -> R.string.help_question4 to R.string.help_answer4
+            5 -> R.string.help_question5 to R.string.help_answer5
+            6 -> R.string.help_question6 to R.string.help_answer6
+            7 -> R.string.help_question7 to R.string.help_answer7
+            8 -> R.string.help_question8 to R.string.help_answer8
+            9 -> R.string.help_question9 to R.string.help_answer9
+            10 -> R.string.help_question10 to R.string.help_answer10
+            11 -> R.string.help_question11 to R.string.help_answer11
+            12 -> R.string.help_question12 to R.string.help_answer12
+            else -> R.string.help to R.string.help // Fallback
         }
+
+        QuestionAnswer(
+            question = stringResource(id = questionRes),
+            answer = stringResource(id = answerRes)
+        )
     }
 
     var expandedIndex by remember { mutableIntStateOf(-1) }

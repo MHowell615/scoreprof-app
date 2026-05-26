@@ -55,6 +55,9 @@ fun CreateNewLeagueScreen(
     var showSuccessDialog by remember { mutableStateOf(false) }
     var generatedLeagueCode by remember { mutableStateOf("") }
 
+    val shareLeagueMsg = stringResource(id = R.string.share_league_msg)
+    val copyToClipboardMsg = stringResource(id = R.string.copy_to_clipboard)
+
     val groupedData = remember(competitionsState) {
         competitionsState
             .filter { it.isSelected }
@@ -272,7 +275,7 @@ fun CreateNewLeagueScreen(
                     onClick = {
                         val sendIntent = android.content.Intent().apply {
                             action = android.content.Intent.ACTION_SEND
-                            putExtra(android.content.Intent.EXTRA_TEXT, context.getString(R.string.share_league_msg))
+                            putExtra(android.content.Intent.EXTRA_TEXT, shareLeagueMsg)
                             type = "text/plain"
                         }
                         context.startActivity(android.content.Intent.createChooser(sendIntent, null))
@@ -284,7 +287,7 @@ fun CreateNewLeagueScreen(
                     onClick = {
                         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         clipboard.setPrimaryClip(ClipData.newPlainText("League Code", generatedLeagueCode))
-                        Toast.makeText(context, context.getString(R.string.copy_to_clipboard), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, copyToClipboardMsg, Toast.LENGTH_SHORT).show()
                         showSuccessDialog = false
                         navController.popBackStack()
                     }
