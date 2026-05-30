@@ -48,9 +48,24 @@ class LoginViewModel @Inject constructor(
     fun onEmailChange(value: String) { _email.value = value }
     fun onPasswordChange(value: String) { _password.value = value }
 
+    private fun getAppLanguage(): String {
+        return AppCompatDelegate.getApplicationLocales()[0]?.language
+            ?: java.util.Locale.getDefault().language
+    }
+
+
     fun login() {
         val currentEmail = _email.value.trim()
         val currentPassword = _password.value.trim()
+
+        val packageInfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            context.packageManager.getPackageInfo(context.packageName, android.content.pm.PackageManager.PackageInfoFlags.of(0))
+        } else {
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        }
+        val currentVersion = packageInfo.longVersionCode.toInt()
+
+        val deviceLanguage = getAppLanguage()
 
         if (currentEmail.isBlank() || currentPassword.isBlank()) {
             viewModelScope.launch { _eventFlow.emit(UiEvent.Error("Fields cannot be empty")) }
@@ -64,9 +79,11 @@ class LoginViewModel @Inject constructor(
             val params = JSONObject().apply {
                 put("email_input", currentEmail)
                 put("pass_input", currentPassword)
+                put("lang_input", deviceLanguage)
+                put("v_input", currentVersion)
             }
 
-            val url = "https://www.scoreprof.cloud/rpc/login"
+            val url = "https://www.scoreprof.cloud/rpc/new_login"
 
             // 2. The Volley Request
             val stringRequest = object: com.android.volley.toolbox.StringRequest(

@@ -19,8 +19,8 @@ android {
         applicationId = "cloud.scoreprof.app"
         minSdk = 30
         targetSdk = 36
-        versionCode = 7
-        versionName = "1.0.7"
+        versionCode = 8
+        versionName = "1.0.8"
         buildConfigField("String", "SPROF_AUTH_KEY", "\"${project.findProperty("SPROF_AUTH_KEY") ?: ""}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

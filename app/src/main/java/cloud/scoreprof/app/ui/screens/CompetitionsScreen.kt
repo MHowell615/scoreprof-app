@@ -125,7 +125,7 @@ fun CompetitionsScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = sportType.uppercase(),
+                                text = sportType, //.uppercase(),
                                 style = MaterialTheme.typography.titleMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.primary),

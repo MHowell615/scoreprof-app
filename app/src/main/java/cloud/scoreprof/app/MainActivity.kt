@@ -174,7 +174,9 @@ class MainActivity : ComponentActivity() {
             TestNavigationTheme {
                 // Let the Scaffold handle all system bar insets automatically
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .statusBarsPadding().navigationBarsPadding(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     AppNavigation(tokenManager = tokenManager)

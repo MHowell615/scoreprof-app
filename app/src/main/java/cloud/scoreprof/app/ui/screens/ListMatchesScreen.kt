@@ -74,28 +74,39 @@ fun ListMatchesScreen(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            Row(
+            Surface(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding() // Modern Edge-to-Edge fix
-                    .height(56.dp)
-                    .padding(horizontal = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                    .fillMaxWidth(),
+                //color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 3.dp
             ) {
-                IconButton(onClick = {
-                    matchesViewModel.onEvent(ListMatchesViewModel.MatchEvent.SaveAndNavigateUp)
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .windowInsetsPadding(WindowInsets.statusBars)
+                        .height(56.dp)
+                        .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    IconButton(onClick = {
+                        matchesViewModel.onEvent(ListMatchesViewModel.MatchEvent.SaveAndNavigateUp)
+                    }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                    Text(
+                        text = competitionName,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            lineHeight = 24.sp
+                        ),
+                        modifier = Modifier.weight(1f),
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                     )
                 }
-                Text(
-                    text = competitionName,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f)
-                )
             }
         }
     ) { contentPadding ->

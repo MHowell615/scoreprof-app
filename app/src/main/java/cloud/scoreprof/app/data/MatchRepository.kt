@@ -2,6 +2,7 @@ package cloud.scoreprof.app.data
 
 import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -80,12 +81,13 @@ class MatchRepositoryImpl @Inject constructor(
         // Fetch the raw string from the server.
         try {
             val token = tokenManager.getToken() ?: ""
-            val deviceLanguage = java.util.Locale.getDefault().language
+            val language = AppCompatDelegate.getApplicationLocales()[0]?.language
+                ?: java.util.Locale.getDefault().language
             val url =
-                "https://www.scoreprof.cloud/rpc/getmatchesbycomp?competition_id=$competitionId&lang=$deviceLanguage&user_token=$token"
+                "https://www.scoreprof.cloud/rpc/getmatchesbycomp?competition_id=$competitionId&lang=$language&user_token=$token"
             //println("TEST: Calling URL: $url")
             val responseString = fetchPublicFromServer(url)
-            //println("TEST: Response: $responseString")
+            println("TEST: Response: $responseString")
 
             // Decode the entire MatchHeader object, which includes the list of matches.
             if (!responseString.isNullOrBlank() && responseString != "null") {

@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cloud.scoreprof.app.ui.theme.button_background
@@ -54,6 +55,7 @@ fun <T> SelectableRowWithCheckboxes(
                     color = MaterialTheme.colorScheme.primary,
                     lineHeight = 20.sp
                 ),
+                textAlign = TextAlign.Start,
                 modifier = Modifier.weight(1f),
                 softWrap = true
             )

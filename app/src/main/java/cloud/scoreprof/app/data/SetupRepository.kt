@@ -2,6 +2,7 @@ package cloud.scoreprof.app.data
 
 import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import cloud.scoreprof.app.BuildConfig
 import cloud.scoreprof.app.data.local.TokenManager
 import cloud.scoreprof.app.domain.model.Setup
@@ -69,7 +70,23 @@ class SetupRepositoryImpl @Inject constructor(
             val token = tokenManager.getToken() ?: ""
             if (token.isBlank()) throw IllegalStateException("SESSION_EXPIRED")
 
-            val url = "https://www.scoreprof.cloud/rpc/getsetupdata?user_token=$token"
+            val rawLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language
+                ?: java.util.Locale.getDefault().language
+            val language = rawLanguage.take(2).lowercase()
+
+            val packageInfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                context.packageManager.getPackageInfo(context.packageName, android.content.pm.PackageManager.PackageInfoFlags.of(0))
+            } else {
+                context.packageManager.getPackageInfo(context.packageName, 0)
+            }
+            val currentVersion = packageInfo.longVersionCode.toInt()
+
+            var url = "https://www.scoreprof.cloud/rpc/getsetupdata?user_token=$token"
+            if (currentVersion > 7) {
+                url = "https://www.scoreprof.cloud/rpc/getsetupdata?user_token=$token&lang=$language"
+            }
+
+            println("TEST: sending request for url: $url")
             val responseString = fetchPublicFromServer(url)
 
             if (!responseString.isNullOrBlank() && responseString != "null") {
