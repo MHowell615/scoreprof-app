@@ -129,4 +129,5 @@
     <string name="close_btn">إغلاق</string>
     <string name="connection_error">تعذر تحميل المباريات. يرجى التحقق من قوة الإشارة.</string>
     <string name="retry">إعادة المحاولة</string>
+    <string name="show_forthcoming_only">التصفية حسب المسابقات التي ستقام مبارياتها خلال الأسابيع الأربعة المقبلة</string>
 </resources>

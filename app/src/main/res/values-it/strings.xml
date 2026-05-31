@@ -131,4 +131,5 @@
     <string name="close_btn">Chiudi</string>
     <string name="connection_error">Impossibile caricare le partite. Controlla la connessione.</string>
     <string name="retry">Riprova</string>
+    <string name="show_forthcoming_only">Filtra per competizioni con partite nelle prossime 4 settimane</string>
 </resources>

@@ -131,4 +131,5 @@
     <string name="close_btn">बंद करें</string>
     <string name="connection_error">मैच लोड नहीं हो पा रहे हैं। कृपया अपना सिग्नल जांचें।</string>
     <string name="retry">दोबारा प्रयास करें</string>
+    <string name="show_forthcoming_only">अगले 4 सप्ताह में मैचों वाले प्रतियोगिताओं द्वारा फ़िल्टर करें</string>
 </resources>

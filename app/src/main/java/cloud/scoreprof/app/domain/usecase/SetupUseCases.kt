@@ -4,5 +4,6 @@ data class SetupUseCases(
     val getSetup: GetSetupUseCase,
     val loadAndCacheSetup: LoadAndCacheSetupUseCase,
     val updateUserCompetition: UpdateUserCompetitionUseCase,
-    val sendSupportEmail: SendSupportEmailUseCase
+    val sendSupportEmail: SendSupportEmailUseCase,
+    val updateAllUserCompetitions: UpdateAllUserCompetitionsCase
 )

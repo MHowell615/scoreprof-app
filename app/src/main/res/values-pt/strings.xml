@@ -131,4 +131,5 @@
     <string name="close_btn">Fechar</string>
     <string name="connection_error">Não foi possível carregar os jogos. Verifique a sua ligação.</string>
     <string name="retry">Tentar novamente</string>
+    <string name="show_forthcoming_only">Filtrar por competições com jogos nas próximas 4 semanas</string>
 </resources>

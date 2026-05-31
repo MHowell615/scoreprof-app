@@ -162,4 +162,5 @@
     <string name="close_btn">Close</string>
     <string name="connection_error">Unable to load matches. Please check your signal.</string>
     <string name="retry">Retry</string>
+    <string name="show_forthcoming_only">Filter by competitions with matches in the next 4 weeks</string>
 </resources>

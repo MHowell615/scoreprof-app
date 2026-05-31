@@ -35,7 +35,8 @@ data class UserCompetitionSelection(
     val region: String? = null,
     val country_ranking: Int? = null,
     val name: String, // We can ignore this name, as we'll use the one from competitions.json
-    val selected: Boolean? = false
+    val selected: Boolean? = false,
+    val has_upcoming: Boolean? = false
 )
 
 @Serializable

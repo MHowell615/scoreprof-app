@@ -39,6 +39,7 @@ interface SetupRepository {
     suspend fun requestJoinLeague(joinCode: String)
     suspend fun updateAdsRemoved(isRemoved: Boolean)
     suspend fun reportCrash(errorMessage: String, stackTrace: String, appVersion: String)
+    suspend fun updateAllUserCompetitions(isSelected: Boolean)
 }
 
 @Singleton
@@ -70,9 +71,12 @@ class SetupRepositoryImpl @Inject constructor(
             val token = tokenManager.getToken() ?: ""
             if (token.isBlank()) throw IllegalStateException("SESSION_EXPIRED")
 
-            val rawLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language
-                ?: java.util.Locale.getDefault().language
-            val language = rawLanguage.take(2).lowercase()
+            val appLocales = AppCompatDelegate.getApplicationLocales()
+            val language = if (!appLocales.isEmpty) {
+                appLocales[0]?.language?.take(2)?.lowercase() ?: "en"
+            } else {
+                java.util.Locale.getDefault().language.take(2).lowercase()
+            }
 
             val packageInfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 context.packageManager.getPackageInfo(context.packageName, android.content.pm.PackageManager.PackageInfoFlags.of(0))
@@ -282,6 +286,16 @@ class SetupRepositoryImpl @Inject constructor(
             put("user_token", token)
             put("_competitionid", competitionid)
             put("_isselected", isSelected)
+        }
+        performPostRequest(url, jsonBody.toString())
+    }
+
+    override suspend fun updateAllUserCompetitions(isSelected: Boolean) {
+        val token = tokenManager.getToken() ?: ""
+        val url = "https://www.scoreprof.cloud/rpc/update_all_user_competitions"
+        val jsonBody = JSONObject().apply {
+            put("user_token", token)
+            put("isselected", isSelected)
         }
         performPostRequest(url, jsonBody.toString())
     }

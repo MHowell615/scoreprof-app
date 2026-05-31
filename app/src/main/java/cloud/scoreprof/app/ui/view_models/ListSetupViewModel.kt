@@ -117,6 +117,9 @@ class ListSetupViewModel @Inject constructor(
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents = _navigationEvents.asSharedFlow()
 
+    private val _showOnlyUpcoming = MutableStateFlow(false)
+    val showOnlyUpcoming = _showOnlyUpcoming.asStateFlow()
+
     init {
         loadInitialDataForUser(userid)
         
@@ -128,6 +131,10 @@ class ListSetupViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun toggleUpcomingFilter(enabled: Boolean) {
+        _showOnlyUpcoming.value = enabled
     }
 
     private fun onAdsRemovedSuccessfully() {
@@ -304,7 +311,8 @@ class ListSetupViewModel @Inject constructor(
                     sport_type = userCompetition.sport_type,
                     region = userCompetition.region,
                     country_ranking = userCompetition.country_ranking,
-                    name = userCompetition.name
+                    name = userCompetition.name,
+                    has_upcoming = userCompetition.has_upcoming
                 ),
                 isSelected = userCompetition.selected ?: false
             )
@@ -347,6 +355,45 @@ class ListSetupViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("ListSetupViewModel", "Failed to get languages", e)
+            }
+        }
+    }
+
+    fun onToggleAllCompetitions(isSelected: Boolean) {
+        viewModelScope.launch {
+            try {
+                // 1. UI Update (Snappy response for the user)
+                val currentList = _competitions.value
+                val updatedList = currentList.map { it.copy(isSelected = isSelected) }
+                _competitions.value = updatedList
+
+                // 2. Server Update (Batch)
+                // Ideally, your SetupRepository should have a batch function.
+                // If not, we run the loop here inside a single coroutine.
+                setupUseCases.updateAllUserCompetitions(isSelected)
+
+                // 3. Local Database Update (Batch)
+                // Map the items to your Selection entities
+                val selections = updatedList.map { selectable ->
+                    UserCompetitionSelection(
+                        id = selectable.item.id,
+                        competitionid = selectable.item.competitionid,
+                        sport_type = selectable.item.sport_type,
+                        name = selectable.item.name,
+                        selected = isSelected
+                    )
+                }
+                dao.updateAllCompetitions(selections) // See DAO update below
+
+                // 4. Update the main Setup state object
+                _setup.update { currentSetup ->
+                    currentSetup?.copy(
+                        competitions = currentSetup.competitions.map { it.copy(selected = isSelected) }
+                    )
+                }
+
+            } catch (e: Exception) {
+                Log.e("ListSetupViewModel", "Failed to batch update competitions", e)
             }
         }
     }

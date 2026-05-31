@@ -39,6 +39,7 @@ import cloud.scoreprof.app.domain.usecase.LoadAndCacheSetupUseCase
 import cloud.scoreprof.app.domain.usecase.MatchesUseCases
 import cloud.scoreprof.app.domain.usecase.SendSupportEmailUseCase
 import cloud.scoreprof.app.domain.usecase.SetupUseCases
+import cloud.scoreprof.app.domain.usecase.UpdateAllUserCompetitionsCase
 import cloud.scoreprof.app.domain.usecase.UpdatePredictionInDbUseCase
 import cloud.scoreprof.app.domain.usecase.UpdateUserCompetitionUseCase
 import dagger.Binds
@@ -116,6 +117,7 @@ object DatabaseAndUseCaseModule {
             getSetup = GetSetupUseCase(repository),
             loadAndCacheSetup = LoadAndCacheSetupUseCase(repository),
             updateUserCompetition = UpdateUserCompetitionUseCase(repository),
+            updateAllUserCompetitions = UpdateAllUserCompetitionsCase(repository),
             sendSupportEmail = SendSupportEmailUseCase(repository)
         )
     }

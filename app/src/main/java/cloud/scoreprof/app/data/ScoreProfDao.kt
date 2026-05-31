@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import androidx.room.Upsert
 import cloud.scoreprof.app.domain.model.Competition
 import cloud.scoreprof.app.domain.model.LanguageEntity
@@ -234,4 +235,6 @@ interface ScoreProfDao {
         insertLeagueTable(table)
     }
 
+    @Update
+    suspend fun updateAllCompetitions(selections: List<UserCompetitionSelection>)
 }

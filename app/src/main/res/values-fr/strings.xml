@@ -163,4 +163,5 @@
     <string name="close_btn">Fermer</string>
     <string name="connection_error">Impossible de charger les matchs. Vérifiez votre connexion.</string>
     <string name="retry">Réessayer</string>
+    <string name="show_forthcoming_only">Filtrer par compétitions dont les matchs auront lieu dans les 4 prochaines semaines</string>
 </resources>

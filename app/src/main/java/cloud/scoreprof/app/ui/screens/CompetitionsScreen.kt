@@ -46,18 +46,25 @@ fun CompetitionsScreen(
         setupState?.userid ?: passedUserId?.let { UUID.fromString(it) }
     }
     val competitionsState by setupViewModel.competitions.collectAsState()
+    val showOnlyUpcoming by setupViewModel.showOnlyUpcoming.collectAsState()
 
-    val groupedData = remember(competitionsState) {
+    val displayedCompetitions = remember(competitionsState, showOnlyUpcoming) {
+        if (showOnlyUpcoming) {
+            competitionsState.filter { it.item.has_upcoming == true }
+        } else {
+            competitionsState
+        }
+    }
+
+    val groupedData = remember(displayedCompetitions) {
         val collator = java.text.Collator.getInstance()
-        competitionsState
+        displayedCompetitions
             .filter { it.isSelected }
             .groupBy { it.item.sport_type ?: "Other" }
             .mapValues { sportEntry ->
                 val byRegion = sportEntry.value.groupBy { it.item.region ?: "International" }
                 byRegion.toSortedMap(collator::compare).mapValues { regionEntry ->
-                    regionEntry.value.sortedBy { competitionSelection ->
-                        competitionSelection.item.country_ranking ?: Int.MAX_VALUE
-                    }
+                    regionEntry.value.sortedBy { it.item.country_ranking ?: Int.MAX_VALUE }
                 }
             }.toSortedMap()
     }
@@ -110,6 +117,23 @@ fun CompetitionsScreen(
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = showOnlyUpcoming,
+                        onCheckedChange = { setupViewModel.toggleUpcomingFilter(it) }
+                    )
+                    Text(
+                        text = stringResource(R.string.show_forthcoming_only),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+                HorizontalDivider(modifier = Modifier.padding(bottom = 8.dp))
+            }
             groupedData.forEach { (sportType, regions) ->
                 item(key = "sport_$sportType") {
                     val isSportExpanded = expandedSports[sportType] ?: false

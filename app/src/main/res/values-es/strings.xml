@@ -131,4 +131,5 @@
     <string name="close_btn">Cerrar</string>
     <string name="connection_error">No se pueden cargar los partidos. Comprueba la señal.</string>
     <string name="retry">Inténtalo de nuevo</string>
+    <string name="show_forthcoming_only">Filtrar por competiciones con partidos en las próximas 4 semanas</string>
 </resources>

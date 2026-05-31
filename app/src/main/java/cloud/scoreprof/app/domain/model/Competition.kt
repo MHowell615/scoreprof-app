@@ -22,7 +22,8 @@ data class Competition(
     val sport_type: String?,
     val region: String?,
     val country_ranking: Int?,
-    val name: String
+    val name: String,
+    val has_upcoming: Boolean?
 ) : Parcelable
 
 fun groupAndSortCompetitions(
