@@ -86,6 +86,7 @@ fun CompetitionsScreen(
         }
     }
 
+
     Scaffold(
         topBar = {
             Row(
