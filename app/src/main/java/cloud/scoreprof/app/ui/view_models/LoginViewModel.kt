@@ -188,7 +188,7 @@ class LoginViewModel @Inject constructor(
                     put("_new_password", newPassword.trim())
                 }
 
-                val url = "https://www.scoreprof.cloud/rpc/reset_password"
+                val url = "https://api.scoreprof.cloud/api/reset_password"
 
                 val request = object : StringRequest(
                     Method.POST, url,
@@ -239,7 +239,7 @@ class LoginViewModel @Inject constructor(
         _isLoading.value = true // Start loader
 
         viewModelScope.launch {
-            val url = "https://www.scoreprof.cloud/rpc/request_password_reset"
+            val url = "https://api.scoreprof.cloud/api/request_password_reset"
             val authKey = BuildConfig.SPROF_AUTH_KEY
             val language = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en"
 

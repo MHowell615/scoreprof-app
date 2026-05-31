@@ -147,6 +147,7 @@ class SetupRepositoryImpl @Inject constructor(
     }
 
     override suspend fun sendSupportEmail(userEmail: String, category: String, subject: String, description: String): Boolean {
+
         val url = "https://api.scoreprof.cloud/send-support"
         val jsonBody = JSONObject().apply {
             put("userEmail", userEmail)
@@ -155,9 +156,15 @@ class SetupRepositoryImpl @Inject constructor(
             put("description", description)
             put("authKey", BuildConfig.SPROF_AUTH_KEY)
         }
-        val request = JsonObjectRequest(Request.Method.POST, url, jsonBody, null, null)
-        requestQueue.add(request)
-        return true
+
+        return try {
+            // Reuse your performPostRequest helper
+            performPostRequest(url, jsonBody.toString())
+            true
+        } catch (e: Exception) {
+            Log.e("SetupRepository", "Support email failed to send", e)
+            false
+        }
     }
 
     override suspend fun upsertSetup(setup: Setup) {
