@@ -164,4 +164,8 @@
     <string name="connection_error">Impossible de charger les matchs. Vérifiez votre connexion.</string>
     <string name="retry">Réessayer</string>
     <string name="show_forthcoming_only">Filtrer par compétitions dont les matchs auront lieu dans les 4 prochaines semaines</string>
+    <string name="sign_up">S\'inscrire</string>
+    <string name="confirm_password">Confirmer le mot de passe</string>
+    <string name="password_mismatch">Les mots de passe ne correspondent pas</string>
+    <string name="signup_text">L\'inscription se fait en toute simplicité. Le mot de passe que vous saisissez maintenant servira de clé permanente.</string>
 </resources>

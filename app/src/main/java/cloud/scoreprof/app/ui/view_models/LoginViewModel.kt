@@ -17,14 +17,18 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.text.intl.Locale
 import cloud.scoreprof.app.BuildConfig
+import cloud.scoreprof.app.data.SetupRepository
 import org.json.JSONObject
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val repository: SetupRepository,
     private val tokenManager: TokenManager,
     @dagger.hilt.android.qualifiers.ApplicationContext
     private val context: Context
@@ -45,6 +49,9 @@ class LoginViewModel @Inject constructor(
 
     private val requestQueue: RequestQueue = Volley.newRequestQueue(context)
 
+    private val _isLoginMode = MutableStateFlow(true)
+    val isLoginMode = _isLoginMode.asStateFlow()
+
     fun onEmailChange(value: String) { _email.value = value }
     fun onPasswordChange(value: String) { _password.value = value }
 
@@ -53,6 +60,35 @@ class LoginViewModel @Inject constructor(
             ?: java.util.Locale.getDefault().language
     }
 
+    fun setLoginMode(isLogin: Boolean) {
+        _isLoginMode.value = isLogin
+    }
+
+    fun toggleMode() {
+        _isLoginMode.value = !_isLoginMode.value
+    }
+
+    fun logUiError(message: String) {
+        val isUserError = message.contains("Invalid email", ignoreCase = true) ||
+                message.contains("Fields cannot be empty", ignoreCase = true) ||
+                message.contains("too short", ignoreCase = true)
+
+        if (isUserError) {
+            println("ScoreProfAuthLog: Skipping remote log for user validation error.")
+            return
+        }
+        viewModelScope.launch {
+            try {
+                repository.logError(
+                    errorMessage = "UI Error: $message",
+                    stackTrace = "LoginMode: \${if (isLoginMode.value) \"LOGIN\" else \"SIGN_UP\"}",
+                    appVersion = BuildConfig.VERSION_NAME
+                )
+            } catch (e: Exception) {
+                println("ScoreProfAuthLog: Remote log failed: ${e.message}")
+            }
+        }
+    }
 
     fun login() {
         val currentEmail = _email.value.trim()
@@ -155,6 +191,16 @@ class LoginViewModel @Inject constructor(
 
                         if (error.networkResponse == null) {
                             println("ScoreProfAuthLog: No network response. Check internet/SSL.")
+                        }
+                        println("[TEST] error statusCode = $statusCode")
+                        if (statusCode != 401 && statusCode != 403) {
+                            repository.logError(
+                                errorMessage = "Status $statusCode: $message",
+                                stackTrace = "VOLLEY_UI_ERROR_CAUGHT",
+                                appVersion = BuildConfig.VERSION_NAME
+                            )
+                        } else {
+                            println("ScoreProfAuthLog: Skipping DB log for Auth Failure (Status $statusCode)")
                         }
 
                         _isLoading.value = false
@@ -265,6 +311,11 @@ class LoginViewModel @Inject constructor(
                     val message = "Failed to send reset code. Please check your email and try again."
                     viewModelScope.launch {
                         _eventFlow.emit(UiEvent.Error(message))
+                        repository.logError(
+                            errorMessage = "Status $statusCode: $message",
+                            stackTrace = "VOLLEY_UI_ERROR_CAUGHT",
+                            appVersion = BuildConfig.VERSION_NAME
+                        )
                     }
                 }
             )

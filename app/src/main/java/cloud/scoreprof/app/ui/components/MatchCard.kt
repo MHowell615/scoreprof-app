@@ -193,24 +193,43 @@ fun MatchCard(
             }
 
             Row {
-                Column {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                ) {
+                    // 1. Venue aligned to the Start (Left)
                     match.venue?.let {
                         Text(
-                            it,
+                            text = it,
                             style = TextStyle(
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.primary
                             ),
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                                .fillMaxWidth(0.35f), // Prevents overlapping center
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
-                }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.End,
-                    verticalArrangement = Arrangement.Center
-                ) {
+
+                    // 2. Supplement aligned to the Center (Middle)
+                    match.supplement?.let {
+                        Text(
+                            text = it,
+                            style = TextStyle(
+                                fontSize = 14.sp, // Slightly smaller than score for hierarchy
+                                fontWeight = FontWeight.Bold,
+                                color = fontColor,
+                                textAlign = TextAlign.Center
+                            ),
+                            modifier = Modifier.align(Alignment.Center),
+                            maxLines = 1
+                        )
+                    }
+
+                    // 3. Kickoff Time aligned to the End (Right)
                     Text(
                         text = run {
                             val context = LocalContext.current
@@ -222,16 +241,16 @@ fun MatchCard(
                             } else {
                                 "h:mm a"
                             }
-                            val formatter =
-                                DateTimeFormatter.ofPattern(pattern, Locale.getDefault())
+                            val formatter = DateTimeFormatter.ofPattern(pattern, Locale.getDefault())
                             localKickoff.toJavaLocalDateTime().format(formatter)
                         },
                         style = TextStyle(
                             fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.End
                         ),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        maxLines = 1
                     )
                 }
             }

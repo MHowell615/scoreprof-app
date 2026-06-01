@@ -1,8 +1,10 @@
 package cloud.scoreprof.app.ui.screens
 
+import android.R.attr.onClick
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -25,6 +27,10 @@ import java.util.UUID
 import cloud.scoreprof.app.R
 import cloud.scoreprof.app.ui.components.AdBanner
 import android.util.Patterns
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun LoginScreen(
@@ -40,6 +46,22 @@ fun LoginScreen(
     val isPasswordTooShort = password.isNotEmpty() && password.length < 6
     val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
     var hasAttemptedLogin by remember { mutableStateOf(false) }
+    val isLoginMode by viewModel.isLoginMode.collectAsState()
+    var confirmPasswordInput by remember { mutableStateOf("") }
+    val passwordsMatch = passwordInput == confirmPasswordInput || isLoginMode
+
+
+
+    val buttonText = if (isLoginMode)
+        stringResource(R.string.login)
+    else
+        stringResource(R.string.sign_up)
+
+    val toggleText = if (isLoginMode)
+        "Don't have an account? Sign Up"
+    else
+        "Already have an account? Login"
+    var showFields by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -51,6 +73,7 @@ fun LoginScreen(
                 }
                 is LoginViewModel.UiEvent.Error -> {
                     snackbarHostState.showSnackbar(event.message)
+                    viewModel.logUiError(event.message)
                 }
             }
         }
@@ -59,32 +82,8 @@ fun LoginScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surface
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding() // Correct edge-to-edge handling
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(120.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.scoreprof_launcher_round),
-                            contentDescription = "ScoreProf Logo",
-                            modifier = Modifier
-                                .height(100.dp)
-                                .fillMaxWidth(),
-                            contentScale = ContentScale.Fit
-                        )
-                    }
-                }
-            }
+            // Only handle the status bar height here
+            Spacer(modifier = Modifier.statusBarsPadding())
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { padding ->
@@ -92,104 +91,175 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
         ) {
-            Text(text = stringResource(R.string.scoreprof_login), style = MaterialTheme.typography.headlineMedium)
+            Spacer(modifier = Modifier.weight(1f))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.scoreprof_launcher_round),
+                    contentDescription = "ScoreProf Logo",
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.Fit
+                )
+            }
 
-            Spacer(modifier = Modifier.height(26.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            OutlinedTextField(
-                value = email,
-                onValueChange = { newValue ->
-                    viewModel.onEmailChange(newValue)
-                    if (isEmailValid) hasAttemptedLogin = false
-                },
-                label = { Text(stringResource(R.string.email)) },
-                isError = hasAttemptedLogin && !isEmailValid,
-                supportingText = {
-                    if (hasAttemptedLogin && !isEmailValid) {
-                        Text(
-                            text = stringResource(R.string.email_validation_text),
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !isLoading,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-            )
+            // STEP 1: Selection Mode
+            if (!showFields) {
+                Text(
+                    text = stringResource(R.string.scoreprof_login),
+                    style = MaterialTheme.typography.headlineMedium
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(48.dp))
 
-            OutlinedTextField(
-                value = passwordInput,
-                label = { Text(stringResource(R.string.password)) },
-                isError = isPasswordTooShort,
-                supportingText = {
-                    if (isPasswordTooShort) {
-                        Text(
-                            stringResource(R.string.short_password_msg),
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                },
-                onValueChange = { passwordInput = it },
-                singleLine = true,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                trailingIcon = {
-                    val image = if (passwordVisible)
-                        Icons.Filled.Visibility
-                    else Icons.Filled.VisibilityOff
-
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                        Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide" else "Show")
-                    }
-                },
-                textStyle = MaterialTheme.typography.headlineSmall.copy(color = MaterialTheme.colorScheme.primary),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(R.string.login_text),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 4.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            if (isLoading) {
-                CircularProgressIndicator()
-            } else {
                 Button(
                     onClick = {
-                        hasAttemptedLogin = true
-                        if (isEmailValid && !isPasswordTooShort && email.isNotEmpty()) {
-                            viewModel.onPasswordChange(passwordInput)
-                            viewModel.login()
-                        }
+                        viewModel.setLoginMode(true)
+                        showFields = true
                     },
-                    enabled = !isLoading,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(R.string.login))
                 }
-            }
 
-            Spacer(modifier = Modifier.weight(1f))
-            TextButton(
-                onClick = { navController.navigate("forgot_password") }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.forgot_password),
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedButton(
+                    onClick = {
+                        viewModel.setLoginMode(false)
+                        showFields = true
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                ) {
+                    Text(stringResource(R.string.sign_up))
+                }
             }
+            // STEP 2: Input Mode
+            else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { showFields = false }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                    Text(
+                        text = if (isLoginMode) stringResource(R.string.login) else stringResource(R.string.sign_up),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Email Field
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { viewModel.onEmailChange(it) },
+                    label = { Text(stringResource(R.string.email)) },
+                    isError = hasAttemptedLogin && !isEmailValid,
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !isLoading,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Password Field
+                OutlinedTextField(
+                    value = passwordInput,
+                    label = { Text(stringResource(R.string.password)) },
+                    isError = isPasswordTooShort,
+                    onValueChange = { passwordInput = it },
+                    singleLine = true,
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    trailingIcon = {
+                        val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(imageVector = image, contentDescription = null)
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                // NEW: Confirm Password Field (Only for Sign Up)
+                if (!isLoginMode) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OutlinedTextField(
+                        value = confirmPasswordInput,
+                        onValueChange = { confirmPasswordInput = it },
+                        label = { Text(stringResource(R.string.confirm_password)) },
+                        isError = hasAttemptedLogin && !passwordsMatch,
+                        supportingText = {
+                            if (hasAttemptedLogin && !passwordsMatch) {
+                                Text(stringResource(R.string.password_mismatch), color = MaterialTheme.colorScheme.error)
+                            }
+                        },
+                        singleLine = true,
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                if (isLoading) {
+                    CircularProgressIndicator()
+                } else {
+                    Button(
+                        onClick = {
+                            hasAttemptedLogin = true
+                            if (isEmailValid && !isPasswordTooShort && email.isNotEmpty() && passwordsMatch) {
+                                viewModel.onPasswordChange(passwordInput)
+                                viewModel.login()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(if (isLoginMode) stringResource(R.string.login) else stringResource(R.string.sign_up))
+                    }
+
+                    if (isLoginMode) {
+                        TextButton(onClick = {
+                            navController.navigate("forgot_password")
+                        }) {
+                            Text(
+                                text = stringResource(R.string.forgot_password),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+
+                if (!isLoginMode) {
+                    Text(
+                        text = stringResource(R.string.signup_text),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                        modifier = Modifier.padding(top = 24.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.weight(1.5f))
         }
     }
 }

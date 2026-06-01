@@ -130,4 +130,8 @@
     <string name="connection_error">تعذر تحميل المباريات. يرجى التحقق من قوة الإشارة.</string>
     <string name="retry">إعادة المحاولة</string>
     <string name="show_forthcoming_only">التصفية حسب المسابقات التي ستقام مبارياتها خلال الأسابيع الأربعة المقبلة</string>
+    <string name="sign_up">التسجيل</string>
+    <string name="confirm_password">تأكيد كلمة المرور</string>
+    <string name="password_mismatch">كلمات المرور غير متطابقة</string>
+    <string name="signup_text">عملية التسجيل سهلة للغاية. ستكون كلمة المرور التي تدخلها الآن هي مفتاحك الدائم.</string>
 </resources>

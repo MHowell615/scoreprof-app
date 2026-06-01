@@ -132,4 +132,8 @@
     <string name="connection_error">Impossibile caricare le partite. Controlla la connessione.</string>
     <string name="retry">Riprova</string>
     <string name="show_forthcoming_only">Filtra per competizioni con partite nelle prossime 4 settimane</string>
+    <string name="sign_up">Iscriviti</string>
+    <string name="confirm_password">Conferma password</string>
+    <string name="password_mismatch">Le password non corrispondono</string>
+    <string name="signup_text">La registrazione è semplicissima. La password che inserisci ora sarà la tua chiave permanente.</string>
 </resources>

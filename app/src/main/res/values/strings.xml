@@ -163,4 +163,8 @@
     <string name="connection_error">Unable to load matches. Please check your signal.</string>
     <string name="retry">Retry</string>
     <string name="show_forthcoming_only">Filter by competitions with matches in the next 4 weeks</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="signup_text">Registration is seamless. The password you enter now will be your permanent key.</string>
 </resources>

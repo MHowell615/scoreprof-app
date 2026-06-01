@@ -40,6 +40,7 @@ interface SetupRepository {
     suspend fun updateAdsRemoved(isRemoved: Boolean)
     suspend fun reportCrash(errorMessage: String, stackTrace: String, appVersion: String)
     suspend fun updateAllUserCompetitions(isSelected: Boolean)
+    suspend fun logError(errorMessage: String, stackTrace: String, appVersion: String)
 }
 
 @Singleton
@@ -260,6 +261,29 @@ class SetupRepositoryImpl @Inject constructor(
                 requestQueue.add(stringRequest)
                 Log.d("SetupRepository", "requestJoinLeague request sent")
             }
+        }
+    }
+
+    override suspend fun logError(errorMessage: String, stackTrace: String, appVersion: String) {
+        // This hits your Node.js endpoint: app.post('/logs/error', ...)
+        val url = "https://api.scoreprof.cloud/logs/error"
+        val userId = tokenManager.getUserId()?.toString() ?: "Unknown"
+        val deviceModel = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}"
+
+        val jsonBody = JSONObject().apply {
+            put("userid", userId)
+            put("error_message", errorMessage)
+            put("stack_trace", stackTrace)
+            put("app_version", appVersion)
+            put("device_model", deviceModel)
+        }
+
+        try {
+            // Reuse your existing performPostRequest helper
+            performPostRequest(url, jsonBody.toString())
+        } catch (e: Exception) {
+            // If logging fails, we just print to console to avoid infinite loops
+            Log.e("SetupRepository", "Failed to send remote log", e)
         }
     }
 

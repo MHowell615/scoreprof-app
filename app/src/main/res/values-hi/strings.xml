@@ -132,4 +132,8 @@
     <string name="connection_error">मैच लोड नहीं हो पा रहे हैं। कृपया अपना सिग्नल जांचें।</string>
     <string name="retry">दोबारा प्रयास करें</string>
     <string name="show_forthcoming_only">अगले 4 सप्ताह में मैचों वाले प्रतियोगिताओं द्वारा फ़िल्टर करें</string>
+    <string name="sign_up">साइन अप करें</string>
+    <string name="confirm_password">पासवर्ड की पुष्टि करें</string>
+    <string name="password_mismatch">पासवर्ड मेल नहीं खाते</string>
+    <string name="signup_text">पंजीकरण सहज है। अब आप जो पासवर्ड दर्ज करेंगे, वही आपकी स्थायी कुंजी होगी।</string>
 </resources>

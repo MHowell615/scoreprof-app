@@ -132,4 +132,8 @@
     <string name="connection_error">Não foi possível carregar os jogos. Verifique a sua ligação.</string>
     <string name="retry">Tentar novamente</string>
     <string name="show_forthcoming_only">Filtrar por competições com jogos nas próximas 4 semanas</string>
+    <string name="sign_up">Inscreva-se</string>
+    <string name="confirm_password">Confirmar palavra-passe</string>
+    <string name="password_mismatch">As palavras-passe não coincidem</string>
+    <string name="signup_text">O registo é muito simples. A palavra-passe que introduzir agora será a sua chave permanente.</string>
 </resources>

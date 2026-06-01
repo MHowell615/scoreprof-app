@@ -132,4 +132,8 @@
     <string name="connection_error">Die Spiele können nicht geladen werden. Bitte überprüfe deine Verbindung.</string>
     <string name="retry">Erneut versuchen</string>
     <string name="show_forthcoming_only">Nach Wettbewerben filtern, bei denen in den nächsten 4 Wochen Spiele stattfinden</string>
+    <string name="sign_up">Anmelden</string>
+    <string name="confirm_password">Passwort bestätigen</string>
+    <string name="password_mismatch">Die Passwörter stimmen nicht überein</string>
+    <string name="signup_text">Die Registrierung erfolgt nahtlos. Das Passwort, das Sie jetzt eingeben, dient als Ihr permanenter Schlüssel.</string>
 </resources>

@@ -132,4 +132,8 @@
     <string name="connection_error">No se pueden cargar los partidos. Comprueba la señal.</string>
     <string name="retry">Inténtalo de nuevo</string>
     <string name="show_forthcoming_only">Filtrar por competiciones con partidos en las próximas 4 semanas</string>
+    <string name="sign_up">Regístrate</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="password_mismatch">Las contraseñas no coinciden</string>
+    <string name="signup_text">El registro es muy sencillo. La contraseña que introduzcas ahora será tu clave permanente.</string>
 </resources>
