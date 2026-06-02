@@ -81,11 +81,21 @@ class MatchRepositoryImpl @Inject constructor(
         // Fetch the raw string from the server.
         try {
             val token = tokenManager.getToken() ?: ""
-            val language = AppCompatDelegate.getApplicationLocales()[0]?.language
-                ?: java.util.Locale.getDefault().language
+            val appLocales = AppCompatDelegate.getApplicationLocales()
+            val language = when {
+                !appLocales.isEmpty -> {
+                    // This will return "en-US", "fr-FR", etc.
+                    appLocales[0]?.toLanguageTag() ?: "en"
+                }
+                else -> {
+                    context.resources.configuration.locales[0]?.toLanguageTag()
+                        ?: java.util.Locale.getDefault().toLanguageTag()
+                }
+            }
+
             val url =
                 "https://www.scoreprof.cloud/rpc/getmatchesbycomp?competition_id=$competitionId&lang=$language&user_token=$token"
-            //println("TEST: Calling URL: $url")
+            println("TEST: Calling URL: $url")
             val responseString = fetchPublicFromServer(url)
             println("TEST: Response: $responseString")
 

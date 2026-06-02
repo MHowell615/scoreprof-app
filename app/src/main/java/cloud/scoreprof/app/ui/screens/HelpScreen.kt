@@ -36,7 +36,7 @@ fun HelpScreen(
     val context = LocalContext.current
     val setupState by setupViewModel.setup.collectAsState()
 
-    val faqList = (1..12).map { i ->
+    val faqList = (1..13).map { i ->
         val (questionRes, answerRes) = when (i) {
             1 -> R.string.help_question1 to R.string.help_answer1
             2 -> R.string.help_question2 to R.string.help_answer2
@@ -50,6 +50,7 @@ fun HelpScreen(
             10 -> R.string.help_question10 to R.string.help_answer10
             11 -> R.string.help_question11 to R.string.help_answer11
             12 -> R.string.help_question12 to R.string.help_answer12
+            13 -> R.string.help_question13 to R.string.help_answer13
             else -> R.string.help to R.string.help // Fallback
         }
 

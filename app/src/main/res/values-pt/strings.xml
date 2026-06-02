@@ -43,6 +43,7 @@
     <string name="login">Iniciar sessão</string>
     <string name="login_text">Nota: Se for a primeira vez que inicia sessão, a palavra-passe que introduzir será guardada como a sua palavra-passe permanente.</string>
     <string name="help_answer12">Vá a «Ideias e Erros» e preencha o formulário. Responderemos assim que possível.</string>
+    <string name="help_answer13">Vá a «Configurações» > «Privacidade» e clique no botão para subscrever a opção premium, que impede a exibição de anúncios na aplicação.</string>
     <string name="invite_users">Convidar utilizadores</string>
     <string name="users_email">E-mail do utilizador</string>
     <string name="add">Adicionar</string>
@@ -76,7 +77,7 @@
     <string name="help_question7">Como é que me inscrevo na liga de um amigo?</string>
     <string name="help_answer7">O teu amigo terá de partilhar o código da liga contigo. Depois, vai a «Configurações» > «Ligas» e introduz o código da liga na secção «Juntar-se a uma liga», na parte superior do ecrã. Isto enviará um pedido ao teu amigo através das notificações da aplicação, que ele terá de aceitar.</string>
     <string name="help_question8">Como posso alterar o idioma apresentado?</string>
-    <string name="help_answer8">A aplicação utilizará por predefinição o idioma definido no seu telemóvel, caso este esteja disponível na aplicação. Se alterou recentemente as definições de idioma no seu telemóvel e o idioma apresentado na aplicação não estiver correto, aceda ao ecrã de Configuração e, em seguida, volte à página inicial. Isto irá reinicializar o idioma apresentado. Se a aplicação continuar a não ser apresentada no seu idioma, por favor, crie um ticket na página «Ideias e Erros» e iremos analisá-lo para uma versão futura.</string>
+    <string name="help_answer8">Aceda às definições do seu sistema telefónico e selecione a opção de idiomas para as aplicações. Pode escolher o idioma a utilizar nesta aplicação. Ao abrir a aplicação, aceda ao ecrã «Configuração» e, em seguida, volte ao ecrã «Início». A sua aplicação foi reinicializada com o novo idioma.</string>
     <string name="help_question9">Como posso criar uma liga?</string>
     <string name="help_answer9">Vá a «Configuração» > «Ligas» e clique no botão «+» na parte inferior da lista de ligas. Deve atribuir um nome à liga e selecionar uma única competição. Em seguida, pode convidar amigos partilhando o código da liga, que é fornecido ao guardar a liga. Será redirecionado para o ecrã «Configurar Ligas». Certifique-se de que a sua nova liga está selecionada para que a possa ver na aplicação.</string>
     <string name="help_question10">Como posso editar uma liga?</string>
@@ -136,4 +137,5 @@
     <string name="confirm_password">Confirmar palavra-passe</string>
     <string name="password_mismatch">As palavras-passe não coincidem</string>
     <string name="signup_text">O registo é muito simples. A palavra-passe que introduzir agora será a sua chave permanente.</string>
+    <string name="help_question13">Como posso remover os anúncios?</string>
 </resources>

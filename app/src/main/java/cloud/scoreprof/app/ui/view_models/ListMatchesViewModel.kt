@@ -87,7 +87,11 @@ class ListMatchesViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             _competitionId.collect { id ->
-                id?.let { loadAndCacheMatches(it) }
+                println("ScoreProfLog: ViewModel received ID: $id") // DEBUG
+                id?.let {
+                    println("ScoreProfLog: Triggering loadAndCacheMatches for $it")
+                    loadAndCacheMatches(it)
+                }
             }
         }
     }

@@ -74,11 +74,11 @@ class SetupRepositoryImpl @Inject constructor(
 
             val appLocales = AppCompatDelegate.getApplicationLocales()
             val language = if (!appLocales.isEmpty) {
-                appLocales[0]?.language?.take(2)?.lowercase() ?: "en"
+                appLocales[0]?.toLanguageTag() ?: "en"
             } else {
-                java.util.Locale.getDefault().language.take(2).lowercase()
+                java.util.Locale.getDefault().toLanguageTag()
             }
-
+println("[TEST] language = $language")
             val packageInfo = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 context.packageManager.getPackageInfo(context.packageName, android.content.pm.PackageManager.PackageInfoFlags.of(0))
             } else {

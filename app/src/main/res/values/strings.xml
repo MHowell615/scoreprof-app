@@ -56,7 +56,7 @@
     <string name="help_question7">How do I join a league?</string>
     <string name="help_answer7">Your friend will need to share the league code with you. You then go to \'Setup\' > \'Leagues\', and enter the league code into the \'Join a league\' section at the top of the screen. This will make a request to your friend via their in-app notifications, which they will need to accept.</string>
     <string name="help_question8">How do I change the language displayed?</string>
-    <string name="help_answer8">The application will default to the language defined on your phone, if it is available within the application. If you have recently changed the language settings on your phone and the language displayed in the application is not correct, go into the Setup screen and then return to the Home page. This will reinitialise the language displayed. If the application still doesn\'t display in your language, please log a ticket in the \'Ideas &amp; Bugs\' page and we will review for a future release.</string>
+    <string name="help_answer8">Go to your phone system settings, select the languages option for applications. You can choose the language to be displayed for this application. On opening the application go to the \'Setup\' screen then return to the \'Home\' screen. Your application has now been reinitialised with the new language.</string>
     <string name="help_question9">How do I create a league?</string>
     <string name="help_answer9">Go to \'Setup\' > \'Leagues\' and click the \'+\' button at the bottom of the list of leagues. You must give the league a name and select a single competition. You can then invite friends by sharing the league code, which is provided on saving the league. You will be returned to the Setup Leagues screen. Ensure your new league is selected for you to see it in the application.</string>
     <string name="help_question10">How do I edit a league?</string>
@@ -65,6 +65,8 @@
     <string name="help_answer11">Go to \'Setup\' > \'Leagues\' and click the triple dot icon to the right of the league you wish to delete. Note, you can only delete leagues which you have created.</string>
     <string name="help_question12">How do I report an issue or an idea?</string>
     <string name="help_answer12">Go to \'Ideas &amp; Bugs\' and complete the template. We will respond as soon as we can.</string>
+    <string name="help_question13">How do I remove ads?</string>
+    <string name="help_answer13">Go to \'Setup\' > \'Privacy\' and click the button to subscribe to the premium option which prevent ads from being displayed in the application.</string>
     <string name="invite_users">Invite Users</string>
     <string name="users_email">User\'s Email</string>
     <string name="add">Add</string>

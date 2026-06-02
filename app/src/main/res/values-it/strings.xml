@@ -43,6 +43,7 @@
     <string name="login">Login</string>
     <string name="login_text">Nota: se è la prima volta che accedi, la password che inserisci verrà salvata come password permanente.</string>
     <string name="help_answer12">Vai alla sezione \"Idee e errori\" e compila il modulo. Ti risponderemo il prima possibile.</string>
+    <string name="help_answer13">Vai su “Configura” > “Privacy” e clicca sul pulsante per sottoscrivere l\'opzione premium che impedisce la visualizzazione degli annunci pubblicitari nell\'applicazione.</string>
     <string name="invite_users">Invita gli utenti</string>
     <string name="users_email">Indirizzo email dell\'utente</string>
     <string name="add">Aggiungere</string>
@@ -72,7 +73,7 @@
     <string name="help_question7">Come faccio a unirmi alla lega di un amico?</string>
     <string name="help_answer7">Il tuo amico dovrà comunicarti il codice del campionato. A quel punto, vai su “Configurazione” > ‘Leghe’ e inserisci il codice nella sezione “Partecipa a un lega” nella parte superiore dello schermo. In questo modo verrà inviata una richiesta al tuo amico tramite le notifiche dell\'app, che dovrà accettare.</string>
     <string name="help_question8">Come faccio a cambiare la lingua visualizzata?</string>
-    <string name="help_answer8">L\'applicazione utilizzerà per impostazione predefinita la lingua definita sul telefono, se disponibile al suo interno. Se hai recentemente modificato le configurazione della lingua sul telefono e la lingua visualizzata nell\'applicazione non è corretta, accedi alla schermata Impostazioni e poi torna alla pagina iniziale. In questo modo la lingua visualizzata verrà ripristinata. Se l\'applicazione continua a non essere visualizzata nella tua lingua, segnala il problema nella pagina \"Idee e errori\" e lo prenderemo in considerazione per una futura versione.</string>
+    <string name="help_answer8">Accedi alle impostazioni del tuo sistema telefonico e seleziona l\'opzione “Lingue” per le applicazioni. Puoi scegliere la lingua da visualizzare per questa applicazione. All\'apertura dell\'applicazione, vai alla schermata ‘Configurazione’, quindi torna alla schermata “Home”. L\'applicazione è stata ora reinizializzata con la nuova lingua.</string>
     <string name="help_question9">Come si crea una lega?</string>
     <string name="help_answer9">Vai su “Configura” > ‘Leghe’ e clicca sul pulsante “+” in fondo all\'elenco dei leghe. Devi assegnare un nome alla lega e selezionare un unico torneo. A questo punto puoi invitare gli amici condividendo il codice della lega, che ti verrà fornito al momento del salvataggio. Verrai reindirizzato alla schermata “Configura leghe”. Assicurati che il tua nuova lega sia selezionato per poterlo visualizzare nell\'applicazione.</string>
     <string name="help_question10">Come si modifica una lega?</string>
@@ -136,4 +137,5 @@
     <string name="confirm_password">Conferma password</string>
     <string name="password_mismatch">Le password non corrispondono</string>
     <string name="signup_text">La registrazione è semplicissima. La password che inserisci ora sarà la tua chiave permanente.</string>
+    <string name="help_question13">Come faccio a rimuovere gli annunci pubblicitari?</string>
 </resources>

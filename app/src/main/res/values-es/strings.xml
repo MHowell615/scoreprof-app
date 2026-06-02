@@ -43,6 +43,7 @@
     <string name="login">Iniciar sesión</string>
     <string name="login_text">Nota: Si es la primera vez que inicias sesión, la contraseña que introduzcas se guardará como tu contraseña permanente.</string>
     <string name="help_answer12">Ve a «Ideas y errores» y rellena el formulario. Te responderemos lo antes posible.</string>
+    <string name="help_answer13">Ve a «Configuración» > «Privacidad» y haz clic en el botón para suscribirte a la opción premium, que impide que se muestren anuncios en la aplicación.</string>
     <string name="invite_users">Invitar a usuarios</string>
     <string name="users_email">Dirección de correo electrónico del usuario</string>
     <string name="add">Agregar</string>
@@ -71,7 +72,7 @@
     <string name="help_question7">¿Cómo me uno a la liga de un amigo?</string>
     <string name="help_answer7">Tu amigo tendrá que compartir contigo el código de la liga. A continuación, ve a «Configuración» > «Ligas» e introduce el código de la liga en la sección «Unirse a una liga», situada en la parte superior de la pantalla. Esto enviará una solicitud a tu amigo a través de las notificaciones de la aplicación, que deberá aceptar.</string>
     <string name="help_question8">¿Cómo puedo cambiar el idioma de visualización?</string>
-    <string name="help_answer8">La aplicación utilizará de forma predeterminada el idioma configurado en tu teléfono, siempre que esté disponible en la aplicación. Si has cambiado recientemente la configuración de idioma de tu teléfono y el idioma que se muestra en la aplicación no es el correcto, accede a la pantalla de configuración y, a continuación, vuelve a la página de inicio. Esto reiniciará el idioma que se muestra. Si la aplicación sigue sin mostrarse en tu idioma, envía una solicitud de asistencia en la página «Ideas y errores» y la tendremos en cuenta para una futura actualización.</string>
+    <string name="help_answer8">Ve a los ajustes de tu sistema telefónico y selecciona la opción de idiomas para las aplicaciones. Allí podrás elegir el idioma en el que se mostrará esta aplicación. Al abrir la aplicación, ve a la pantalla «Configuración» y, a continuación, vuelve a la pantalla «Inicio». La aplicación se ha reiniciado con el nuevo idioma.</string>
     <string name="help_question9">¿Cómo se crea una liga?</string>
     <string name="help_answer9">Ve a «Configuración» > «Ligas» y haz clic en el botón «+» situado al final de la lista de ligas. Debes asignarle un nombre a la liga y seleccionar una sola competición. A continuación, puedes invitar a tus amigos compartiendo el código de la liga, que se genera al guardarla. Volverás a la pantalla de configuración de ligas. Asegúrate de que tu nueva liga esté seleccionada para poder verla en la aplicación.</string>
     <string name="help_question10">¿Cómo edito una liga?</string>
@@ -136,4 +137,5 @@
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="password_mismatch">Las contraseñas no coinciden</string>
     <string name="signup_text">El registro es muy sencillo. La contraseña que introduzcas ahora será tu clave permanente.</string>
+    <string name="help_question13">¿Cómo elimino los anuncios?</string>
 </resources>

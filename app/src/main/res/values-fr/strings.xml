@@ -18,6 +18,7 @@
     <string name="home_text_4">Créez votre propre ligue dans Configuration. Invitez vos amis à faire leurs pronostics eux aussi.</string>
     <string name="home_text_5">Bonne chance !</string>
     <string name="create_league">Créer une ligue</string>
+    <string name="help_answer13">Rendez-vous dans « Paramètres » > « Confidentialité » et cliquez sur le bouton pour souscrire à l\'option premium qui empêche l\'affichage des publicités dans l\'application.</string>
     <string name="invite_users">Inviter des utilisateurs</string>
     <string name="users_email">Adresse e-mail de l\'utilisateur</string>
     <string name="add">Ajouter</string>
@@ -60,7 +61,7 @@
     <string name="help_question7">Comment puis-je rejoindre la ligue d\'un ami ?</string>
     <string name="help_answer7">Votre ami devra vous communiquer le code de la ligue. Rendez-vous ensuite dans « Paramètres » > « Ligues », puis saisissez le code de la ligue dans la section « Rejoindre une ligue » en haut de l\'écran. Une demande sera alors envoyée à votre ami via les notifications de l\'application, qu\'il devra accepter.</string>
     <string name="help_question8">Comment puis-je changer la langue d\'affichage ?</string>
-    <string name="help_answer8">L\'application utilisera par défaut la langue définie sur votre téléphone, si celle-ci est disponible dans l\'application. Si vous avez récemment modifié les paramètres de langue de votre téléphone et que la langue affichée dans l\'application n\'est pas la bonne, accédez à l\'écran de configuration, puis revenez à la page d\'accueil. Cela réinitialisera la langue affichée. Si l\'application ne s\'affiche toujours pas dans votre langue, veuillez créer un ticket sur la page « Idées et bugs » et nous examinerons votre demande en vue d\'une prochaine mise à jour.</string>
+    <string name="help_answer8">Accédez aux paramètres de votre système téléphonique, puis sélectionnez l\'option « Langues » pour les applications. Vous pouvez choisir la langue d\'affichage de cette application. Une fois l\'application ouverte, accédez à l\'écran « Configuration », puis revenez à l\'écran « Accueil ». Votre application a maintenant été réinitialisée dans la nouvelle langue.</string>
     <string name="help_question9">Comment créer une ligue ?</string>
     <string name="help_answer9">Rendez-vous dans « Configuration » > « Ligues » et cliquez sur le bouton « + » situé en bas de la liste des ligues. Vous devez donner un nom à la ligue et sélectionner une seule compétition. Vous pouvez ensuite inviter des amis en partageant le code de la ligue, qui s\'affiche une fois la ligue enregistrée. Vous serez redirigé vers l\'écran de configuration des ligues. Assurez-vous que votre nouvelle ligue est sélectionnée pour qu\'elle s\'affiche dans l\'application.</string>
     <string name="help_question10">Comment modifier une ligue ?</string>
@@ -168,4 +169,5 @@
     <string name="confirm_password">Confirmer le mot de passe</string>
     <string name="password_mismatch">Les mots de passe ne correspondent pas</string>
     <string name="signup_text">L\'inscription se fait en toute simplicité. Le mot de passe que vous saisissez maintenant servira de clé permanente.</string>
+    <string name="help_question13">Comment puis-je supprimer les publicités ?</string>
 </resources>
