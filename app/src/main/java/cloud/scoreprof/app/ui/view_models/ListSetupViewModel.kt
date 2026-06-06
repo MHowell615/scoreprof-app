@@ -153,6 +153,22 @@ class ListSetupViewModel @Inject constructor(
         }
     }
 
+    fun logPrivacyError(errorCode: Int, message: String) {
+        val fullMessage = "UMP Privacy Error [$errorCode]: $message"
+        Log.e("ScoreProfPrivacy", fullMessage)
+        viewModelScope.launch {
+            try {
+                setupRepository.logError(
+                    errorMessage = fullMessage,
+                    stackTrace = "PRIVACY_OPTIONS_FORM",
+                    appVersion = cloud.scoreprof.app.BuildConfig.VERSION_NAME
+                )
+            } catch (e: Exception) {
+                // Fail silently if remote logging is down
+            }
+        }
+    }
+
     fun triggerRemoveAdsPurchase(activity: Activity) {
         billingManager.launchPurchaseFlow(activity, "remove_ads_premium")
     }

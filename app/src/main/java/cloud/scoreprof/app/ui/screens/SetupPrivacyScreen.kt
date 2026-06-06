@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import cloud.scoreprof.app.R
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
+import com.google.android.ump.UserMessagingPlatform
 
 @Composable
 fun SetupPrivacyScreen(
@@ -152,6 +153,39 @@ fun SetupPrivacyScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            }
+
+            item {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                Text(
+                    text = stringResource(id = R.string.privacy_choices_title), // Add to strings.xml
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedButton(
+                    onClick = {
+                        val activity = context as? Activity
+                        if (activity != null) {
+                            UserMessagingPlatform.showPrivacyOptionsForm(activity) { error ->
+                                if (error != null) {
+                                    setupViewModel.logPrivacyError(error.errorCode, error.message)
+                                }
+                            }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.update_privacy_consent))
+                }
+                Text(
+                    text = stringResource(id = R.string.privacy_consent_desc), // Add to strings.xml
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
 
             // Legal Documents Section

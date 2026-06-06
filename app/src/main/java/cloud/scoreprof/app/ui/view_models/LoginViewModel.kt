@@ -90,7 +90,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun login() {
+    fun login(isAdultCertified: Boolean = false) {
         val currentEmail = _email.value.trim()
         val currentPassword = _password.value.trim()
 
@@ -117,6 +117,10 @@ class LoginViewModel @Inject constructor(
                 put("pass_input", currentPassword)
                 put("lang_input", deviceLanguage)
                 put("v_input", currentVersion)
+
+                if (!isLoginMode.value) {
+                    put("is_adult_input", isAdultCertified)
+                }
             }
 
             val url = "https://www.scoreprof.cloud/rpc/new_login"
@@ -287,7 +291,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             val url = "https://api.scoreprof.cloud/api/request_password_reset"
             val authKey = BuildConfig.SPROF_AUTH_KEY
-            val language = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en"
+            val language = getAppLanguage()
 
             val jsonBody = JSONObject().apply {
                 put("email_input", email)

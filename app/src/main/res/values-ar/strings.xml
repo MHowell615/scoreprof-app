@@ -136,4 +136,8 @@
     <string name="password_mismatch">كلمات المرور غير متطابقة</string>
     <string name="signup_text">عملية التسجيل سهلة للغاية. ستكون كلمة المرور التي تدخلها الآن هي مفتاحك الدائم.</string>
     <string name="help_question13">كيف يمكنني إزالة الإعلانات؟</string>
+    <string name="privacy_choices_title">خيارات الخصوصية الخاصة بك</string>
+    <string name="update_privacy_consent">تحديث تفضيلات الخصوصية</string>
+    <string name="privacy_consent_desc">يمكنك تغيير تفضيلات بياناتك وموافقتك على الإعلانات في أي وقت.</string>
+    <string name="age_certification">أُقر بأنني أبلغ من العمر 18 عامًا أو أكثر</string>
 </resources>

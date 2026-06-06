@@ -49,8 +49,7 @@ fun LoginScreen(
     val isLoginMode by viewModel.isLoginMode.collectAsState()
     var confirmPasswordInput by remember { mutableStateOf("") }
     val passwordsMatch = passwordInput == confirmPasswordInput || isLoginMode
-
-
+    var isAdultChecked by remember { mutableStateOf(false) }
 
     val buttonText = if (isLoginMode)
         stringResource(R.string.login)
@@ -221,6 +220,21 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Checkbox(
+                        checked = isAdultChecked,
+                        onCheckedChange = { isAdultChecked = it }
+                    )
+                    Text(
+                        text = stringResource(R.string.age_certification),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = if (hasAttemptedLogin && !isAdultChecked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                    )
+                }
+
                 if (isLoading) {
                     CircularProgressIndicator()
                 } else {
@@ -229,7 +243,7 @@ fun LoginScreen(
                             hasAttemptedLogin = true
                             if (isEmailValid && !isPasswordTooShort && email.isNotEmpty() && passwordsMatch) {
                                 viewModel.onPasswordChange(passwordInput)
-                                viewModel.login()
+                                viewModel.login(isAdultChecked)
                             }
                         },
                         modifier = Modifier.fillMaxWidth()

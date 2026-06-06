@@ -138,4 +138,8 @@
     <string name="password_mismatch">पासवर्ड मेल नहीं खाते</string>
     <string name="signup_text">पंजीकरण सहज है। अब आप जो पासवर्ड दर्ज करेंगे, वही आपकी स्थायी कुंजी होगी।</string>
     <string name="help_question13">मैं विज्ञापन कैसे हटाऊँ?</string>
+    <string name="privacy_choices_title">आपकी गोपनीयता संबंधी पसंद</string>
+    <string name="update_privacy_consent">गोपनीयता प्राथमिकताएँ अपडेट करें</string>
+    <string name="privacy_consent_desc">आप किसी भी समय अपना डेटा और ऐड सहमति की पसंद बदल सकते हैं।</string>
+    <string name="age_certification">मैं प्रमाणित करता/करती हूँ कि मेरी आयु 18 वर्ष या उससे अधिक है</string>
 </resources>

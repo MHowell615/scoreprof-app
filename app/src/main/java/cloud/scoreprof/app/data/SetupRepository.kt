@@ -267,11 +267,11 @@ println("[TEST] language = $language")
     override suspend fun logError(errorMessage: String, stackTrace: String, appVersion: String) {
         // This hits your Node.js endpoint: app.post('/logs/error', ...)
         val url = "https://api.scoreprof.cloud/logs/error"
-        val userId = tokenManager.getUserId()?.toString() ?: "Unknown"
+        val userId = tokenManager.getUserId()
         val deviceModel = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}"
 
         val jsonBody = JSONObject().apply {
-            put("userid", userId)
+            put("userid", userId ?: JSONObject.NULL)
             put("error_message", errorMessage)
             put("stack_trace", stackTrace)
             put("app_version", appVersion)

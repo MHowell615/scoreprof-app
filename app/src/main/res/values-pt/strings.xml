@@ -138,4 +138,8 @@
     <string name="password_mismatch">As palavras-passe não coincidem</string>
     <string name="signup_text">O registo é muito simples. A palavra-passe que introduzir agora será a sua chave permanente.</string>
     <string name="help_question13">Como posso remover os anúncios?</string>
+    <string name="privacy_choices_title">As suas opções de privacidade</string>
+    <string name="update_privacy_consent">Atualizar as preferências de privacidade</string>
+    <string name="privacy_consent_desc">Pode alterar as suas preferências de dados e consentimento para anúncios a qualquer momento.</string>
+    <string name="age_certification">Certifico que tenho 18 anos de idade ou mais.</string>
 </resources>

@@ -1,6 +1,7 @@
 package cloud.scoreprof.app.ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -108,6 +109,24 @@ fun CompetitionsScreen(
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f)
                 )
+            }
+        },
+        bottomBar = {
+            // This keeps an ad visible even when scrolling long lists of competitions
+            if (setupState?.is_ads_removed == false) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(vertical = 4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AdBanner(
+                        modifier = Modifier.fillMaxWidth(),
+                        isMediumRectangle = false,
+                        showAds = true
+                    )
+                }
             }
         }
     ) { innerPadding ->
@@ -237,7 +256,7 @@ fun CompetitionsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-            item {
+            /*item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Box(contentAlignment = Alignment.Center) {
                     AdBanner(
@@ -246,7 +265,7 @@ fun CompetitionsScreen(
                         showAds = setupState?.is_ads_removed == false
                     )
                 }
-            }
+            }*/
         }
     }
 }

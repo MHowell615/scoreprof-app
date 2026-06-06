@@ -23,7 +23,8 @@ data class Setup(
     val competitions: List<UserCompetitionSelection>,
     val leagues: List<UserLeagueSelection>,
     val receive_email: Boolean = true,
-    val is_ads_removed: Boolean = false
+    val is_ads_removed: Boolean = false,
+    val is_adult: Boolean = true
 )
 
 @Serializable

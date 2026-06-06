@@ -137,6 +137,8 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        // Since ScoreProf is an 18+ app and sign-up requires age certification,
+        // we statically set this to false to comply with your Play Store declaration.
         val params = ConsentRequestParameters.Builder()
             .setTagForUnderAgeOfConsent(false)
             .build()

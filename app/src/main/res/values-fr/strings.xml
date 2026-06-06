@@ -170,4 +170,8 @@
     <string name="password_mismatch">Les mots de passe ne correspondent pas</string>
     <string name="signup_text">L\'inscription se fait en toute simplicité. Le mot de passe que vous saisissez maintenant servira de clé permanente.</string>
     <string name="help_question13">Comment puis-je supprimer les publicités ?</string>
+    <string name="privacy_choices_title">Vos choix en matière de confidentialité</string>
+    <string name="update_privacy_consent">Mettre à jour les préférences de confidentialité</string>
+    <string name="privacy_consent_desc">Vous pouvez modifier vos préférences en matière de données et de consentement publicitaire à tout moment.</string>
+    <string name="age_certification">Je certifie être âgé(e) de 18 ans ou plus.</string>
 </resources>

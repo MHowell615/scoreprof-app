@@ -138,4 +138,8 @@
     <string name="password_mismatch">Le password non corrispondono</string>
     <string name="signup_text">La registrazione è semplicissima. La password che inserisci ora sarà la tua chiave permanente.</string>
     <string name="help_question13">Come faccio a rimuovere gli annunci pubblicitari?</string>
+    <string name="privacy_choices_title">Le tue scelte in materia di privacy</string>
+    <string name="update_privacy_consent">Aggiorna le preferenze sulla privacy</string>
+    <string name="privacy_consent_desc">Puoi modificare le tue preferenze relative ai dati e al consenso per la pubblicità in qualsiasi momento.</string>
+    <string name="age_certification">Dichiaro di avere almeno 18 anni di età.</string>
 </resources>

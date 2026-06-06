@@ -138,4 +138,8 @@
     <string name="password_mismatch">Las contraseñas no coinciden</string>
     <string name="signup_text">El registro es muy sencillo. La contraseña que introduzcas ahora será tu clave permanente.</string>
     <string name="help_question13">¿Cómo elimino los anuncios?</string>
+    <string name="privacy_choices_title">Tus opciones de privacidad</string>
+    <string name="update_privacy_consent">Actualizar preferencias de privacidad</string>
+    <string name="privacy_consent_desc">Puedes cambiar tus preferencias de consentimiento de datos y anuncios en cualquier momento.</string>
+    <string name="age_certification">Certifico que tengo 18 años de edad o más.</string>
 </resources>

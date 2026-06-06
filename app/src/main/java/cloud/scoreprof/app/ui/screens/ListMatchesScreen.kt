@@ -29,9 +29,8 @@ import cloud.scoreprof.app.ui.view_models.ListMatchesViewModel.MatchesUiState
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -39,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
 import cloud.scoreprof.app.ui.view_models.ListMatchesViewModel
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @Composable
 fun ListMatchesScreen(
@@ -186,7 +186,10 @@ fun MatchesList(
             style = TextStyle(fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        //val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val formatter = remember {
+            DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM).withLocale(Locale.getDefault())
+        }
         LazyColumn(state = lazyListState) {
             groupedMatches.forEach { (date, matchesOnDate) ->
                 stickyHeader {
