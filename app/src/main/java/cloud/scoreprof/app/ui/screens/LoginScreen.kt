@@ -216,24 +216,24 @@ fun LoginScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = isAdultChecked,
+                            onCheckedChange = { isAdultChecked = it }
+                        )
+                        Text(
+                            text = stringResource(R.string.age_certification),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (hasAttemptedLogin && !isAdultChecked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = isAdultChecked,
-                        onCheckedChange = { isAdultChecked = it }
-                    )
-                    Text(
-                        text = stringResource(R.string.age_certification),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = if (hasAttemptedLogin && !isAdultChecked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
-                    )
-                }
 
                 if (isLoading) {
                     CircularProgressIndicator()
