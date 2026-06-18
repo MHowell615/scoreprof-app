@@ -1,0 +1,172 @@
+<resources>
+    <string name="app_name">ScoreProf</string>
+    <string name="setup">Setup</string>
+    <string name="leagues">Leagues</string>
+    <string name="league">League</string>
+    <string name="league_name">League Name</string>
+    <string name="password">Password</string>
+    <string name="competitions">Competitions</string>
+    <string name="username">Username</string>
+    <string name="email">Email Address</string>
+    <string name="create_new_league">Create New League</string>
+    <string name="invite_others">Invite Others</string>
+    <string name="competition_screen_text">For each match click on the team you predict to win. Click on both teams to predict a draw.</string>
+    <string name="home_text_1">Welcome to ScoreProf.</string>
+    <string name="home_text_2">You can predict the winners for each match in a multitude of competitions of your choosing.</string>
+    <string name="home_text_3">Points are gained per match correctly predicted.</string>
+    <string name="home_text_4">Create your own league in Setup. Invite your friends to make their predictions too.</string>
+    <string name="home_text_5">Best of luck!</string>
+    <string name="create_league">Create League</string>
+    <string name="invite_others_by_email">Invite others by email</string>
+    <string name="rules">Rules</string>
+    <string name="contact">Ideas &amp; Bugs</string>
+    <string name="setup_text_1">Select the competitions you would like to see on your home screen.\n</string>
+    <string name="setup_text_2">Create your own leagues and invite friends to join you.</string>
+    <string name="preferred_language">Preferred language</string>
+    <string name="language_screen_text">Select the language you would like to use in the app.</string>
+    <string name="edit_league">Edit League</string>
+    <string name="matches">Matches</string>
+    <string name="help">Help</string>
+    <string name="category">Category</string>
+    <string name="selection">Selection</string>
+    <string name="summary">Summary</string>
+    <string name="subject">Subject</string>
+    <string name="details">Details</string>
+    <string name="feedback_toast">Feedback sent! Thank you.</string>
+    <string name="feedback_button">Send Feedback</string>
+    <string name="idea">Idea</string>
+    <string name="bug">Bug</string>
+    <string name="question">Question</string>
+    <string name="other">Other</string>
+    <string name="scoreprof_login">ScoreProf Login</string>
+    <string name="login">Login</string>
+    <string name="login_text">Note: If this is your first time logging in, the password you enter will be saved as your permanent password.</string>
+    <string name="help_question1">How do I start?</string>
+    <string name="help_answer1">Go to Setup, give yourself an in-game name, then select which competitions and leagues you want to be able to see.</string>
+    <string name="help_question2">How do I make a prediction?</string>
+    <string name="help_answer2">Go to the Matches screen and choose the competition matches you would like to predict. Once the matches page has opened, click on which team you think will win. If you think the match will be a draw, click on both team names. Selected teams should be highlighted in green.</string>
+    <string name="help_question3">How do I undo a prediction?</string>
+    <string name="help_answer3">Go to the Matches page of your prediction and click on the team selected green. It will unselect your prediction.</string>
+    <string name="help_question4">How do I earn points?</string>
+    <string name="help_answer4">You earn 1 point for every correct result (Home Win, Draw, or Away Win). The result is taken after the match is completed. For example, if the match goes to extra time and a shoot off, the result will be taken after those are complete. For knockout games it is no use choosing a draw.</string>
+    <string name="help_question5">When can I make predictions?</string>
+    <string name="help_answer5">You can make or change predictions any time up until one minute before the match kicks off.</string>
+    <string name="help_question6">Can I see my results?</string>
+    <string name="help_answer6">Whilst Match pages will open on the next available match, you can scroll up to see results. If your selected team remains green, your prediction was good. If not, the selection will turn red.</string>
+    <string name="help_question7">How do I join a league?</string>
+    <string name="help_answer7">Your friend will need to share the league code with you. You then go to \'Setup\' > \'Leagues\', and enter the league code into the \'Join a league\' section at the top of the screen. This will make a request to your friend via their in-app notifications, which they will need to accept.</string>
+    <string name="help_question8">How do I change the language displayed?</string>
+    <string name="help_answer8">Go to your phone system settings, select the languages option for applications. You can choose the language to be displayed for this application. On opening the application go to the \'Setup\' screen then return to the \'Home\' screen. Your application has now been reinitialised with the new language.</string>
+    <string name="help_question9">How do I create a league?</string>
+    <string name="help_answer9">Go to \'Setup\' > \'Leagues\' and click the \'+\' button at the bottom of the list of leagues. You must give the league a name and select a single competition. You can then invite friends by sharing the league code, which is provided on saving the league. You will be returned to the Setup Leagues screen. Ensure your new league is selected for you to see it in the application.</string>
+    <string name="help_question10">How do I edit a league?</string>
+    <string name="help_answer10">Go to \'Setup\' > \'Leagues\' and click the triple dot icon to the right of the league you wish to edit. Then choose \'Edit League\'. Remember to save your league once the edit is complete. Note, you can only edit leagues which you have created.</string>
+    <string name="help_question11">How do I delete a league?</string>
+    <string name="help_answer11">Go to \'Setup\' > \'Leagues\' and click the triple dot icon to the right of the league you wish to delete. Note, you can only delete leagues which you have created.</string>
+    <string name="help_question12">How do I report an issue or an idea?</string>
+    <string name="help_answer12">Go to \'Ideas &amp; Bugs\' and complete the template. We will respond as soon as we can.</string>
+    <string name="help_question13">How do I remove ads?</string>
+    <string name="help_answer13">Go to \'Setup\' > \'Privacy\' and click the button to subscribe to the premium option which prevent ads from being displayed in the application.</string>
+    <string name="invite_users">Invite Users</string>
+    <string name="users_email">User\'s Email</string>
+    <string name="add">Add</string>
+    <string name="delete_league">Delete League</string>
+    <string name="delete_league_confirmation">Are you sure you want to delete</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="points">Pts</string>
+    <string name="win_percentage">Win%</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="privacy_policy_content">
+        ScoreProf respects your privacy. Muntjac Solutions is the Data Controller for this Service. \n\n
+        <b>1. Legal Basis (GDPR):</b> Our primary legal basis for processing your data (email address) is the <b>Performance of a Contract</b>. This data is necessary to provide your account and gaming features. We also rely on <b>Legitimate Interests</b> for security and <b>Consent</b> for personalized advertisements (handled via our consent provider). \n\n
+        <b>2. Data Controller:</b> Muntjac Solutions, 9 rue de Condé, Bureau 3, 33000 Bordeaux, France. SIRET: 104 419 619 00010. Registered with the RNE. \n\n
+        <b>3. Data Protection Contact:</b> In accordance with Art. 37 of the GDPR, our point of contact for privacy inquiries is <b>support@muntjac-solutions.com</b>. \n\n
+        <b>4. Data Retention:</b> We retain your data according to French law: \n
+        • <b>Account &amp; Contact:</b> 3 years after account closure or last active contact. \n
+        • <b>Invitations:</b> Emails used for invites are deleted if not accepted within 30 days. \n
+        • <b>Accounting Records:</b> 10 years as required by the French Commercial Code. \n
+        • <b>Cookies/Analytics:</b> Maximum 13 months. \n\n
+        <b>5. International Transfers:</b> Data is primarily hosted in London, UK (DigitalOcean Limited) and Stockholm, Sweden (AWS EMEA SARL). The UK has an <b>adequacy decision</b> from the European Commission. Sweden is part of the EEA. \n\n
+        <b>6. Your Rights:</b> You have the right to access, rectify, or request erasure. Contact us or the CNIL. \n\n
+        <b>7. Policy Changes:</b> Material changes will be notified via our News section. \n\n
+        <b>8. Full Policy:</b> https://www.muntjac-solutions.com/privacy
+    </string>
+    <string name="copyright">Copyright © 2026 Muntjac Solutions</string>
+    <string name="email_validation_text">Please enter a valid email address</string>
+    <string name="invite_subject">%1$s invited you to join league \'%2$s\'</string>
+    <string name="invite_message">Hi!\n\n%1$s has invited you to join the league \'%2$s\' on the ScoreProf app.\n\nTo accept this invitation and start playing, open the ScoreProf app and select the league via Setup > Leagues.\n\nIf you don\'t have the app yet, you can download it here: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nDon\'t want these invites? You can opt-out at: https://www.muntjac-solutions.com/opt-out\n\nHappy playing!\nThe ScoreProf Team\n\n---\nLegal Notice: https://www.muntjac-solutions.com/legal</string>
+    <string name="legal_notice_title">Legal Notice</string>
+    <string name="legal_notice_content">
+        In accordance with the provisions of Articles 6-III and 19 of Law No. 2004-575 of June 21, 2004 for Confidence in the Digital Economy (LCEN), users of ScoreProf are informed of these legal notices.\n\n
+        <b>Publisher:</b> Muntjac Solutions\n
+        <b>Publication Director:</b> Mark Howell, Founder\n
+        <b>Status:</b> Sole Proprietor (Unregulated Professional Practice)\n
+        <b>SIRET:</b> 104 419 619 00010\n
+        <b>Registration:</b> Registered with the National Business Registry (RNE)\n
+        <b>Headquarters:</b> 9 rue de Condé, Bureau 3, 33000 Bordeaux, France\n
+        <b>Phone:</b> 07 87 27 59 08\n
+        <b>Email:</b> contact@muntjac-solutions.com\n\n
+        <b>Data Protection:</b> For data privacy inquiries, see our Privacy Policy or contact support@muntjac-solutions.com.\n\n
+        <b>Hosting:</b> This application is hosted by:\n\n
+        <b>Digital Ocean Limited</b>\n
+        Suite 7 Savant House, 63-65 Camden High Street, London NW1 7JL, United Kingdom\n
+        Contact: https://www.digitalocean.com/company/contact/support\n\n
+        <b>Amazon Web Services Emea Sarl, Sverige Filial</b>\n
+        Malmskillnadsgatan 36, 111 57 Stockholm, Sweden\n
+        Contact: https://aws.amazon.com/fr/contact-us/?nc1=f_m
+    </string>
+    <string name="privacy">Privacy</string>
+    <string name="privacy_settings">Privacy Settings</string>
+    <string name="receive_emails">Receive game notifications via email</string>
+    <string name="allow_analytics">Allow anonymous analytics collection</string>
+    <string name="league_created">League created</string>
+    <string name="league_code">League code</string>
+    <string name="league_share">Share this code with your friends.</string>
+    <string name="join_league_title">Join a League</string>
+    <string name="enter_code_hint">Enter league code</string>
+    <string name="join_btn">Join</string>
+    <string name="league_created_success">League created successfully!</string>
+    <string name="share_league_msg">Join my ScoreProf league! Code: %1$s</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="request_sent">Join request sent to owner.</string>
+    <string name="notif_join_request_title">Join Request</string>
+    <string name="accept">Accept</string>
+    <string name="ignore">Ignore</string>
+    <string name="reset_code_sent">A security code has been sent via Brevo.</string>
+    <string name="notifications">Notifications</string>
+    <string name="notification">Notification</string>
+    <string name="short_password_msg">Password must be at least 6 characters</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="forgot_password_text1">Enter your email address to receive a 6-digit reset code.</string>
+    <string name="reset_password_text1">Enter the code sent to your email and your new password.</string>
+    <string name="send_reset_code">Send Reset Code</string>
+    <string name="update_password">Update Password</string>
+    <string name="back_to_login">Back to Login</string>
+    <string name="new_password">New Password</string>
+    <string name="six_digit_code">6-Digit Code</string>
+    <string name="no_upcoming_matches">No upcoming matches</string>
+    <string name="premium_title">Premium</string>
+    <string name="remove_ads_btn">Remove All Ads (Monthly subscription)</string>
+    <string name="remove_ads_desc">Enjoy a clean, ad-free experience while supporting ScoreProf maintenance and server costs.</string>
+    <string name="receive_emails_desc">Manage league invitations and game updates sent to your email.</string>
+    <string name="allow_analytics_desc">Helps us improve ScoreProf with anonymous usage data.</string>
+    <string name="legal_docs_title">Legal Documents</string>
+    <string name="account_mgmt_title">Account Management</string>
+    <string name="request_deletion_title">Request Account Deletion</string>
+    <string name="deletion_desc">In accordance with GDPR, you have the right to be forgotten. To request the permanent removal of your account and all associated data, please contact support@muntjac-solutions.com.</string>
+    <string name="privacy_policy_label">Privacy Policy</string>
+    <string name="legal_notice_label">Legal Notice (Mentions Légales)</string>
+    <string name="notif_invited_title">You\'ve been invited!</string>
+    <string name="notif_invite_msg_body">You have a pending invitation from %1$s to join the league: %2$s. To participate, confirm your acceptance in the Setup Leagues section.</string>
+    <string name="go_to_setup_leagues_btn">Go to Setup Leagues</string>
+    <string name="close_btn">Close</string>
+    <string name="connection_error">Unable to load matches. Please check your signal.</string>
+    <string name="retry">Retry</string>
+    <string name="show_forthcoming_only">Filter by competitions with matches in the next 4 weeks</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="signup_text">Registration is seamless. The password you enter now will be your permanent key.</string>
+</resources>
