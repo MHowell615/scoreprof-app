@@ -1,10 +1,8 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.gradle.api.JavaVersion
-import com.android.build.gradle.LibraryExtension
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.ksp)
@@ -23,23 +21,19 @@ compose {
     }
 }
 
-extensions.configure<com.android.build.api.dsl.LibraryExtension>("android") {
-    namespace = "cloud.scoreprof.app.shared"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
-
 kotlin {
-    androidTarget {
-       compilerOptions {
-           jvmTarget = JvmTarget.JVM_11
-       }
+    androidLibrary {
+        namespace = "cloud.scoreprof.app.shared"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+
+        androidResources {
+            enable = true
+        }
     }
 
     listOf(
