@@ -34,7 +34,10 @@ abstract class ScoreProfDatabase : RoomDatabase() {
 }
 
 // The constructor needed for Room KMP
-expect object ScoreProfDatabaseConstructor : RoomDatabaseConstructor<ScoreProfDatabase>
+@Suppress("NO_ACTUAL_FOR_EXPECT")
+expect object ScoreProfDatabaseConstructor : RoomDatabaseConstructor<ScoreProfDatabase> {
+    override fun initialize(): ScoreProfDatabase
+}
 
 // Room KMP uses expect/actual for the builder
 expect fun getDatabaseBuilder(): RoomDatabase.Builder<ScoreProfDatabase>

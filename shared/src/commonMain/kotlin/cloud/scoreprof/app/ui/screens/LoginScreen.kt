@@ -54,8 +54,8 @@ fun LoginScreen(
     
     // Simple regex for email validation in KMP
     val isEmailValid = remember(email) {
-        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$".toRegex()
-        email.matches(emailRegex)
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+        email.trim().matches(emailRegex)
     }
     
     var hasAttemptedLogin by remember { mutableStateOf(false) }
@@ -230,7 +230,7 @@ fun LoginScreen(
                         onClick = {
                             hasAttemptedLogin = true
                             if (isEmailValid && !isPasswordTooShort && email.isNotEmpty() && passwordsMatch) {
-                                viewModel.onPasswordChange(passwordInput)
+                                viewModel.onPasswordChange(passwordInput.trim())
                                 viewModel.login()
                             }
                         },
