@@ -25,10 +25,12 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 interface SetupRepository {
     suspend fun getSetup(userid: String) : Flow<Setup?>
-    suspend fun refreshSetupFromServer(userid: String)
+    suspend fun refreshSetupFromServer(userid: String, lang: String? = null)
     suspend fun upsertSetup(setup: Setup)
     suspend fun updateUserCompetition(competitionid: String, isSelected: Boolean)
     suspend fun updateUserProfile(name: String, email: String, language: String)
@@ -41,6 +43,7 @@ interface SetupRepository {
     suspend fun updateAdsRemoved(isRemoved: Boolean)
     suspend fun updateAllUserCompetitions(isSelected: Boolean)
     suspend fun logError(errorMessage: String, stackTrace: String, appVersion: String)
+    suspend fun updateLanguage(language: String)
 }
 
 class SetupRepositoryImpl(
@@ -60,11 +63,11 @@ class SetupRepositoryImpl(
         return dao.getSetup()
     }
 
-    override suspend fun refreshSetupFromServer(userid: String) {
+    override suspend fun refreshSetupFromServer(userid: String, lang: String?) {
         val token = tokenManager.getToken() ?: ""
         if (token.isBlank()) throw IllegalStateException("SESSION_EXPIRED")
 
-        val language = platform.language
+        val language = lang ?: platform.language
         val currentVersion = platform.version
 
         val url = if (currentVersion > 7) {
@@ -73,7 +76,9 @@ class SetupRepositoryImpl(
             "https://www.scoreprof.cloud/rpc/getsetupdata?user_token=$token"
         }
 
+        println("Fetching setup data from: $url")
         val responseString: String = httpClient.get(url).body()
+        println("Setup response received. Sample: ${responseString.take(100)}")
 
         if (responseString.isNotBlank() && responseString != "null") {
             val setupData = json.decodeFromString<Setup>(responseString)
@@ -245,6 +250,24 @@ class SetupRepositoryImpl(
                 ))
             }
         } catch (e: Exception) {
+            logError(e.message.toString(), e.stackTraceToString(), platform.version.toString())
+        }
+    }
+
+    override suspend fun updateLanguage(language: String) {
+        val token = tokenManager.getToken() ?: ""
+        println("Calling updateLanguage server function with lang: $language and token prefix: ${token.take(10)}")
+        try {
+            val response = httpClient.post("https://www.scoreprof.cloud/rpc/update_language") {
+                contentType(ContentType.Application.Json)
+                setBody(buildJsonObject {
+                    put("user_token", token)
+                    put("_language", language)
+                })
+            }
+            println("update_language server response status: ${response.status}")
+        } catch (e: Exception) {
+            println("update_language server call failed: ${e.message}")
             logError(e.message.toString(), e.stackTraceToString(), platform.version.toString())
         }
     }

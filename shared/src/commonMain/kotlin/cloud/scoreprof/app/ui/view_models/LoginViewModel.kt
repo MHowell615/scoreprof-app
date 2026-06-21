@@ -24,7 +24,8 @@ import kotlinx.coroutines.flow.asStateFlow
 class LoginViewModel(
     private val repository: SetupRepository,
     private val tokenManager: TokenManager,
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    private val platform: cloud.scoreprof.app.Platform
 ) : ViewModel() {
 
     private val _email = mutableStateOf("")
@@ -71,7 +72,7 @@ class LoginViewModel(
                     setBody(LoginRequest(
                         email_input = currentEmail,
                         pass_input = currentPassword,
-                        lang_input = "en", // TODO: Get from platform
+                        lang_input = platform.language,
                         v_input = 14, // TODO: Get from platform
                         is_adult_input = true // TODO: Need prompt
                     ))
@@ -81,7 +82,16 @@ class LoginViewModel(
                 tokenManager.saveToken(response.token)
                 tokenManager.saveUserId(response.u_id)
 
-                println("Login successful! Token: ${response.token}")
+                // Update server-side profile language immediately after login
+                val currentLang = platform.language
+                println("Login successful. Syncing language to server: $currentLang")
+                try {
+                    repository.updateLanguage(currentLang)
+                    println("Language sync call finished. Now navigating.")
+                } catch (e: Exception) {
+                    println("Failed to sync language after login: ${e.message}")
+                }
+
                 _eventFlow.emit(UiEvent.LoginSuccess(response.u_id, currentEmail))
             } catch (e: Exception) {
                 println("Login failed: ${e.message}")
@@ -132,7 +142,7 @@ class LoginViewModel(
                     contentType(ContentType.Application.Json)
                     setBody(PwResetRequest(
                         email_input = currentEmail,
-                        language_input = "en", // TODO: Get from platform
+                        language_input = platform.language,
                         auth_key_input = "" // TODO: Find secure way to store/get SPROF_AUTH_KEY with KMP
                     ))
                 }.body()

@@ -123,7 +123,13 @@ class ListSetupViewModel(
 
         viewModelScope.launch {
             try {
-                setupRepository.refreshSetupFromServer(userid)
+                // Ensure server is updated with current platform language before refreshing
+                val currentLang = platform.language
+                println("HomeScreen loaded. Ensuring server lang sync: $currentLang")
+                setupRepository.updateLanguage(currentLang)
+                
+                // Now refresh from server using the current platform language
+                setupRepository.refreshSetupFromServer(userid, currentLang)
             } catch (e: Exception) {
                 if (e.message == "SESSION_EXPIRED") {
                     _navigationEvents.emit(NavigationEvent.ToLogin)
@@ -134,9 +140,11 @@ class ListSetupViewModel(
 
     fun refreshData() {
         val userId = _setup.value?.userid ?: return
+        
         viewModelScope.launch {
             try {
-                setupRepository.refreshSetupFromServer(userId)
+                // Use platform.language here as it's the most up-to-date choice
+                setupRepository.refreshSetupFromServer(userId, platform.language)
             } catch (e: Exception) {
                 println("Refresh failed: ${e.message}")
             }
@@ -393,12 +401,12 @@ class ListSetupViewModel(
     fun saveSetupScreenChanges() {
         val currentSetup = _setup.value ?: return
         viewModelScope.launch {
-            val deviceLanguage = platform.language
+            val selectedLanguage = currentSetup.preferred_language
             setupRepository.upsertSetup(currentSetup)
             setupRepository.updateUserProfile(
                 name = currentSetup.name?.ifBlank { currentSetup.email.substringBefore('@') } ?: "",
                 email = currentSetup.email,
-                language = deviceLanguage
+                language = selectedLanguage
             )
         }
     }
@@ -432,7 +440,14 @@ class ListSetupViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             dao.insertSetup(updatedSetup)
+            // Notify server immediately of the language change
+            setupRepository.updateLanguage(newLanguage.languageCode)
+            // Refresh setup to get localized competition names etc.
+            setupRepository.refreshSetupFromServer(userid, newLanguage.languageCode)
         }
+
+        // Apply to the system/platform (Android 13+ support)
+        platform.setLanguage(newLanguage.languageCode)
     }
 
     fun onPrivacySettingsChanged(receiveEmail: Boolean) {

@@ -15,7 +15,7 @@ val appModule = module {
     // Repositories
     single<SetupRepository> { SetupRepositoryImpl(get(), get(), get(), get(), "YOUR_SPROF_AUTH_KEY") }
     single<VersionRepository> { VersionRepositoryImpl(get(), get()) }
-    single<LeaguesRepository> { LeaguesRepositoryImpl(get(), get(), get(), get()) }
+    single<LeaguesRepository> { LeaguesRepositoryImpl(get(), get(), get(), get(), get()) }
     single<MatchRepository> { MatchRepositoryImpl(get(), get(), get(), get()) }
     single<NotificationRepository> { NotificationRepositoryImpl(get(), get(), get()) }
     single<LanguageRepository> { LanguageRepositoryImpl(get(), get()) }

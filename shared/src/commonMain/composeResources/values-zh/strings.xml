@@ -1,0 +1,172 @@
+<resources>
+    <string name="app_name">ScoreProf</string>
+    <string name="setup">设置</string>
+    <string name="leagues">联赛</string>
+    <string name="league">联赛</string>
+    <string name="league_name">联赛名称</string>
+    <string name="password">密码</string>
+    <string name="competitions">锦标赛</string>
+    <string name="username">用户名</string>
+    <string name="email">电子邮件地址</string>
+    <string name="create_new_league">创建新联赛</string>
+    <string name="invite_others">邀请其他人</string>
+    <string name="competition_screen_text">每场比赛，点击你预测获胜的队伍。点击两支队伍即可预测平局。</string>
+    <string name="home_text_1">欢迎使用 ScoreProf。</string>
+    <string name="home_text_2">您可以预测您选择的众多比赛中每场比赛的获胜者。</string>
+    <string name="home_text_3">每正确预测一场比赛即可获得积分。</string>
+    <string name="home_text_4">在“设置”中创建您自己的联赛。邀请您的朋友也来参与预测。</string>
+    <string name="home_text_5">祝你好运!</string>
+    <string name="create_league">创建联赛</string>
+    <string name="invite_others_by_email">通过电子邮件邀请其他人</string>
+    <string name="rules">规则</string>
+    <string name="contact">想法与缺陷</string>
+    <string name="setup_text_1">选择您想在主屏幕上看到的赛事。\n</string>
+    <string name="setup_text_2">创建你自己的联赛并邀请朋友加入。</string>
+    <string name="preferred_language">首选语言</string>
+    <string name="language_screen_text">请选择您想在应用中使用的语言。</string>
+    <string name="edit_league">编辑联赛</string>
+    <string name="matches">比赛</string>
+    <string name="help">帮助</string>
+    <string name="category">类别</string>
+    <string name="selection">选拔</string>
+    <string name="summary">概括</string>
+    <string name="subject">主题</string>
+    <string name="details">细节</string>
+    <string name="feedback_toast">反馈已发送！谢谢。</string>
+    <string name="feedback_button">发送反馈</string>
+    <string name="idea">主意</string>
+    <string name="bug">软件缺陷</string>
+    <string name="question">问题</string>
+    <string name="other">其他</string>
+    <string name="scoreprof_login">ScoreProf 登录</string>
+    <string name="login">登录</string>
+    <string name="login_text">注意：如果您是首次登录，您输入的密码将被保存为您的永久密码。</string>
+    <string name="help_question1">我该如何开始？</string>
+    <string name="help_answer1">进入设置，给自己取一个游戏内名称，然后选择你想看到的比赛和联赛。</string>
+    <string name="help_question2">我该如何进行预测？</string>
+    <string name="help_answer2">前往“比赛”页面，选择您想要预测的赛事。比赛页面打开后，点击您认为会获胜的球队。如果您认为比赛会打成平局，请点击双方球队的名称。选中的球队会以绿色高亮显示。</string>
+    <string name="help_question3">如何撤销预测？</string>
+    <string name="help_answer3">前往您预测的比赛页面，点击已选中的绿色队伍，即可取消选中您的预测。</string>
+    <string name="help_question4">我如何获得积分？</string>
+    <string name="help_answer4">每猜对一个比赛结果（主胜、平局或客胜），即可获得 1 分。比赛结果以比赛结束后为准。例如，如果比赛进入加时赛和点球大战，则结果以加时赛和点球大战结束后为准。对于淘汰赛，选择平局没有意义。</string>
+    <string name="help_question5">我什么时候可以做出预测？</string>
+    <string name="help_answer5">您可以在比赛开始前一分钟随时进行预测或更改预测。</string>
+    <string name="help_question6">我可以查看我的结果吗？</string>
+    <string name="help_answer6">比赛页面会在下一场比赛开始时打开，您可以向上滚动查看比赛结果。如果您选择的球队仍然显示为绿色，则表示您的预测正确。否则，该球队将变为红色。</string>
+    <string name="help_question7">我如何加入联赛？</string>
+    <string name="help_answer7">您的朋友需要将联赛代码分享给您。然后，您需要前往“设置”>“联赛”，并在屏幕顶​​部的“加入联赛”部分输入联赛代码。系统会通过应用内通知向您的朋友发送加入联赛的请求，他们需要接受该请求。</string>
+    <string name="help_question8">如何更改显示语言？</string>
+    <string name="help_answer8">前往手机系统设置，选择应用程序语言选项。您可以选择此应用程序的显示语言。打开应用程序后，进入“设置”屏幕，然后返回“主屏幕”。您的应用程序现已使用新语言重新初始化。</string>
+    <string name="help_question9">如何创建联赛？</string>
+    <string name="help_answer9">前往“设置”>“联赛”，然后点击联赛列表顶部的“+”按钮。您必须为联赛命名并选择一个锦标赛。之后，您可以通过分享联赛代码邀请好友，联赛代码会在保存联赛时生成。您将返回“设置联赛”界面。请确保您的新联赛已在应用程序中选中，以便您能够看到它。</string>
+    <string name="help_question10">如何编辑联赛？</string>
+    <string name="help_answer10">前往“设置”>“联赛”，然后点击要编辑的联赛右侧的三点图标。接着选择“编辑联赛”。编辑完成后，请务必保存联赛。注意，您只能编辑自己创建的联赛。</string>
+    <string name="help_question11">如何删除联赛？</string>
+    <string name="help_answer11">前往“设置”>“联赛”，然后点击要删除的联赛右侧的三点图标。请注意，您只能删除自己创建的联赛。</string>
+    <string name="help_question12">我该如何报告问题或提出建议？</string>
+    <string name="help_answer12">请前往“想法与缺陷”页面并填写模板。我们会尽快回复。</string>
+    <string name="help_question13">如何移除广告？</string>
+    <string name="help_answer13">前往“设置”>“隐私”，然后点击按钮订阅高级选项，以阻止广告在应用中出现。</string>
+    <string name="invite_users">邀请用户</string>
+    <string name="users_email">用户邮箱</string>
+    <string name="add">添加</string>
+    <string name="delete_league">删除联赛</string>
+    <string name="delete_league_confirmation">您确定要删除吗？</string>
+    <string name="delete">删除</string>
+    <string name="cancel">取消</string>
+    <string name="points">得分</string>
+    <string name="win_percentage">胜率</string>
+    <string name="forgot_password">我忘记密码了</string>
+    <string name="privacy_policy_title">隐私政策</string>
+    <string name="privacy_policy_content">
+        ScoreProf respects your privacy. Muntjac Solutions is the Data Controller for this Service. \n\n
+        <b>1. Legal Basis (GDPR):</b> Our primary legal basis for processing your data (email address) is the <b>Performance of a Contract</b>. This data is necessary to provide your account and gaming features. We also rely on <b>Legitimate Interests</b> for security and <b>Consent</b> for personalized advertisements (handled via our consent provider). \n\n
+        <b>2. Data Controller:</b> Muntjac Solutions, 9 rue de Condé, Bureau 3, 33000 Bordeaux, France. SIRET: 104 419 619 00010. Registered with the RNE. \n\n
+        <b>3. Data Protection Contact:</b> In accordance with Art. 37 of the GDPR, our point of contact for privacy inquiries is <b>support@muntjac-solutions.com</b>. \n\n
+        <b>4. Data Retention:</b> We retain your data according to French law: \n
+        • <b>Account &amp; Contact:</b> 3 years after account closure or last active contact. \n
+        • <b>Invitations:</b> Emails used for invites are deleted if not accepted within 30 days. \n
+        • <b>Accounting Records:</b> 10 years as required by the French Commercial Code. \n
+        • <b>Cookies/Analytics:</b> Maximum 13 months. \n\n
+        <b>5. International Transfers:</b> Data is primarily hosted in London, UK (DigitalOcean Limited) and Stockholm, Sweden (AWS EMEA SARL). The UK has an <b>adequacy decision</b> from the European Commission. Sweden is part of the EEA. \n\n
+        <b>6. Your Rights:</b> You have the right to access, rectify, or request erasure. Contact us or the CNIL. \n\n
+        <b>7. Policy Changes:</b> Material changes will be notified via our News section. \n\n
+        <b>8. Full Policy:</b> https://www.muntjac-solutions.com/privacy
+    </string>
+    <string name="copyright">版权所有 © 2026 Muntjac Solutions</string>
+    <string name="email_validation_text">请输入有效的电子邮件地址</string>
+    <string name="invite_subject">%1$s 邀请您加入联赛 \'%2$s\'</string>
+    <string name="invite_message">您好！\n\n%1$s 已邀请您加入 ScoreProf 应用上的联赛 \'%2$s\'。\n\n要接受此邀请并开始游戏，请打开 ScoreProf 应用，然后通过“设置”>“联赛”选择该联赛。\n\n如果您还没有安装该应用，可以点击此处下载：https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\n不想收到此类邀请？您可以点击此处取消订阅：https://www.muntjac-solutions.com/opt-out\n\n祝您游戏愉快！\nScoreProf 团队\n\n---\n法律声明：https://www.muntjac-solutions.com/legal</string>
+    <string name="legal_notice_title">法律声明</string>
+    <string name="legal_notice_content">
+        In accordance with the provisions of Articles 6-III and 19 of Law No. 2004-575 of June 21, 2004 for Confidence in the Digital Economy (LCEN), users of ScoreProf are informed of these legal notices.\n\n
+        <b>Publisher:</b> Muntjac Solutions\n
+        <b>Publication Director:</b> Mark Howell, Founder\n
+        <b>Status:</b> Sole Proprietor (Unregulated Professional Practice)\n
+        <b>SIRET:</b> 104 419 619 00010\n
+        <b>Registration:</b> Registered with the National Business Registry (RNE)\n
+        <b>Headquarters:</b> 9 rue de Condé, Bureau 3, 33000 Bordeaux, France\n
+        <b>Phone:</b> 07 87 27 59 08\n
+        <b>Email:</b> contact@muntjac-solutions.com\n\n
+        <b>Data Protection:</b> For data privacy inquiries, see our Privacy Policy or contact support@muntjac-solutions.com.\n\n
+        <b>Hosting:</b> This application is hosted by:\n\n
+        <b>Digital Ocean Limited</b>\n
+        Suite 7 Savant House, 63-65 Camden High Street, London NW1 7JL, United Kingdom\n
+        Contact: https://www.digitalocean.com/company/contact/support\n\n
+        <b>Amazon Web Services Emea Sarl, Sverige Filial</b>\n
+        Malmskillnadsgatan 36, 111 57 Stockholm, Sweden\n
+        Contact: https://aws.amazon.com/fr/contact-us/?nc1=f_m
+    </string>
+    <string name="privacy">隐私</string>
+    <string name="privacy_settings">隐私设置</string>
+    <string name="receive_emails">通过电子邮件接收游戏通知</string>
+    <string name="allow_analytics">允许匿名分析数据收集</string>
+    <string name="league_created">联赛创建</string>
+    <string name="league_code">联赛代码</string>
+    <string name="league_share">把这段代码分享给你的朋友们。</string>
+    <string name="join_league_title">加入联赛</string>
+    <string name="enter_code_hint">输入联赛代码</string>
+    <string name="join_btn">参加</string>
+    <string name="league_created_success">联赛创建成功！</string>
+    <string name="share_league_msg">加入我的 ScoreProf 联赛！代码：%1$s</string>
+    <string name="copy_to_clipboard">复制到剪贴板</string>
+    <string name="request_sent">加入请求已发送给所有者。</string>
+    <string name="notif_join_request_title">加入请求</string>
+    <string name="accept">接受</string>
+    <string name="ignore">忽略</string>
+    <string name="reset_code_sent">已通过Brevo发送了一条验证码。</string>
+    <string name="notifications">通知</string>
+    <string name="notification">通知</string>
+    <string name="short_password_msg">密码必须至少包含 6 个字符。</string>
+    <string name="reset_password">重置密码</string>
+    <string name="forgot_password_text1">请输入您的电子邮件地址以接收 6 位数的重置代码。</string>
+    <string name="reset_password_text1">输入发送到您邮箱的验证码和您的新密码。</string>
+    <string name="send_reset_code">发送重置代码</string>
+    <string name="update_password">更新密码</string>
+    <string name="back_to_login">返回登录</string>
+    <string name="new_password">新密码</string>
+    <string name="six_digit_code">六位数代码</string>
+    <string name="no_upcoming_matches">没有即将进行的比赛</string>
+    <string name="premium_title">高级版</string>
+    <string name="remove_ads_btn">移除所有广告（包月订阅）</string>
+    <string name="remove_ads_desc">享受干净、无广告的体验，同时支持 ScoreProf 的维护和服务器费用。</string>
+    <string name="receive_emails_desc">管理发送到您邮箱的联赛邀请和比赛更新。</string>
+    <string name="allow_analytics_desc">利用匿名使用数据帮助我们改进 ScoreProf。</string>
+    <string name="legal_docs_title">法律文件</string>
+    <string name="account_mgmt_title">账户管理</string>
+    <string name="request_deletion_title">请求删除帐户</string>
+    <string name="deletion_desc">根据《通用数据保护条例》(GDPR)，您有权被遗忘。如需永久删除您的帐户及所有相关数据，请联系 support@muntjac-solutions.com。</string>
+    <string name="privacy_policy_label">隐私政策</string>
+    <string name="legal_notice_label">法律声明</string>
+    <string name="notif_invited_title">您已收到邀请！</string>
+    <string name="notif_invite_msg_body">您已收到来自 %1$s 的加入联赛的邀请。如需参加，请在“设置联赛”部分确认接受邀请。</string>
+    <string name="go_to_setup_leagues_btn">前往“设置联赛”页面</string>
+    <string name="close_btn">关闭</string>
+    <string name="connection_error">比赛无法加载。请检查您的信号。</string>
+    <string name="retry">重试</string>
+    <string name="show_forthcoming_only">筛选未来四周内有比赛的赛事</string>
+    <string name="sign_up">报名</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="password_mismatch">密码不匹配</string>
+    <string name="signup_text">注册过程非常简单。您现在输入的密码将是您的永久密码。</string>
+</resources>

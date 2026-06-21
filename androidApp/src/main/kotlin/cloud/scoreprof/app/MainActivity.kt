@@ -2,7 +2,7 @@ package cloud.scoreprof.app
 
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,7 +24,7 @@ import com.google.android.ump.UserMessagingPlatform
 import org.koin.android.ext.android.inject
 import java.util.concurrent.atomic.AtomicBoolean
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     // These will be provided by Koin now
     private val dao: ScoreProfDao by inject()

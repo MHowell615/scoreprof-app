@@ -16,7 +16,7 @@ import kotlinx.serialization.json.Json
 interface MatchRepository {
     fun getMatchesByCompetition(competitionId: String): Flow<List<Match>>
     suspend fun upsertMatches(matches: List<Match>)
-    suspend fun loadAndCacheMatchesFromJson(competitionId: String, userid: String)
+    suspend fun loadAndCacheMatchesFromJson(competitionId: String, userid: String, lang: String? = null)
     suspend fun upsertMatch(match: Match)
     suspend fun updateLocalPrediction(
         matchid: Int,
@@ -62,13 +62,14 @@ class MatchRepositoryImpl(
         return dao.getMatchCountForCompetition(competitionId) > 0
     }
 
-    override suspend fun loadAndCacheMatchesFromJson(competitionId: String, userid: String) {
+    override suspend fun loadAndCacheMatchesFromJson(competitionId: String, userid: String, lang: String?) {
         try {
             val token = tokenManager.getToken() ?: ""
-            val language = platform.language
+            val language = lang ?: platform.language
 
             val url = "https://www.scoreprof.cloud/rpc/getmatchesbycomp?competition_id=$competitionId&lang=$language&user_token=$token"
             val responseString: String = httpClient.get(url).body()
+            println("Matches response received. Sample: ${responseString.take(100)}")
 
             if (responseString.isNotBlank() && responseString != "null") {
                 val matchHeader = json.decodeFromString<MatchHeader>(responseString)

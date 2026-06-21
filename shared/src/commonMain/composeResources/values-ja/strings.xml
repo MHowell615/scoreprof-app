@@ -1,0 +1,172 @@
+<resources>
+    <string name="app_name">ScoreProf</string>
+    <string name="setup">設定</string>
+    <string name="leagues">リーグ</string>
+    <string name="league">リーグ</string>
+    <string name="league_name">リーグ名</string>
+    <string name="password">パスワード</string>
+    <string name="competitions">トーナメント</string>
+    <string name="username">ユーザー名</string>
+    <string name="email">メールアドレス</string>
+    <string name="create_new_league">新しいリーグを作成する</string>
+    <string name="invite_others">他の人を招待する</string>
+    <string name="competition_screen_text">各試合について、勝つと予想するチームをクリックしてください。引き分けと予想する場合は、両方のチームをクリックしてください。</string>
+    <string name="home_text_1">ScoreProfへようこそ。</string>
+    <string name="home_text_2">お好みの数多くの大会において、各試合の勝者を予想することができます。</string>
+    <string name="home_text_3">試合の結果を正しく予想するごとにポイントが獲得できます。</string>
+    <string name="home_text_4">「設定」で自分だけのリーグを作成しましょう。友達を招待して、彼らにも予想を立ててもらいましょう。</string>
+    <string name="home_text_5">頑張ってください！</string>
+    <string name="create_league">リーグを作成する</string>
+    <string name="invite_others_by_email">メールで他の人を招待する</string>
+    <string name="rules">ルール</string>
+    <string name="contact">アイデアとバグ</string>
+    <string name="setup_text_1">ホーム画面に表示したい大会を選択してください。\n</string>
+    <string name="setup_text_2">自分だけのリーグを作成して、友達を招待しましょう。</string>
+    <string name="preferred_language">希望する言語</string>
+    <string name="language_screen_text">アプリで使用する言語を選択してください。</string>
+    <string name="edit_league">リーグを編集</string>
+    <string name="matches">試合</string>
+    <string name="help">ヘルプ</string>
+    <string name="category">カテゴリ</string>
+    <string name="selection">選択</string>
+    <string name="summary">概要</string>
+    <string name="subject">件名</string>
+    <string name="details">詳細</string>
+    <string name="feedback_toast">フィードバックを送信しました！ありがとうございます。</string>
+    <string name="feedback_button">フィードバックを送信</string>
+    <string name="idea">アイデア</string>
+    <string name="bug">バグ</string>
+    <string name="question">質問</string>
+    <string name="other">その他</string>
+    <string name="scoreprof_login">ScoreProf ログイン</string>
+    <string name="login">ログイン</string>
+    <string name="login_text">注：初めてログインする場合、入力したパスワードが永続的なパスワードとして保存されます。</string>
+    <string name="help_question1">どうやって始めればいいですか？</string>
+    <string name="help_answer1">「設定」に移動し、ゲーム内の名前を設定してから、閲覧したい大会やリーグを選択してください。</string>
+    <string name="help_question2">予測を行うにはどうすればよいですか？</string>
+    <string name="help_answer2">「試合」画面に移動し、予想したい大会の試合を選択してください。試合ページが開いたら、勝つと思うチームをクリックしてください。引き分けになると予想する場合は、両方のチーム名をクリックしてください。選択したチームは緑色でハイライト表示されます。</string>
+    <string name="help_question3">予測を取り消すにはどうすればいいですか？</string>
+    <string name="help_answer3">予想の試合ページに移動し、選択したチームを緑色でクリックしてください。そうすると、予想の選択が解除されます。</string>
+    <string name="help_question4">ポイントはどうやって獲得できますか？</string>
+    <string name="help_answer4">正解（ホーム勝利、引き分け、アウェイ勝利）ごとに1ポイント獲得できます。結果は試合終了後に確定します。例えば、試合が延長戦やPK戦にもつれ込んだ場合、結果はそれらが終了した後に確定します。トーナメント方式のトーナメントでは、引き分けを選択しても意味がありません。</string>
+    <string name="help_question5">いつから予測ができるようになりますか？</string>
+    <string name="help_answer5">試合開始1分前までであれば、いつでも予想を立てたり変更したりできます。</string>
+    <string name="help_question6">自分の結果を見ることはできますか？</string>
+    <string name="help_answer6">試合ページは次の試合開始時に開きますが、上にスクロールすると結果を確認できます。選択したチームが緑色のままであれば、予想は正しかったということです。そうでなければ、選択内容が赤色に変わります。</string>
+    <string name="help_question7">リーグに参加するにはどうすればいいですか？</string>
+    <string name="help_answer7">友達にリーグコードを共有してもらう必要があります。その後、「設定」>「リーグ」に進み、画面上部の「リーグに参加」セクションにリーグコードを入力します。これにより、アプリ内通知を通じて友達にリクエストが送信されるので、友達はそれを承認する必要があります。</string>
+    <string name="help_question8">表示言語を変更するにはどうすればよいですか？</string>
+    <string name="help_answer8">スマートフォンのシステム設定を開き、アプリの言語オプションを選択してください。このアプリで表示する言語を選択できます。アプリを開いたら、「設定」画面に移動し、「ホーム」画面に戻ってください。これでアプリの言語が新しい言語にリセットされました。</string>
+    <string name="help_question9">リーグを作成するにはどうすればいいですか？</string>
+    <string name="help_answer9">「設定」＞「リーグ」に進み、リーグ一覧の上部にある「+」ボタンをクリックします。リーグ名を入力し、トーナメントを1つ選択します。リーグを保存すると、リーグコードが表示されます。このコードを使って友達を招待できます。設定画面に戻り、新しいリーグが選択されていることを確認してください。すると、アプリにリーグが表示されます。</string>
+    <string name="help_question10">リーグを編集するにはどうすればよいですか？</string>
+    <string name="help_answer10">「設定」＞「リーグ」に進み、編集したいリーグの右側にある3つの点アイコンをクリックします。次に「リーグを編集」を選択します。編集が完了したら、必ずリーグを保存してください。なお、編集できるのは自分が作成したリーグのみです。</string>
+    <string name="help_question11">リーグを削除するにはどうすればよいですか？</string>
+    <string name="help_answer11">「設定」＞「リーグ」に進み、削除したいリーグの右側にある三点リーダーのアイコンをクリックしてください。なお、削除できるのは自分が作成したリーグのみです。</string>
+    <string name="help_question12">問題やアイデアを報告するにはどうすればよいですか？</string>
+    <string name="help_answer12">「アイデアとバグ」ページにアクセスし、テンプレートにご記入ください。できる限り迅速に対応いたします。</string>
+    <string name="help_question13">広告を削除するにはどうすればよいですか？</string>
+    <string name="help_answer13">「設定」＞「プライバシー」に進み、ボタンをクリックしてプレミアムオプションに登録すると、アプリ内で広告が表示されなくなります。</string>
+    <string name="invite_users">ユーザーを招待する</string>
+    <string name="users_email">ユーザーのメールアドレス</string>
+    <string name="add">を追加</string>
+    <string name="delete_league">リーグを削除</string>
+    <string name="delete_league_confirmation">本当に削除しますか？</string>
+    <string name="delete">取り除く</string>
+    <string name="cancel">キャンセル</string>
+    <string name="points">点数</string>
+    <string name="win_percentage">勝つ％</string>
+    <string name="forgot_password">パスワードをお忘れですか</string>
+    <string name="privacy_policy_title">プライバシーポリシー</string>
+    <string name="privacy_policy_content">
+        ScoreProf respects your privacy. Muntjac Solutions is the Data Controller for this Service. \n\n
+        <b>1. Legal Basis (GDPR):</b> Our primary legal basis for processing your data (email address) is the <b>Performance of a Contract</b>. This data is necessary to provide your account and gaming features. We also rely on <b>Legitimate Interests</b> for security and <b>Consent</b> for personalized advertisements (handled via our consent provider). \n\n
+        <b>2. Data Controller:</b> Muntjac Solutions, 9 rue de Condé, Bureau 3, 33000 Bordeaux, France. SIRET: 104 419 619 00010. Registered with the RNE. \n\n
+        <b>3. Data Protection Contact:</b> In accordance with Art. 37 of the GDPR, our point of contact for privacy inquiries is <b>support@muntjac-solutions.com</b>. \n\n
+        <b>4. Data Retention:</b> We retain your data according to French law: \n
+        • <b>Account &amp; Contact:</b> 3 years after account closure or last active contact. \n
+        • <b>Invitations:</b> Emails used for invites are deleted if not accepted within 30 days. \n
+        • <b>Accounting Records:</b> 10 years as required by the French Commercial Code. \n
+        • <b>Cookies/Analytics:</b> Maximum 13 months. \n\n
+        <b>5. International Transfers:</b> Data is primarily hosted in London, UK (DigitalOcean Limited) and Stockholm, Sweden (AWS EMEA SARL). The UK has an <b>adequacy decision</b> from the European Commission. Sweden is part of the EEA. \n\n
+        <b>6. Your Rights:</b> You have the right to access, rectify, or request erasure. Contact us or the CNIL. \n\n
+        <b>7. Policy Changes:</b> Material changes will be notified via our News section. \n\n
+        <b>8. Full Policy:</b> https://www.muntjac-solutions.com/privacy
+    </string>
+    <string name="copyright">著作権 © 2026 Muntjac Solutions</string>
+    <string name="email_validation_text">有効なメールアドレスを入力してください</string>
+    <string name="invite_subject">%1$s がリーグ \'%2$s\' への参加を招待しました。</string>
+    <string name="invite_message">こんにちは！\n\n%1$s さんが ScoreProf アプリのリーグ \'%2$s\' にあなたを招待しました。\n\nこの招待を受け入れてプレイを開始するには、ScoreProf アプリを開き、[設定] > [リーグ] からリーグを選択してください。\n\nまだアプリをお持ちでない場合は、こちらからダウンロードできます: https://play.google.com/store/apps/details?id=cloud.scoreprof.app\n\nこれらの招待が不要な場合は、こちらからオプトアウトできます: https://www.muntjac-solutions.com/opt-out\n\nプレイをお楽しみください！\nScoreProf チーム\n\n---\n法的通知: https://www.muntjac-solutions.com/legal</string>
+    <string name="legal_notice_title">法的通知</string>
+    <string name="legal_notice_content">
+        In accordance with the provisions of Articles 6-III and 19 of Law No. 2004-575 of June 21, 2004 for Confidence in the Digital Economy (LCEN), users of ScoreProf are informed of these legal notices.\n\n
+        <b>Publisher:</b> Muntjac Solutions\n
+        <b>Publication Director:</b> Mark Howell, Founder\n
+        <b>Status:</b> Sole Proprietor (Unregulated Professional Practice)\n
+        <b>SIRET:</b> 104 419 619 00010\n
+        <b>Registration:</b> Registered with the National Business Registry (RNE)\n
+        <b>Headquarters:</b> 9 rue de Condé, Bureau 3, 33000 Bordeaux, France\n
+        <b>Phone:</b> 07 87 27 59 08\n
+        <b>Email:</b> contact@muntjac-solutions.com\n\n
+        <b>Data Protection:</b> For data privacy inquiries, see our Privacy Policy or contact support@muntjac-solutions.com.\n\n
+        <b>Hosting:</b> This application is hosted by:\n\n
+        <b>Digital Ocean Limited</b>\n
+        Suite 7 Savant House, 63-65 Camden High Street, London NW1 7JL, United Kingdom\n
+        Contact: https://www.digitalocean.com/company/contact/support\n\n
+        <b>Amazon Web Services Emea Sarl, Sverige Filial</b>\n
+        Malmskillnadsgatan 36, 111 57 Stockholm, Sweden\n
+        Contact: https://aws.amazon.com/fr/contact-us/?nc1=f_m
+    </string>
+    <string name="privacy">プライバシー</string>
+    <string name="privacy_settings">プライバシー設定</string>
+    <string name="receive_emails">ゲームの通知をメールで受け取る</string>
+    <string name="allow_analytics">匿名での分析データの収集を許可する</string>
+    <string name="league_created">リーグが設立されました</string>
+    <string name="league_code">リーグコード</string>
+    <string name="league_share">このコードを友達と共有してください。</string>
+    <string name="join_league_title">リーグに参加する</string>
+    <string name="enter_code_hint">リーグコードを入力してください</string>
+    <string name="join_btn">参加する</string>
+    <string name="league_created_success">リーグの作成に成功しました！</string>
+    <string name="share_league_msg">私のScoreProfリーグに参加してください！コード：%1$s</string>
+    <string name="copy_to_clipboard">クリップボードにコピー</string>
+    <string name="request_sent">オーナーに加入リクエストを送信しました。</string>
+    <string name="notif_join_request_title">参加リクエスト</string>
+    <string name="accept">受け入れる</string>
+    <string name="ignore">無視する</string>
+    <string name="reset_code_sent">セキュリティコードがBrevo経由で送信されました。</string>
+    <string name="notifications">通知</string>
+    <string name="notification">通知</string>
+    <string name="short_password_msg">パスワードは6文字以上である必要があります</string>
+    <string name="reset_password">パスワードをリセット</string>
+    <string name="forgot_password_text1">6桁のリセットコードを受け取るには、メールアドレスを入力してください。</string>
+    <string name="reset_password_text1">メールアドレスに送信されたコードと新しいパスワードを入力してください。</string>
+    <string name="send_reset_code">リセットコードを送信</string>
+    <string name="update_password">パスワードを更新</string>
+    <string name="back_to_login">ログイン画面に戻る</string>
+    <string name="new_password">新しいパスワード</string>
+    <string name="six_digit_code">6桁のコード</string>
+    <string name="no_upcoming_matches">今後の試合はありません</string>
+    <string name="premium_title">プレミアム</string>
+    <string name="remove_ads_btn">広告をすべて削除（月額購読）</string>
+    <string name="remove_ads_desc">ScoreProfの維持管理費とサーバー費用を支援しながら、広告なしの快適な体験をお楽しみください。</string>
+    <string name="receive_emails_desc">リーグへの招待や試合の最新情報がメールで送信されるので、それらを管理できます。</string>
+    <string name="allow_analytics_desc">匿名化された利用データを提供することで、ScoreProfの改善に役立てることができます。</string>
+    <string name="legal_docs_title">法的文書</string>
+    <string name="account_mgmt_title">アカウント管理</string>
+    <string name="request_deletion_title">アカウント削除依頼</string>
+    <string name="deletion_desc">GDPR（一般データ保護規則）に基づき、お客様には「忘れられる権利」があります。アカウントおよび関連するすべてのデータの完全削除をご希望の場合は、support@muntjac-solutions.comまでご連絡ください。</string>
+    <string name="privacy_policy_label">プライバシーポリシー</string>
+    <string name="legal_notice_label">法的通知</string>
+    <string name="notif_invited_title">ご招待しました！</string>
+    <string name="notif_invite_msg_body">%1$s からリーグ参加の招待が届いています。参加するには、「リーグ設定」セクションで参加を承認してください。</string>
+    <string name="go_to_setup_leagues_btn">リーグ設定へ移動</string>
+    <string name="close_btn">閉じる</string>
+    <string name="connection_error">試合結果を読み込めません。電波状況をご確認ください。</string>
+    <string name="retry">リトライ</string>
+    <string name="show_forthcoming_only">今後4週間以内に試合がある大会で絞り込む</string>
+    <string name="sign_up">サインアップ</string>
+    <string name="confirm_password">パスワードを認証する</string>
+    <string name="password_mismatch">パスワードが一致しません</string>
+    <string name="signup_text">登録は簡単です。今入力するパスワードが、あなたの永久的なキーとなります。</string>
+</resources>

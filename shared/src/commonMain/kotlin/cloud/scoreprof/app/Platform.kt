@@ -6,6 +6,7 @@ interface Platform {
     val deviceModel: String
     val language: String
     fun shareText(text: String)
+    fun setLanguage(languageCode: String)
 }
 
 expect fun getPlatform(): Platform

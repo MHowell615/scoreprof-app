@@ -61,7 +61,8 @@ class LeaguesRepositoryImpl(
     private val dao: ScoreProfDao,
     private val tokenManager: TokenManager,
     private val setupRepository: SetupRepository,
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient,
+    private val platform: cloud.scoreprof.app.Platform
 ) : LeaguesRepository {
     private val json = Json {
         ignoreUnknownKeys = true
@@ -73,6 +74,7 @@ class LeaguesRepositoryImpl(
             var localLeagues = dao.getLeagues()
             try {
                 val token = tokenManager.getToken() ?: ""
+                val language = platform.language
                 val url = "https://www.scoreprof.cloud/rpc/getleagues?user_token=$token"
                 val responseString: String = httpClient.get(url).body()
 
