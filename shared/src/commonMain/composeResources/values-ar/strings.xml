@@ -138,5 +138,8 @@
     <string name="vs">vs</string>
     <string name="jump_to_top">القفز إلى الأعلى</string>
     <string name="find_me">ابحث عني</string>
+    <string name="public_leagues">الدوريات العامة</string>
+    <string name="private_leagues">الدوريات الخاصة</string>
     <string name="help_question13">كيف يمكنني إزالة الإعلانات؟</string>
+    <string name="help_answer13">انتقل إلى "الإعدادات" > "الخصوصية" وانقر على الزر للاشتراك في الخيار المميز الذي يمنع عرض الإعلانات في التطبيق.</string>
 </resources>

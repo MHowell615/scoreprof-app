@@ -138,4 +138,10 @@
     <string name="password_mismatch">पासवर्ड मेल नहीं खाते</string>
     <string name="signup_text">पंजीकरण सहज है। अब आप जो पासवर्ड दर्ज करेंगे, वही आपकी स्थायी कुंजी होगी।</string>
     <string name="help_question13">मैं विज्ञापन कैसे हटाऊँ?</string>
+    <string name="help_answer13">\'सेटअप\' > \'प्राइवेसी\' पर जाएं और प्रीमियम ऑप्शन को सब्सक्राइब करने के लिए बटन पर क्लिक करें जो एप्लिकेशन में ऐड्स को दिखने से रोकता है।</string>
+    <string name="vs">vs</string>
+    <string name="jump_to_top">पहले पर जाएँ</string>
+    <string name="find_me">मुझे ढूढ़ें</string>
+    <string name="public_leagues">सार्वजनिक लीग</string>
+    <string name="private_leagues">निजी लीग</string>
 </resources>

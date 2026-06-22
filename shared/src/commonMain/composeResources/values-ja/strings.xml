@@ -169,4 +169,9 @@
     <string name="confirm_password">パスワードを認証する</string>
     <string name="password_mismatch">パスワードが一致しません</string>
     <string name="signup_text">登録は簡単です。今入力するパスワードが、あなたの永久的なキーとなります。</string>
+    <string name="vs">vs</string>
+    <string name="jump_to_top">ページの先頭へ</string>
+    <string name="find_me">私を見つけてください</string>
+    <string name="public_leagues">パブリックリーグ</string>
+    <string name="private_leagues">プライベートリーグ</string>
 </resources>

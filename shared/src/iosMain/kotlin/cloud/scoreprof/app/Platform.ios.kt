@@ -1,10 +1,12 @@
 package cloud.scoreprof.app
 
 import platform.UIKit.UIDevice
-
 import platform.Foundation.NSLocale
 import platform.Foundation.currentLocale
 import platform.Foundation.languageCode
+import platform.Foundation.NSString
+import platform.Foundation.NSDiacriticInsensitiveSearch
+import platform.Foundation.NSCaseInsensitiveSearch
 
 class IOSPlatform: Platform {
     override val name: String = UIDevice.currentDevice.systemName + " " + UIDevice.currentDevice.systemVersion
@@ -23,3 +25,13 @@ class IOSPlatform: Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
+
+actual fun getStringComparator(): Comparator<String> {
+    return object : Comparator<String> {
+        override fun compare(a: String, b: String): Int {
+            val nsA = a as NSString
+            val options = NSDiacriticInsensitiveSearch or NSCaseInsensitiveSearch
+            return nsA.compare(b, options).toInt()
+        }
+    }
+}

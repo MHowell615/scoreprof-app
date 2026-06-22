@@ -170,4 +170,10 @@
     <string name="password_mismatch">Les mots de passe ne correspondent pas</string>
     <string name="signup_text">L\'inscription se fait en toute simplicité. Le mot de passe que vous saisissez maintenant servira de clé permanente.</string>
     <string name="help_question13">Comment puis-je supprimer les publicités ?</string>
+    <string name="help_answer13">Rendez-vous dans « Paramètres » > « Confidentialité » et cliquez sur le bouton pour souscrire à l\'option premium qui empêche l\'affichage des publicités dans l\'application.</string>
+    <string name="vs">vs</string>
+    <string name="jump_to_top">Aller en haut</string>
+    <string name="find_me">Me trouver</string>
+    <string name="public_leagues">Ligues publiques</string>
+    <string name="private_leagues">Ligues privées</string>
 </resources>

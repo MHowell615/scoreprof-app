@@ -138,4 +138,10 @@
     <string name="password_mismatch">Die Passwörter stimmen nicht überein</string>
     <string name="signup_text">Die Registrierung erfolgt nahtlos. Das Passwort, das Sie jetzt eingeben, dient als Ihr permanenter Schlüssel.</string>
     <string name="help_question13">Wie kann ich Werbung entfernen?</string>
+    <string name="help_answer13">Gehen Sie zu „Konfiguration“ > „Datenschutz“ und klicken Sie auf die Schaltfläche, um die Premium-Option zu abonnieren, die verhindert, dass in der App Werbung angezeigt wird.</string>
+    <string name="vs">vs</string>
+    <string name="jump_to_top">Zum ersten gehen</string>
+    <string name="find_me">Finde mich</string>
+    <string name="public_leagues">Öffentliche Ligen</string>
+    <string name="private_leagues">Private Ligen</string>
 </resources>

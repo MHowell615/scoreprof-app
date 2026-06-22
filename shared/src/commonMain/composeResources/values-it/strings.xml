@@ -138,4 +138,10 @@
     <string name="password_mismatch">Le password non corrispondono</string>
     <string name="signup_text">La registrazione è semplicissima. La password che inserisci ora sarà la tua chiave permanente.</string>
     <string name="help_question13">Come faccio a rimuovere gli annunci pubblicitari?</string>
+    <string name="help_answer13">Vai su “Configura” > “Privacy” e clicca sul pulsante per sottoscrivere l\'opzione premium che impedisce la visualizzazione degli annunci pubblicitari nell\'applicazione.</string>
+    <string name="vs">vs</string>
+    <string name="jump_to_top">Vai al primo</string>
+    <string name="find_me">Trovami</string>
+    <string name="public_leagues">Leghe pubbliche</string>
+    <string name="private_leagues">Leghe private</string>
 </resources>

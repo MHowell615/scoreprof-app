@@ -138,4 +138,10 @@
     <string name="password_mismatch">As palavras-passe não coincidem</string>
     <string name="signup_text">O registo é muito simples. A palavra-passe que introduzir agora será a sua chave permanente.</string>
     <string name="help_question13">Como posso remover os anúncios?</string>
+    <string name="help_answer13">Vá a «Configurações» > «Privacidade» e clique no botão para subscrever a opção premium, que impede a exibição de anúncios na aplicação.</string>
+    <string name="vs">vs</string>
+    <string name="jump_to_top">Voltar ao topo</string>
+    <string name="find_me">Encontre-me</string>
+    <string name="public_leagues">Ligas públicas</string>
+    <string name="private_leagues">Ligas privadas</string>
 </resources>

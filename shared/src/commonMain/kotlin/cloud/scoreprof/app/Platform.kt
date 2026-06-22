@@ -10,3 +10,8 @@ interface Platform {
 }
 
 expect fun getPlatform(): Platform
+
+/**
+ * Returns a locale-aware string comparator for the current platform.
+ */
+expect fun getStringComparator(): Comparator<String>
