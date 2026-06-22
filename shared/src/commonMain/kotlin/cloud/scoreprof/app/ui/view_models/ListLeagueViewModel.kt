@@ -35,10 +35,15 @@ class ListLeagueViewModel(
     private val _uiEventFlow = MutableSharedFlow<UiEvent>()
     val uiEventFlow = _uiEventFlow.asSharedFlow()
 
-    private suspend fun loadLeagueTable(leagueid: String, owneruserid: String, sortBy: String = "points") {
+    private suspend fun loadLeagueTable(
+        leagueid: String,
+        owneruserid: String,
+        sortBy: String = "points",
+        jumpToTop: Boolean = false
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                leaguesUseCases.getLeagueTable(leagueid, owneruserid, sortBy)
+                leaguesUseCases.getLeagueTable(leagueid, owneruserid, sortBy, jumpToTop)
                     .collect { freshList ->
                         dao.updateLeagueTableCache(leagueid, owneruserid, freshList)
                         _leagueTable.value = freshList
@@ -57,7 +62,7 @@ class ListLeagueViewModel(
     suspend fun onEvent(event: LeagueEvent) {
         when(event) {
             is LeagueEvent.LoadLeagueTable -> {
-                loadLeagueTable(event.leagueid, event.owneruserid, event.sortBy)
+                loadLeagueTable(event.leagueid, event.owneruserid, event.sortBy, event.jumpToTop)
             }
         }
     }
@@ -71,7 +76,8 @@ class ListLeagueViewModel(
         data class LoadLeagueTable(
             val leagueid: String,
             val owneruserid: String,
-            val sortBy: String = "points"
+            val sortBy: String = "points",
+            val jumpToTop: Boolean = false
         ) : LeagueEvent()
     }
 }

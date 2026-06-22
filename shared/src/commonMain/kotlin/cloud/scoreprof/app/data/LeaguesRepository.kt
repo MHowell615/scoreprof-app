@@ -28,7 +28,12 @@ data class LeagueCreationResult(
 
 interface LeaguesRepository {
     suspend fun getLeagues(userid: String): List<Leagues>
-    fun getLeagueTable(leagueid: String, owneruserid: String, sortBy: String): Flow<List<LeagueTable>>
+    fun getLeagueTable(
+        leagueid: String,
+        owneruserid: String,
+        sortBy: String,
+        jumpToTop: Boolean = false
+    ): Flow<List<LeagueTable>>
     suspend fun upsertLeagueInDb(league: League, leagues: Leagues)
     suspend fun insertLeagues(leagues: Leagues)
     suspend fun createNewLeague(
@@ -100,16 +105,22 @@ class LeaguesRepositoryImpl(
             .joinToString("")
     }
 
-    override fun getLeagueTable(leagueid: String, owneruserid: String, sortBy: String): Flow<List<LeagueTable>> {
+    override fun getLeagueTable(
+        leagueid: String,
+        owneruserid: String,
+        sortBy: String,
+        jumpToTop: Boolean
+    ): Flow<List<LeagueTable>> {
         return flow {
             try {
                 val token = tokenManager.getToken() ?: ""
-                val url = "https://www.scoreprof.cloud/rpc/getleaguetable"
+                val url = "https://www.scoreprof.cloud/rpc/getleaguetable_v2"
                 val body = buildJsonObject {
                     put("_leagueid", leagueid)
                     put("_owneruserid", owneruserid)
                     put("user_token", token)
                     put("_sort_by", sortBy)
+                    put("_jump_to_top", jumpToTop)
                 }
 
                 val responseString: String = httpClient.post(url) {

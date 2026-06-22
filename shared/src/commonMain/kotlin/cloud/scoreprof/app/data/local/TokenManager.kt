@@ -16,6 +16,12 @@ class TokenManager(private val settings: Settings = Settings()) {
         settings.remove("auth_token")
     }
 
+    fun clear() {
+        settings.remove("auth_token")
+        settings.remove("userid")
+        settings.remove("email")
+    }
+
     fun hasToken(): Boolean = getToken() != null
 
     fun saveUserId(userid: String) {
@@ -24,5 +30,13 @@ class TokenManager(private val settings: Settings = Settings()) {
 
     fun getUserId(): String? {
         return settings.getStringOrNull("userid")
+    }
+
+    fun saveEmail(email: String) {
+        settings.putString("email", email)
+    }
+
+    fun getEmail(): String? {
+        return settings.getStringOrNull("email")
     }
 }

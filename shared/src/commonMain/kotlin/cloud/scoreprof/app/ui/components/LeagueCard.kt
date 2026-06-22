@@ -33,6 +33,13 @@ fun LeagueCard(leagueTable: LeagueTable, modifier: Modifier ?= null) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
+                text = "${leagueTable.rank}.",
+                modifier = Modifier.width(40.dp),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.secondary,
+                textAlign = TextAlign.Start
+            )
+            Text(
                 text = leagueTable.username,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,

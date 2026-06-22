@@ -91,7 +91,7 @@ class SetupRepositoryImpl(
     }
 
     override suspend fun logout() {
-        tokenManager.deleteToken()
+        tokenManager.clear()
         dao.deleteSetup()
     }
 

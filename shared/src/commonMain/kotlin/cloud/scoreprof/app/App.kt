@@ -55,6 +55,7 @@ fun App() {
 @Composable
 fun AppNavigation(setupViewModel: ListSetupViewModel) {
     val versionViewModel: VersionViewModel = koinViewModel()
+    val tokenManager: TokenManager = koinInject()
     val navController = rememberNavController()
     val isUpdateRequired by versionViewModel.isUpdateRequired.collectAsState()
     val updateUrl by versionViewModel.updateUrl.collectAsState()
@@ -62,7 +63,16 @@ fun AppNavigation(setupViewModel: ListSetupViewModel) {
     if (isUpdateRequired) {
         ForcedUpdateScreen(updateUrl)
     } else {
-        val startDestination = "login"
+        val isLoggedIn = tokenManager.hasToken() && tokenManager.getUserId() != null && tokenManager.getEmail() != null
+        val startDestination = if (isLoggedIn) {
+            val userid = tokenManager.getUserId()!!
+            val email = tokenManager.getEmail()!!
+            val encodedEmail = email.replace("@", "%40")
+            "main_graph/$userid/$encodedEmail"
+        } else {
+            "login"
+        }
+
         NavHost(navController = navController, startDestination = startDestination) {
             composable("login") {
                 LoginScreen(onLoginSuccess = { userid, email ->

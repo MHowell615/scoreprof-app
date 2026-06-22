@@ -81,6 +81,7 @@ class LoginViewModel(
 
                 tokenManager.saveToken(response.token)
                 tokenManager.saveUserId(response.u_id)
+                tokenManager.saveEmail(currentEmail)
 
                 // Update server-side profile language immediately after login
                 val currentLang = platform.language

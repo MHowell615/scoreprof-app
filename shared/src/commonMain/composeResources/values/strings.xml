@@ -170,4 +170,6 @@
     <string name="password_mismatch">Passwords do not match</string>
     <string name="signup_text">Registration is seamless. The password you enter now will be your permanent key.</string>
     <string name="vs">vs</string>
+    <string name="jump_to_top">Jump to Top</string>
+    <string name="find_me">Find Me</string>
 </resources>

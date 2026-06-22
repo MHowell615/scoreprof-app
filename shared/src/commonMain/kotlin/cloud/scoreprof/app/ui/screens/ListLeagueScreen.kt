@@ -19,13 +19,15 @@ import androidx.navigation.NavController
 import cloud.scoreprof.app.Res
 import cloud.scoreprof.app.points
 import cloud.scoreprof.app.win_percentage
+import cloud.scoreprof.app.jump_to_top
+import cloud.scoreprof.app.find_me
 import cloud.scoreprof.app.ui.components.LeagueCard
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.view_models.ListLeagueViewModel
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.painterResource
-
+import kotlinx.coroutines.launch
 
 @Composable
 fun ListLeagueScreen(
@@ -39,14 +41,16 @@ fun ListLeagueScreen(
 ) {
     val setupState by setupViewModel.setup.collectAsState()
     var sortBy by remember { mutableStateOf("points") }
+    var isViewingTop by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = leagueid, key2 = sortBy) {
+    LaunchedEffect(key1 = leagueid, key2 = sortBy, key3 = isViewingTop) {
         leagueViewModel.onEvent(ListLeagueViewModel.LeagueEvent.LoadLeagueTable(
             leagueid = leagueid,
             owneruserid = owneruserid,
-            sortBy = sortBy
-        )
-        )
+            sortBy = sortBy,
+            jumpToTop = isViewingTop
+        ))
     }
 
     val leagueTable by leagueViewModel.leagueTable.collectAsState()
@@ -72,8 +76,20 @@ fun ListLeagueScreen(
                 Text(
                     text = leaguename,
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
+                if (isViewingTop || (leagueTable.isNotEmpty() && leagueTable.first().rank != 1)) {
+                    TextButton(onClick = {
+                        isViewingTop = !isViewingTop
+                    }) {
+                        Text(
+                            text = if (isViewingTop) stringResource(Res.string.find_me) else stringResource(Res.string.jump_to_top),
+                            style = MaterialTheme.typography.labelMedium
+                        )
+                    }
+                }
             }
         }
     ) { contentPadding ->
@@ -90,12 +106,16 @@ fun ListLeagueScreen(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Spacer(modifier = Modifier.width(40.dp))
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = stringResource(Res.string.points) + if (sortBy == "points") " ↓" else "",
                     modifier = Modifier
-                        .width(60.dp)
-                        .clickable { sortBy = "points" },
+                        .width(40.dp)
+                        .clickable { 
+                            sortBy = "points"
+                            isViewingTop = false
+                        },
                     textAlign = TextAlign.Center,
                     style = TextStyle(
                         fontSize = 12.sp,
@@ -106,8 +126,11 @@ fun ListLeagueScreen(
                 Text(
                     text = stringResource(Res.string.win_percentage) + if (sortBy == "win_pct") " ↓" else "",
                     modifier = Modifier
-                        .width(80.dp)
-                        .clickable { sortBy = "win_pct" },
+                        .width(60.dp)
+                        .clickable { 
+                            sortBy = "win_pct"
+                            isViewingTop = false
+                        },
                     textAlign = TextAlign.Center,
                     style = TextStyle(
                         fontSize = 12.sp,

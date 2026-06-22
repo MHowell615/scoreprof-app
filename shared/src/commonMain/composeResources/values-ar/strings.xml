@@ -136,5 +136,7 @@
     <string name="password_mismatch">كلمات المرور غير متطابقة</string>
     <string name="signup_text">عملية التسجيل سهلة للغاية. ستكون كلمة المرور التي تدخلها الآن هي مفتاحك الدائم.</string>
     <string name="vs">vs</string>
+    <string name="jump_to_top">القفز إلى الأعلى</string>
+    <string name="find_me">ابحث عني</string>
     <string name="help_question13">كيف يمكنني إزالة الإعلانات؟</string>
 </resources>
