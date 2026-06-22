@@ -18,6 +18,7 @@ import cloud.scoreprof.app.domain.usecase.LanguagesUseCases
 import cloud.scoreprof.app.domain.usecase.SetupUseCases
 import cloud.scoreprof.app.data.local.TokenManager
 import cloud.scoreprof.app.Platform
+import cloud.scoreprof.app.getStringComparator
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*

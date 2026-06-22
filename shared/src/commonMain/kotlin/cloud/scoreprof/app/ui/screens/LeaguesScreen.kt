@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import cloud.scoreprof.app.Res
 import cloud.scoreprof.app.leagues
+import cloud.scoreprof.app.public_leagues
+import cloud.scoreprof.app.private_leagues
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.view_models.ListLeaguesViewModel
@@ -48,13 +50,8 @@ fun LeaguesScreen(
     setupViewModel: ListSetupViewModel,
     modifier: Modifier = Modifier
 ) {
-    val leagues by leaguesViewModel.leagues.collectAsState()
+    val groupedLeagues by leaguesViewModel.groupedLeagues.collectAsState()
     val setupState by setupViewModel.setup.collectAsState()
-
-    println("TEST: leagues = $leagues")
-    val filteredLeagues = leagues.filter {
-        it.state?.uppercase() != "DELETED"
-    }
 
     Scaffold(
         topBar = {
@@ -92,46 +89,57 @@ fun LeaguesScreen(
                 .padding(contentPadding)
                 .padding(horizontal = 16.dp)
         ) {
-            items(filteredLeagues) { league ->
-                Row(
-                    modifier = modifier
-                        .background(color = button_background)
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Button(
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = button_background,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = {
-                            val leagueid = league.leagueid
-                            val owneruserid = league.owneruserid
-                            val leaguename = league.name
-                            navController.navigate("league_screen/${leagueid}/${owneruserid}/${leaguename}")
-                        },
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = league.name,
-                            style = TextStyle(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            ),
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = ("Forward")
-                        )
-                    }
+            groupedLeagues.forEach { (category, leagueList) ->
+                item {
+                    Text(
+                        text = if (category == "Public") stringResource(Res.string.public_leagues) else stringResource(Res.string.private_leagues),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+
+                items(leagueList) { league ->
+                    Row(
+                        modifier = modifier
+                            .background(color = button_background)
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = button_background,
+                                contentColor = MaterialTheme.colorScheme.primary
+                            ),
+                            shape = RoundedCornerShape(8.dp),
+                            onClick = {
+                                val leagueid = league.leagueid
+                                val owneruserid = league.owneruserid
+                                val leaguename = league.name
+                                navController.navigate("league_screen/${leagueid}/${owneruserid}/${leaguename}")
+                            },
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = league.name,
+                                style = TextStyle(
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                ),
+                                modifier = Modifier.weight(1f)
+                            )
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = ("Forward")
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
 
             if (setupState?.is_ads_removed == false) {

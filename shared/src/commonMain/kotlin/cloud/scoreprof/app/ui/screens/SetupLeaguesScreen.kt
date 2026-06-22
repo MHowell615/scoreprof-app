@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.ui.graphics.Color
 import cloud.scoreprof.app.Res
 import cloud.scoreprof.app.leagues
+import cloud.scoreprof.app.public_leagues
+import cloud.scoreprof.app.private_leagues
 import cloud.scoreprof.app.delete_league
 import cloud.scoreprof.app.delete_league_confirmation
 import cloud.scoreprof.app.enter_code_hint
@@ -34,6 +36,7 @@ import cloud.scoreprof.app.domain.model.Leagues
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.utils.SelectableRowWithCheckboxes
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
+import cloud.scoreprof.app.getStringComparator
 
 @Composable
 fun SetupLeaguesScreen(
@@ -42,11 +45,30 @@ fun SetupLeaguesScreen(
     modifier: Modifier = Modifier
 ) {
     val leagues by setupViewModel.setupLeagues.collectAsState()
-    val activeLeagues = remember(leagues) {
-        leagues
+    val publicOwnerId = "00000000-0000-0000-0000-111111111111"
+    val comparator = remember { getStringComparator() }
+    
+    val groupedActiveLeagues = remember(leagues) {
+        val filtered = leagues
             .filter { it.item.state?.uppercase() != "DELETED" }
             .distinctBy { "${it.item.leagueid}_${it.item.owneruserid}" }
+            .sortedWith { a, b -> comparator.compare(a.item.name, b.item.name) }
+
+        val grouped = LinkedHashMap<String, List<cloud.scoreprof.app.ui.view_models.SelectableItem<Leagues>>>()
+        
+        val private = filtered.filter { 
+            it.item.owneruserid != publicOwnerId && !it.item.leagueid.equals("All", ignoreCase = true) 
+        }
+        if (private.isNotEmpty()) grouped["Private"] = private
+
+        val public = filtered.filter { 
+            it.item.owneruserid == publicOwnerId || it.item.leagueid.equals("All", ignoreCase = true) 
+        }
+        if (public.isNotEmpty()) grouped["Public"] = public
+        
+        grouped
     }
+    
     var expandedLeagueItem by remember { mutableStateOf<Leagues?>(null) }
     var leagueToDelete by remember { mutableStateOf<Leagues?>(null) }
     val setup by setupViewModel.setup.collectAsState()
@@ -188,75 +210,90 @@ fun SetupLeaguesScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
             }
-            items(
-                activeLeagues,
-                key = { "${it.item.leagueid}_${it.item.owneruserid}" }
-            ) { selectableLeague ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(modifier = Modifier.weight(1f)) {
-                        SelectableRowWithCheckboxes(
-                            item = selectableLeague.item,
-                            name = selectableLeague.item.name,
-                            isSelected = selectableLeague.isSelected,
-                            onCheckedChange = { isSelected ->
-                                setupViewModel.onLeagueSelected(selectableLeague.item, isSelected)
-                            }
-                        )
-                    }
-                    if (selectableLeague.item.owneruserid == userid) {
-                        Box {
-                            IconButton(onClick = {
-                                expandedLeagueItem = selectableLeague.item
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.MoreVert,
-                                    contentDescription = "Options",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
 
-                            DropdownMenu(
-                                expanded = expandedLeagueItem == selectableLeague.item,
-                                onDismissRequest = { expandedLeagueItem = null }
-                            ) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(Res.string.edit_league)) },
-                                    onClick = {
-                                        expandedLeagueItem = null
-                                        val leagueid = selectableLeague.item.leagueid
-                                        val owneruserid = selectableLeague.item.owneruserid
-                                        if (userid != null) {
-                                            navController.navigate(
-                                                "setup_edit_league_screen/${leagueid}/${owneruserid}/${userid}"
+            groupedActiveLeagues.forEach { (category, leagueList) ->
+                item {
+                    Text(
+                        text = if (category == "Public") stringResource(Res.string.public_leagues) else stringResource(Res.string.private_leagues),
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+
+                items(
+                    leagueList,
+                    key = { "${it.item.leagueid}_${it.item.owneruserid}" }
+                ) { selectableLeague ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(modifier = Modifier.weight(1f)) {
+                            SelectableRowWithCheckboxes(
+                                item = selectableLeague.item,
+                                name = selectableLeague.item.name,
+                                isSelected = selectableLeague.isSelected,
+                                onCheckedChange = { isSelected ->
+                                    setupViewModel.onLeagueSelected(selectableLeague.item, isSelected)
+                                }
+                            )
+                        }
+                        if (selectableLeague.item.owneruserid == userid) {
+                            Box {
+                                IconButton(onClick = {
+                                    expandedLeagueItem = selectableLeague.item
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.MoreVert,
+                                        contentDescription = "Options",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+
+                                DropdownMenu(
+                                    expanded = expandedLeagueItem == selectableLeague.item,
+                                    onDismissRequest = { expandedLeagueItem = null }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(Res.string.edit_league)) },
+                                        onClick = {
+                                            expandedLeagueItem = null
+                                            val leagueid = selectableLeague.item.leagueid
+                                            val owneruserid = selectableLeague.item.owneruserid
+                                            if (userid != null) {
+                                                navController.navigate(
+                                                    "setup_edit_league_screen/${leagueid}/${owneruserid}/${userid}"
+                                                )
+                                            }
+                                        },
+                                        leadingIcon = {
+                                            Icon(Icons.Default.Edit, contentDescription = null)
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(Res.string.delete_league)) },
+                                        onClick = {
+                                            expandedLeagueItem = null
+                                            leagueToDelete = selectableLeague.item
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                Icons.Default.Delete,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.error
                                             )
                                         }
-                                    },
-                                    leadingIcon = {
-                                        Icon(Icons.Default.Edit, contentDescription = null)
-                                    }
-                                )
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(Res.string.delete_league)) },
-                                    onClick = {
-                                        expandedLeagueItem = null
-                                        leagueToDelete = selectableLeague.item
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Delete,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.error
-                                        )
-                                    }
-                                )
+                                    )
+                                }
                             }
                         }
                     }
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
-                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }

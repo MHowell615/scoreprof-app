@@ -43,3 +43,9 @@ class AndroidPlatform : Platform {
 }
 
 actual fun getPlatform(): Platform = AndroidPlatform()
+
+actual fun getStringComparator(): Comparator<String> {
+    val collator = java.text.Collator.getInstance()
+    collator.strength = java.text.Collator.SECONDARY
+    return Comparator { s1, s2 -> collator.compare(s1, s2) }
+}

@@ -30,6 +30,7 @@ import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.theme.dropdown_background
 import cloud.scoreprof.app.ui.theme.sub_dropdown_background
+import cloud.scoreprof.app.getStringComparator
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -47,6 +48,7 @@ fun CompetitionsScreen(
     }
     val competitionsState by setupViewModel.competitions.collectAsState()
     val showOnlyUpcoming by setupViewModel.showOnlyUpcoming.collectAsState()
+    val comparator = remember { getStringComparator() }
 
     val displayedCompetitions = remember(competitionsState, showOnlyUpcoming) {
         if (showOnlyUpcoming) {
@@ -62,10 +64,16 @@ fun CompetitionsScreen(
             .groupBy { it.item.sport_type ?: "Other" }
             .mapValues { sportEntry ->
                 val byRegion = sportEntry.value.groupBy { it.item.region ?: "International" }
-                byRegion.toList().sortedBy { it.first }.toMap().mapValues { regionEntry ->
-                    regionEntry.value.sortedBy { it.item.country_ranking ?: Int.MAX_VALUE }
-                }
-            }.toList().sortedBy { it.first }.toMap()
+                byRegion.toList()
+                    .sortedWith { a, b -> comparator.compare(a.first, b.first) }
+                    .toMap()
+                    .mapValues { regionEntry ->
+                        regionEntry.value.sortedBy { it.item.country_ranking ?: Int.MAX_VALUE }
+                    }
+            }
+            .toList()
+            .sortedWith { a, b -> comparator.compare(a.first, b.first) }
+            .toMap()
     }
 
     val expandedSports = remember { mutableStateMapOf<String, Boolean>() }

@@ -43,6 +43,7 @@ import cloud.scoreprof.app.ui.utils.SelectableRowWithCheckboxes
 import cloud.scoreprof.app.ui.theme.dropdown_background
 import cloud.scoreprof.app.ui.theme.sub_dropdown_background
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
+import cloud.scoreprof.app.getStringComparator
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -54,14 +55,23 @@ fun SetupCompetitionsScreen(
     val competitions by setupViewModel.competitions.collectAsState()
     val setupState by setupViewModel.setup.collectAsState()
     val userid = setupViewModel.userid
+    val comparator = remember { getStringComparator() }
 
     val groupedAllCompetitions = remember(competitions) {
         competitions
             .groupBy { it.item.sport_type ?: "Other" }
             .mapValues { sportEntry ->
                 sportEntry.value.groupBy { it.item.region ?: "International" }
-                    .toList().sortedBy { it.first }.toMap()
-            }.toList().sortedBy { it.first }.toMap()
+                    .mapValues { regionEntry ->
+                        regionEntry.value.sortedWith { a, b -> comparator.compare(a.item.name, b.item.name) }
+                    }
+                    .toList()
+                    .sortedWith { a, b -> comparator.compare(a.first, b.first) }
+                    .toMap()
+            }
+            .toList()
+            .sortedWith { a, b -> comparator.compare(a.first, b.first) }
+            .toMap()
     }
 
     val expandedSports = remember { mutableStateMapOf<String, Boolean>() }
