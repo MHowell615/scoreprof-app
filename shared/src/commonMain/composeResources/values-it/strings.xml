@@ -43,7 +43,6 @@
     <string name="login">Login</string>
     <string name="login_text">Nota: se è la prima volta che accedi, la password che inserisci verrà salvata come password permanente.</string>
     <string name="help_answer12">Vai alla sezione \"Idee e errori\" e compila il modulo. Ti risponderemo il prima possibile.</string>
-    <string name="help_answer13">Vai su “Configura” > “Privacy” e clicca sul pulsante per sottoscrivere l\'opzione premium che impedisce la visualizzazione degli annunci pubblicitari nell\'applicazione.</string>
     <string name="invite_users">Invita gli utenti</string>
     <string name="users_email">Indirizzo email dell\'utente</string>
     <string name="add">Aggiungere</string>

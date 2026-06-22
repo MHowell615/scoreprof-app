@@ -43,7 +43,6 @@
     <string name="login">Anmelden</string>
     <string name="login_text">Hinweis: Wenn Sie sich zum ersten Mal anmelden, wird das von Ihnen eingegebene Passwort als Ihr dauerhaftes Passwort gespeichert.</string>
     <string name="help_answer12">Gehen Sie zu „Ideen &amp; Fehler“ und füllen Sie das Formular aus. Wir melden uns so schnell wie möglich bei Ihnen.</string>
-    <string name="help_answer13">Gehen Sie zu „Konfiguration“ > „Datenschutz“ und klicken Sie auf die Schaltfläche, um die Premium-Option zu abonnieren, die verhindert, dass in der App Werbung angezeigt wird.</string>
     <string name="invite_users">Benutzer einladen</string>
     <string name="users_email">E-Mail-Adresse des Benutzers</string>
     <string name="add">Hinzufügen</string>

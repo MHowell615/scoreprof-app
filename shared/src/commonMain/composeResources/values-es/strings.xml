@@ -43,7 +43,6 @@
     <string name="login">Iniciar sesión</string>
     <string name="login_text">Nota: Si es la primera vez que inicias sesión, la contraseña que introduzcas se guardará como tu contraseña permanente.</string>
     <string name="help_answer12">Ve a «Ideas y errores» y rellena el formulario. Te responderemos lo antes posible.</string>
-    <string name="help_answer13">Ve a «Configuración» > «Privacidad» y haz clic en el botón para suscribirte a la opción premium, que impide que se muestren anuncios en la aplicación.</string>
     <string name="invite_users">Invitar a usuarios</string>
     <string name="users_email">Dirección de correo electrónico del usuario</string>
     <string name="add">Agregar</string>

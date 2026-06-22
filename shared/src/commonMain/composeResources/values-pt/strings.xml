@@ -43,7 +43,6 @@
     <string name="login">Iniciar sessão</string>
     <string name="login_text">Nota: Se for a primeira vez que inicia sessão, a palavra-passe que introduzir será guardada como a sua palavra-passe permanente.</string>
     <string name="help_answer12">Vá a «Ideias e Erros» e preencha o formulário. Responderemos assim que possível.</string>
-    <string name="help_answer13">Vá a «Configurações» > «Privacidade» e clique no botão para subscrever a opção premium, que impede a exibição de anúncios na aplicação.</string>
     <string name="invite_users">Convidar utilizadores</string>
     <string name="users_email">E-mail do utilizador</string>
     <string name="add">Adicionar</string>
