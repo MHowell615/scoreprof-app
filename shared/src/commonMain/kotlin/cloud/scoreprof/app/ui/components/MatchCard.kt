@@ -38,6 +38,12 @@ import kotlin.time.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.runtime.CompositionLocalProvider
+import org.jetbrains.compose.resources.stringResource
+import cloud.scoreprof.app.Res
+import cloud.scoreprof.app.vs
 
 @Composable
 fun MatchCard(
@@ -79,161 +85,163 @@ fun MatchCard(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = cardBackgroundColor,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .padding(16.dp)
-    ) {
-
-        val competitor1BackgroundColor =
-            if (competitor1selected) getSelectionBackgroundColor() else Color.Transparent
-        val competitor2BackgroundColor =
-            if (competitor2selected) getSelectionBackgroundColor() else Color.Transparent
-
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                // Competitor 1
-                Text(
-                    text = match.competitor1,
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(competitor1BackgroundColor)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple(),
-                            onClick = {
-                                if (!isPredictionLocked) {
-                                    competitor1selected = !competitor1selected
-                                    onPredictionClick(competitor1selected, competitor2selected)
-                                }
-                            }
-                        )
-                        .padding(4.dp),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = fontColor,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 18.sp
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = cardBackgroundColor,
+                    shape = RoundedCornerShape(10.dp)
                 )
+                .padding(16.dp)
+        ) {
 
-                // Score or "vs" Text
-                if (match.score1 != null && match.score2 != null) {
+            val competitor1BackgroundColor =
+                if (competitor1selected) getSelectionBackgroundColor() else Color.Transparent
+            val competitor2BackgroundColor =
+                if (competitor2selected) getSelectionBackgroundColor() else Color.Transparent
+
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    // Competitor 1
                     Text(
-                        text = "${match.score1} - ${match.score2}",
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = fontColor,
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                } else {
-                    Text(
-                        text = "vs",
+                        text = match.competitor1,
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(competitor1BackgroundColor)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = ripple(),
+                                onClick = {
+                                    if (!isPredictionLocked) {
+                                        competitor1selected = !competitor1selected
+                                        onPredictionClick(competitor1selected, competitor2selected)
+                                    }
+                                }
+                            )
+                            .padding(4.dp),
                         style = TextStyle(
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal,
+                            fontWeight = FontWeight.Bold,
                             color = fontColor,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            lineHeight = 18.sp
                         ),
-                        modifier = Modifier.padding(horizontal = 8.dp)
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
-                }
 
-                // Competitor 2
-                Text(
-                    text = match.competitor2,
-                    modifier = Modifier
-                        .weight(1f)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(competitor2BackgroundColor)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple(),
-                            onClick = {
-                                if (!isPredictionLocked) {
-                                    competitor2selected = !competitor2selected
-                                    onPredictionClick(competitor1selected, competitor2selected)
-                                }
-                            }
-                        )
-                        .padding(4.dp),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = fontColor,
-                        textAlign = TextAlign.Center,
-                        lineHeight = 18.sp
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-            Row {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                ) {
-                    match.venue?.let {
+                    // Score or "vs" Text
+                    if (match.score1 != null && match.score2 != null) {
                         Text(
-                            text = it,
+                            text = "${match.score1} - ${match.score2}",
                             style = TextStyle(
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.primary
-                            ),
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                                .fillMaxWidth(0.35f),
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-
-                    match.supplement?.let {
-                        Text(
-                            text = it,
-                            style = TextStyle(
-                                fontSize = 14.sp,
+                                fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = fontColor,
                                 textAlign = TextAlign.Center
                             ),
-                            modifier = Modifier.align(Alignment.Center),
-                            maxLines = 1
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(Res.string.vs),
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = fontColor,
+                                textAlign = TextAlign.Center
+                            ),
+                            modifier = Modifier.padding(horizontal = 8.dp)
                         )
                     }
 
-                    // 3. Kickoff Time
-                    val systemTimeZone = TimeZone.currentSystemDefault()
-                    val localKickoff = match.kickoff.toLocalDateTime(systemTimeZone)
-                    val timeString = "${localKickoff.hour.toString().padStart(2, '0')}:${localKickoff.minute.toString().padStart(2, '0')}"
-                    
+                    // Competitor 2
                     Text(
-                        text = timeString,
+                        text = match.competitor2,
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(competitor2BackgroundColor)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = ripple(),
+                                onClick = {
+                                    if (!isPredictionLocked) {
+                                        competitor2selected = !competitor2selected
+                                        onPredictionClick(competitor1selected, competitor2selected)
+                                    }
+                                }
+                            )
+                            .padding(4.dp),
                         style = TextStyle(
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.primary,
-                            textAlign = TextAlign.End
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = fontColor,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 18.sp
                         ),
-                        modifier = Modifier.align(Alignment.CenterEnd),
-                        maxLines = 1
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
+                }
+
+                Row {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    ) {
+                        match.venue?.let {
+                            Text(
+                                text = it,
+                                style = TextStyle(
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.primary
+                                ),
+                                modifier = Modifier
+                                    .align(Alignment.CenterStart)
+                                    .fillMaxWidth(0.35f),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+
+                        match.supplement?.let {
+                            Text(
+                                text = it,
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = fontColor,
+                                    textAlign = TextAlign.Center
+                                ),
+                                modifier = Modifier.align(Alignment.Center),
+                                maxLines = 1
+                            )
+                        }
+
+                        // 3. Kickoff Time
+                        val systemTimeZone = TimeZone.currentSystemDefault()
+                        val localKickoff = match.kickoff.toLocalDateTime(systemTimeZone)
+                        val timeString = "${localKickoff.hour.toString().padStart(2, '0')}:${localKickoff.minute.toString().padStart(2, '0')}"
+
+                        Text(
+                            text = timeString,
+                            style = TextStyle(
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.primary,
+                                textAlign = TextAlign.End
+                            ),
+                            modifier = Modifier.align(Alignment.CenterEnd),
+                            maxLines = 1
+                        )
+                    }
                 }
             }
         }

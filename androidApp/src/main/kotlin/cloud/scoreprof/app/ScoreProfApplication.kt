@@ -1,6 +1,7 @@
 package cloud.scoreprof.app
 
 import android.app.Application
+import cloud.scoreprof.app.data.setAppContext
 import cloud.scoreprof.app.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -9,6 +10,7 @@ import org.koin.core.context.startKoin
 class ScoreProfApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        setAppContext(this)
 
         startKoin {
             androidLogger()

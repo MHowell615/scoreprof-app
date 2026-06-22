@@ -22,24 +22,38 @@ import cloud.scoreprof.app.data.local.TokenManager
 import cloud.scoreprof.app.ui.screens.*
 import cloud.scoreprof.app.ui.view_models.*
 import org.koin.compose.KoinContext
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
 fun App() {
+    val platform: Platform = koinInject()
+    val setupViewModel: ListSetupViewModel = koinViewModel()
+    val setupState by setupViewModel.setup.collectAsState()
+    
+    val languageCode = setupState?.preferred_language ?: platform.language
+    val isRtl = languageCode == "ar"
+    val layoutDirection = if (isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
+
     KoinContext {
-        MaterialTheme {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                AppNavigation()
+        CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
+            MaterialTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    AppNavigation(setupViewModel)
+                }
             }
         }
     }
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(setupViewModel: ListSetupViewModel) {
     val versionViewModel: VersionViewModel = koinViewModel()
     val navController = rememberNavController()
     val isUpdateRequired by versionViewModel.isUpdateRequired.collectAsState()
@@ -73,8 +87,7 @@ fun AppNavigation() {
                     }
                     val useridString = parentEntry.savedStateHandle.get<String>("userid")
                     val email = parentEntry.savedStateHandle.get<String>("email")
-
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
+                    val tokenManager: TokenManager = koinInject()
 
                     LaunchedEffect(Unit) {
                         setupViewModel.navigationEvents.collect { event ->
@@ -97,7 +110,7 @@ fun AppNavigation() {
                         navController = navController,
                         passedUserId = useridString,
                         passedEmail = email,
-                        tokenManager = TokenManager()
+                        tokenManager = tokenManager
                     )
                 }
 
@@ -106,7 +119,6 @@ fun AppNavigation() {
                     arguments = listOf(navArgument("userid") { type = NavType.StringType })
                 ) { navBackStackEntry ->
                     val useridString = navBackStackEntry.savedStateHandle.get<String>("userid")
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     
                     CompetitionsScreen(
                         navController = navController,
@@ -120,7 +132,6 @@ fun AppNavigation() {
                     arguments = listOf(navArgument("notificationid") { type = NavType.IntType })
                 ) { backStackEntry ->
                     val notificationid = backStackEntry.savedStateHandle.get<Int>("notificationid") ?: 0
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     val notificationViewModel: NotificationViewModel = koinViewModel()
 
                     NotificationScreen(
@@ -135,7 +146,6 @@ fun AppNavigation() {
                     "setup_screen/{userid}",
                     arguments = listOf(navArgument("userid") { type = NavType.StringType })
                 ) {
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     SetupScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -144,7 +154,6 @@ fun AppNavigation() {
                 }
 
                 composable("languages_screen") {
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     LanguagesScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -153,7 +162,6 @@ fun AppNavigation() {
                 }
 
                 composable("setup_competitions_screen/{userid}") {
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     SetupCompetitionsScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -162,7 +170,6 @@ fun AppNavigation() {
                 }
 
                 composable("setup_privacy_screen/{userid}") {
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     SetupPrivacyScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -171,7 +178,6 @@ fun AppNavigation() {
                 }
 
                 composable("setup_leagues_screen/{userid}") {
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     SetupLeaguesScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -191,7 +197,6 @@ fun AppNavigation() {
                     val owneruseridString = backStackEntry.savedStateHandle.get<String>("owneruserid") ?: ""
                     val useridString = backStackEntry.savedStateHandle.get<String>("userid") ?: ""
 
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     val editLeagueViewModel: EditLeagueViewModel = koinViewModel()
 
                     LaunchedEffect(leagueid, owneruseridString) {
@@ -219,7 +224,6 @@ fun AppNavigation() {
                 ) { backStackEntry ->
                     val competitionId = backStackEntry.savedStateHandle.get<String>("competitionId")
                     val userid = backStackEntry.savedStateHandle.get<String>("userid")
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     val viewModel: ListMatchesViewModel = koinViewModel()
                     val competitions by setupViewModel.competitions.collectAsState()
                     
@@ -257,7 +261,6 @@ fun AppNavigation() {
                     val leaguename = backStackEntry.savedStateHandle.get<String>("leaguename") ?: ""
 
                     val listLeagueViewModel: ListLeagueViewModel = koinViewModel()
-                    val listSetupViewModel: ListSetupViewModel = koinViewModel()
 
                     LaunchedEffect(leagueid, owneruseridString) {
                         if (leagueid.isNotEmpty() && owneruseridString.isNotEmpty()) {
@@ -271,7 +274,7 @@ fun AppNavigation() {
                         leaguename = leaguename,
                         navController = navController,
                         leagueViewModel = listLeagueViewModel,
-                        setupViewModel = listSetupViewModel,
+                        setupViewModel = setupViewModel,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -284,7 +287,6 @@ fun AppNavigation() {
                         navArgument("email") { type = NavType.StringType }
                     )
                 ) { backStackEntry ->
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     CreateNewLeagueScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,
@@ -297,7 +299,6 @@ fun AppNavigation() {
                     arguments = listOf(navArgument("userid") { type = NavType.StringType })
                 ) {
                     val listLeaguesViewModel: ListLeaguesViewModel = koinViewModel()
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     LeaguesScreen(
                         navController = navController,
                         leaguesViewModel = listLeaguesViewModel,
@@ -308,11 +309,10 @@ fun AppNavigation() {
 
                 composable("help_screen") {
                     val listHelpViewModel: ListHelpViewModel = koinViewModel()
-                    val listSetupViewModel: ListSetupViewModel = koinViewModel()
                     HelpScreen(
                         navController = navController,
                         helpViewModel = listHelpViewModel,
-                        setupViewModel = listSetupViewModel,
+                        setupViewModel = setupViewModel,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

@@ -13,3 +13,9 @@ data class Language(
 data class LanguageResponse(
     val languages: List<Language>
 )
+
+@Serializable
+data class LanguageDirection(
+    val language_code: String,
+    val direction: String
+)

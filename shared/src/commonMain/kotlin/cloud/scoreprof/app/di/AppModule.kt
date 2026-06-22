@@ -18,7 +18,7 @@ val appModule = module {
     single<LeaguesRepository> { LeaguesRepositoryImpl(get(), get(), get(), get(), get()) }
     single<MatchRepository> { MatchRepositoryImpl(get(), get(), get(), get()) }
     single<NotificationRepository> { NotificationRepositoryImpl(get(), get(), get()) }
-    single<LanguageRepository> { LanguageRepositoryImpl(get(), get()) }
+    single<LanguageRepository> { LanguageRepositoryImpl(get(), get(), get()) }
     single<PredictionUpdateRepository> { PredictionUpdateRepositoryImpl(get(), get()) }
 
     // UseCases
