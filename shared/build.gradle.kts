@@ -41,7 +41,6 @@ kotlin {
     
     if (isIosEnabled) {
         listOf(
-            iosX64(),
             iosArm64(),
             iosSimulatorArm64()
         ).forEach { iosTarget ->
@@ -102,7 +101,6 @@ dependencies {
     // Add Room compiler for KSP
     add("kspAndroid", libs.androidx.room.compiler)
     if (project.findProperty("isIosEnabled") == "true" && HostManager.hostIsMac) {
-        add("kspIosX64", libs.androidx.room.compiler)
         add("kspIosArm64", libs.androidx.room.compiler)
         add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     }
