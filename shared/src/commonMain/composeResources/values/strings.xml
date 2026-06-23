@@ -174,4 +174,8 @@
     <string name="find_me">Find Me</string>
     <string name="public_leagues">Public Leagues</string>
     <string name="private_leagues">Private Leagues</string>
+    <string name="continue_as_guest">Continue as Guest</string>
+    <string name="guest_user">Guest User</string>
+    <string name="login_required_title">Login Required</string>
+    <string name="login_required_msg">Please log in or sign up to use this feature.</string>
 </resources>

@@ -34,6 +34,7 @@ import cloud.scoreprof.app.forgot_password
 import cloud.scoreprof.app.email
 import cloud.scoreprof.app.password
 import cloud.scoreprof.app.scoreprof_launcher_round
+import cloud.scoreprof.app.continue_as_guest
 import cloud.scoreprof.app.ui.view_models.LoginViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -151,6 +152,17 @@ fun LoginScreen(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
                 ) {
                     Text(stringResource(Res.string.sign_up))
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                TextButton(
+                    onClick = {
+                        onLoginSuccess("guest", "guest@scoreprof.cloud")
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(Res.string.continue_as_guest))
                 }
             }
             else {

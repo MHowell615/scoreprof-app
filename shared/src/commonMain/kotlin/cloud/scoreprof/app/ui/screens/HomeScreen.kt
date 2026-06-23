@@ -45,6 +45,9 @@ import cloud.scoreprof.app.scoreprof_launcher_playstore
 import cloud.scoreprof.app.privacy_policy_title
 import cloud.scoreprof.app.legal_notice_title
 import cloud.scoreprof.app.copyright
+import cloud.scoreprof.app.login_required_title
+import cloud.scoreprof.app.login_required_msg
+import cloud.scoreprof.app.login
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
@@ -75,9 +78,10 @@ fun HomeScreen(
     }
 
     val preferredLanguage = setupState?.preferred_language ?: "en"
+    val isGuest = userid == "guest"
 
     LaunchedEffect(userid, setupState) {
-        if (userid.isNotEmpty() && (setupState == null || setupState?.memberSince == null)) {
+        if (!isGuest && userid.isNotEmpty() && (setupState == null || setupState?.memberSince == null)) {
             if (email.isNotEmpty()) {
                 setupViewModel.activateUserAccount(email, preferredLanguage)
             }
@@ -85,7 +89,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(email, setupState) {
-        if (email.isNotEmpty()) {
+        if (!isGuest && email.isNotEmpty()) {
             notificationViewModel.loadNotifications(email)
         }
     }
@@ -93,7 +97,7 @@ fun HomeScreen(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                if (userid.isNotEmpty()) {
+                if (!isGuest && userid.isNotEmpty()) {
                     setupViewModel.refreshData()
                 }
             }
@@ -105,9 +109,38 @@ fun HomeScreen(
     }
 
     LaunchedEffect(userid) {
-        if (userid.isNotEmpty()) {
+        if (!isGuest && userid.isNotEmpty()) {
             setupViewModel.loadInitialDataForUser(userid)
         }
+    }
+
+    var showLoginRequiredDialog by remember { mutableStateOf(false) }
+
+    if (showLoginRequiredDialog) {
+        AlertDialog(
+            onDismissRequest = { showLoginRequiredDialog = false },
+            title = { Text(stringResource(Res.string.login_required_title)) },
+            text = { Text(stringResource(Res.string.login_required_msg)) },
+            confirmButton = {
+                Button(onClick = {
+                    showLoginRequiredDialog = false
+                    scope.launch {
+                        setupViewModel.logout {
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    }
+                }) {
+                    Text(stringResource(Res.string.login))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLoginRequiredDialog = false }) {
+                    Text(stringResource(Res.string.close_btn))
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -166,7 +199,13 @@ fun HomeScreen(
                         contentColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(8.dp),
-                    onClick = { navController.navigate(route) },
+                    onClick = {
+                        if (isGuest && (route.contains("setup") || route.contains("leagues_screen"))) {
+                            showLoginRequiredDialog = true
+                        } else {
+                            navController.navigate(route)
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 4.dp)
