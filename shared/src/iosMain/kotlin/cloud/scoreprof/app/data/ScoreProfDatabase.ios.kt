@@ -2,6 +2,7 @@ package cloud.scoreprof.app.data
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import platform.Foundation.NSHomeDirectory
 
 actual fun getDatabaseBuilder(): RoomDatabase.Builder<ScoreProfDatabase> {

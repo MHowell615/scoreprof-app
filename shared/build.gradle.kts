@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -36,10 +37,11 @@ kotlin {
         }
     }
 
-    val isIosEnabled = project.findProperty("isIosEnabled") == "true"
+    val isIosEnabled = project.findProperty("isIosEnabled") == "true" && HostManager.hostIsMac
     
     if (isIosEnabled) {
         listOf(
+            iosX64(),
             iosArm64(),
             iosSimulatorArm64()
         ).forEach { iosTarget ->
@@ -85,8 +87,10 @@ kotlin {
             implementation("com.google.android.gms:play-services-ads:23.0.0")
             implementation("com.google.code.gson:gson:2.10.1")
         }
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+        if (isIosEnabled) {
+            iosMain.dependencies {
+                implementation(libs.ktor.client.darwin)
+            }
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -97,7 +101,8 @@ kotlin {
 dependencies {
     // Add Room compiler for KSP
     add("kspAndroid", libs.androidx.room.compiler)
-    if (project.findProperty("isIosEnabled") == "true") {
+    if (project.findProperty("isIosEnabled") == "true" && HostManager.hostIsMac) {
+        add("kspIosX64", libs.androidx.room.compiler)
         add("kspIosArm64", libs.androidx.room.compiler)
         add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     }

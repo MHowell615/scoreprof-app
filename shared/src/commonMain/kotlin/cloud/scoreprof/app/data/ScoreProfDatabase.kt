@@ -34,7 +34,7 @@ abstract class ScoreProfDatabase : RoomDatabase() {
 }
 
 // The constructor needed for Room KMP
-@Suppress("NO_ACTUAL_FOR_EXPECT")
+@Suppress("KotlinNoActualForExpect")
 expect object ScoreProfDatabaseConstructor : RoomDatabaseConstructor<ScoreProfDatabase> {
     override fun initialize(): ScoreProfDatabase
 }
