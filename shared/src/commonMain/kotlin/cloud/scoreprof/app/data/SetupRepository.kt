@@ -64,6 +64,8 @@ class SetupRepositoryImpl(
     }
 
     override suspend fun refreshSetupFromServer(userid: String, lang: String?) {
+        if (userid == "guest") return // Guests don't have server-side setup data
+
         val token = tokenManager.getToken() ?: ""
         if (token.isBlank()) throw IllegalStateException("SESSION_EXPIRED")
 

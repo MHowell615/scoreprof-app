@@ -48,6 +48,7 @@ import cloud.scoreprof.app.copyright
 import cloud.scoreprof.app.login_required_title
 import cloud.scoreprof.app.login_required_msg
 import cloud.scoreprof.app.login
+import cloud.scoreprof.app.close_btn
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel

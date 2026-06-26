@@ -113,6 +113,23 @@ class ListSetupViewModel(
     }
 
     fun loadInitialDataForUser(userid: String) {
+        if (userid == "guest") {
+            _setup.value = Setup(
+                id = 0,
+                version = 1,
+                email = "guest@scoreprof.cloud",
+                name = "Guest User",
+                userid = "guest",
+                memberSince = null,
+                preferred_language = platform.language,
+                competitions = emptyList(),
+                leagues = emptyList(),
+                receive_email = false,
+                is_ads_removed = false
+            )
+            return
+        }
+
         viewModelScope.launch {
             setupRepository.getSetup(userid).collect { setupFromDb ->
                 if (setupFromDb != null) {
@@ -124,6 +141,8 @@ class ListSetupViewModel(
 
         viewModelScope.launch {
             try {
+                if (userid == "guest") return@launch
+
                 // Ensure server is updated with current platform language before refreshing
                 val currentLang = platform.language
                 println("HomeScreen loaded. Ensuring server lang sync: $currentLang")

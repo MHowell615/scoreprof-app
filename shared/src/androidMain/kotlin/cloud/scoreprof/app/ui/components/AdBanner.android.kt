@@ -26,7 +26,7 @@ actual fun AdBanner(
         factory = { context ->
             AdView(context).apply {
                 setAdSize(if (isMediumRectangle) AdSize.MEDIUM_RECTANGLE else AdSize.LARGE_BANNER)
-                adUnitId = "ca-app-pub-3940256099942544/6300978111" // Test ID
+                adUnitId = "ca-app-pub-8446803289733319/2334549094"
                 val adRequest = AdRequest.Builder()
                     .addKeyword("Sport")
                     .addKeyword("Football")
@@ -35,6 +35,7 @@ actual fun AdBanner(
                     .addKeyword("Match Scores")
                     .addKeyword("Tournament")
                     .build()
+@Suppress("MissingPermission")
                 loadAd(adRequest)
             }
         },
