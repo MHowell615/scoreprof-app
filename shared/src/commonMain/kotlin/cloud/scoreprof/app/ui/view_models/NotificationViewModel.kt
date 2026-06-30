@@ -22,8 +22,12 @@ class NotificationViewModel(
     private val dao: ScoreProfDao,
     private val platform: Platform
 ) : ViewModel() {
-    private val _notifications = MutableStateFlow<List<AppNotification>>(emptyList())
-    val notifications: StateFlow<List<AppNotification>> = _notifications
+    
+    val notifications: StateFlow<List<AppNotification>> = dao.getAllNotifications().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        emptyList()
+    )
 
     private val _currentNotification = MutableStateFlow<AppNotification?>(null)
     val currentNotification: StateFlow<AppNotification?> = _currentNotification
@@ -36,14 +40,7 @@ class NotificationViewModel(
             val email = savedStateHandle.get<String>("email")
 
             if (id != null && email != null) {
-                _notifications.value = _notifications.value.map {
-                    if (it.notificationid == id) {
-                        if (!it.isread) {
-                            markAsRead(email, id)
-                        }
-                        it.copy(isread = true)
-                    } else it
-                }
+                markAsRead(email, id)
             }
         }
     }
@@ -79,34 +76,38 @@ class NotificationViewModel(
     }
 
     fun markAllAsRead() {
-        _notifications.value = _notifications.value.map { it.copy(isread = true) }
+        viewModelScope.launch {
+            notifications.value.forEach { 
+                if (!it.isread) markAsRead(it.email, it.notificationid)
+            }
+        }
     }
 
     fun loadNotifications(email: String) {
         viewModelScope.launch {
             try {
+                // Capture known IDs BEFORE fetching to avoid race condition with DB Flow
+                val knownIds = notifications.value.map { it.notificationid }.toSet()
+                
                 val fetched = notificationRepository.fetchNotifications(token, email)
                 
                 // Show system notification for new items if enabled
-                setupRepository.getSetup(tokenManager.getUserId() ?: "").collectLatest { setup ->
-                    if (setup?.receive_notifications == true) {
-                        val lastNotifiedId = tokenManager.getLastNotifiedId()
-                        val newNotifications = fetched.filter { 
-                            !it.isread && 
-                            it.notificationid > lastNotifiedId &&
-                            _notifications.value.none { old -> old.notificationid == it.notificationid } 
+                val setup = setupRepository.getSetup(tokenManager.getUserId() ?: "").firstOrNull()
+                if (setup?.receive_notifications == true) {
+                    val lastNotifiedId = tokenManager.getLastNotifiedId()
+                    val newNotifications = fetched.filter { 
+                        !it.isread && 
+                        it.notificationid > lastNotifiedId &&
+                        !knownIds.contains(it.notificationid)
+                    }
+                    
+                    if (newNotifications.isNotEmpty()) {
+                        newNotifications.forEach { 
+                            platform.showSystemNotification(it.title ?: "ScoreProf", it.message ?: "")
                         }
-                        
-                        if (newNotifications.isNotEmpty()) {
-                            newNotifications.forEach { 
-                                platform.showSystemNotification(it.title ?: "ScoreProf", it.message ?: "")
-                            }
-                            tokenManager.saveLastNotifiedId(newNotifications.maxOf { it.notificationid })
-                        }
+                        tokenManager.saveLastNotifiedId(newNotifications.maxOf { it.notificationid })
                     }
                 }
-
-                _notifications.value = fetched
             } catch (e: Exception) {
                 println("Error loading notifications: ${e.message}")
             }
@@ -124,9 +125,6 @@ class NotificationViewModel(
 
                 if (success) {
                     markAsRead(notification.email, notification.notificationid)
-                    _notifications.value = _notifications.value.filter {
-                        it.notificationid != notification.notificationid
-                    }
                 }
             } catch (e: Exception) {
                 println("Error accepting join request: ${e.message}")

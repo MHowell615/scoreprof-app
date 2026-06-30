@@ -172,6 +172,9 @@ interface ScoreProfDao {
     @Upsert
     suspend fun updateAllNotifications(notifications: List<AppNotification>)
 
+    @Query("SELECT * FROM appnotification ORDER BY lastmodified DESC")
+    fun getAllNotifications(): Flow<List<AppNotification>>
+
     @Query("UPDATE appnotification SET isread = 1 WHERE notificationid = :id")
     suspend fun markNotificationAsReadLocal(id: Int)
 

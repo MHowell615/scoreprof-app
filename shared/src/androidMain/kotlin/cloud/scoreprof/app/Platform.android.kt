@@ -44,8 +44,12 @@ class AndroidPlatform : Platform {
             val channel = NotificationChannel(
                 channelId,
                 "ScoreProf Notifications",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "League invitations and match updates"
+                enableLights(true)
+                setShowBadge(true)
+            }
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -56,10 +60,11 @@ class AndroidPlatform : Platform {
         )
 
         val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(context.applicationInfo.icon)
+            .setSmallIcon(android.R.drawable.ic_dialog_info) // System icon is safer for 'smallIcon' template
             .setContentTitle(title)
             .setContentText(message)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
             .build()

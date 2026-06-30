@@ -11,7 +11,7 @@ actual fun getDatabaseBuilder(): RoomDatabase.Builder<ScoreProfDatabase> {
     return Room.databaseBuilder<ScoreProfDatabase>(
         context = appContext,
         name = dbFile.absolutePath
-    )
+    ).fallbackToDestructiveMigration(true)
 }
 
 // We need a way to get the context in androidMain
