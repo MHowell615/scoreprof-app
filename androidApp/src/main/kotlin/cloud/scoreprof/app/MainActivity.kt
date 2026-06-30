@@ -31,6 +31,11 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import cloud.scoreprof.app.worker.NotificationWorker
 import java.util.concurrent.TimeUnit
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
+
 class MainActivity : ComponentActivity() {
 
     // These will be provided by Koin now
@@ -42,6 +47,16 @@ class MainActivity : ComponentActivity() {
     ) { result ->
         if (result.resultCode != RESULT_OK) {
             Log.e("AppUpdate", "Update flow failed! Result code: ${result.resultCode}")
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            Log.d("MainActivity", "Notification permission granted")
+        } else {
+            Log.d("MainActivity", "Notification permission denied")
         }
     }
 
@@ -107,6 +122,7 @@ class MainActivity : ComponentActivity() {
             initializeMobileAdsSdk()
         }
 
+        checkNotificationPermission()
         scheduleNotificationWorker()
 
         setContent {
@@ -136,6 +152,15 @@ class MainActivity : ComponentActivity() {
             ExistingPeriodicWorkPolicy.KEEP,
             workRequest
         )
+    }
+
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != 
+                PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)
