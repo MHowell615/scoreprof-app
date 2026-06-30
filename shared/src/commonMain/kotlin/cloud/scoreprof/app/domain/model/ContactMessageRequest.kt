@@ -3,8 +3,9 @@ package cloud.scoreprof.app.domain.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UpdateUserPrivacyRequest(
+data class ContactMessageRequest(
     val user_token: String,
-    val _receive_email: Boolean,
-    val _receive_notifications: Boolean
+    val _category: String,
+    val _subject: String,
+    val _details: String
 )

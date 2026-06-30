@@ -23,6 +23,14 @@ import com.google.android.ump.UserMessagingPlatform
 import org.koin.android.ext.android.inject
 import java.util.concurrent.atomic.AtomicBoolean
 
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import cloud.scoreprof.app.worker.NotificationWorker
+import java.util.concurrent.TimeUnit
+
 class MainActivity : ComponentActivity() {
 
     // These will be provided by Koin now
@@ -54,9 +62,8 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
 
         // Android-specific: App Update
         val appUpdateManager = AppUpdateManagerFactory.create(this)
@@ -100,6 +107,8 @@ class MainActivity : ComponentActivity() {
             initializeMobileAdsSdk()
         }
 
+        scheduleNotificationWorker()
+
         setContent {
             MaterialTheme {
                 Surface(
@@ -111,6 +120,22 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun scheduleNotificationWorker() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = PeriodicWorkRequestBuilder<NotificationWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "NotificationWorker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
     }
 
     private val isMobileAdsInitializeCalled = AtomicBoolean(false)

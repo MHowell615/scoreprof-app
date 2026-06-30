@@ -171,13 +171,6 @@ class ListSetupViewModel(
         }
     }
 
-    fun activateUserAccount(email: String, preferredLanguage: String) {
-        viewModelScope.launch {
-            setupRepository.activateAccount(email, preferredLanguage)
-            refreshData()
-        }
-    }
-
     fun logout(onSuccess: () -> Unit) {
         viewModelScope.launch {
             try {
@@ -385,9 +378,8 @@ class ListSetupViewModel(
     }
 
     fun sendFeedback(category: String, subject: String, description: String) {
-        val userEmail = _setup.value?.email ?: "Unknown"
         viewModelScope.launch {
-            setupRepository.sendSupportEmail(userEmail, category, subject, description)
+            setupUseCases.sendSupportEmail(category, subject, description)
         }
     }
 
@@ -470,14 +462,17 @@ class ListSetupViewModel(
         platform.setLanguage(newLanguage.languageCode)
     }
 
-    fun onPrivacySettingsChanged(receiveEmail: Boolean) {
+    fun onPrivacySettingsChanged(receiveEmail: Boolean, receiveNotifications: Boolean) {
         val currentSetup = _setup.value ?: return
-        val updatedSetup = currentSetup.copy(receive_email = receiveEmail)
+        val updatedSetup = currentSetup.copy(
+            receive_email = receiveEmail,
+            receive_notifications = receiveNotifications
+        )
         _setup.value = updatedSetup
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 dao.insertSetup(updatedSetup)
-                setupRepository.updateUserPrivacy(receiveEmail)
+                setupRepository.updateUserPrivacy(receiveEmail, receiveNotifications)
             } catch (e: Exception) {
                 println("Privacy update failed: ${e.message}")
             }

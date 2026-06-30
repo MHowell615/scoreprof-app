@@ -9,18 +9,18 @@ import cloud.scoreprof.app.data.local.TokenManager
 import cloud.scoreprof.app.domain.model.AppNotification
 import cloud.scoreprof.app.domain.model.NotificationType
 import cloud.scoreprof.app.domain.model.SendNotification
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import cloud.scoreprof.app.Platform
+import cloud.scoreprof.app.data.SetupRepository
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class NotificationViewModel(
     private val notificationRepository: NotificationRepository,
+    private val setupRepository: SetupRepository,
     private val savedStateHandle: SavedStateHandle,
-    tokenManager: TokenManager,
-    private val dao: ScoreProfDao
+    private val tokenManager: TokenManager,
+    private val dao: ScoreProfDao,
+    private val platform: Platform
 ) : ViewModel() {
     private val _notifications = MutableStateFlow<List<AppNotification>>(emptyList())
     val notifications: StateFlow<List<AppNotification>> = _notifications
@@ -86,6 +86,26 @@ class NotificationViewModel(
         viewModelScope.launch {
             try {
                 val fetched = notificationRepository.fetchNotifications(token, email)
+                
+                // Show system notification for new items if enabled
+                setupRepository.getSetup(tokenManager.getUserId() ?: "").collectLatest { setup ->
+                    if (setup?.receive_notifications == true) {
+                        val lastNotifiedId = tokenManager.getLastNotifiedId()
+                        val newNotifications = fetched.filter { 
+                            !it.isread && 
+                            it.notificationid > lastNotifiedId &&
+                            _notifications.value.none { old -> old.notificationid == it.notificationid } 
+                        }
+                        
+                        if (newNotifications.isNotEmpty()) {
+                            newNotifications.forEach { 
+                                platform.showSystemNotification(it.title ?: "ScoreProf", it.message ?: "")
+                            }
+                            tokenManager.saveLastNotifiedId(newNotifications.maxOf { it.notificationid })
+                        }
+                    }
+                }
+
                 _notifications.value = fetched
             } catch (e: Exception) {
                 println("Error loading notifications: ${e.message}")

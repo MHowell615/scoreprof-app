@@ -81,14 +81,6 @@ fun HomeScreen(
     val preferredLanguage = setupState?.preferred_language ?: "en"
     val isGuest = userid == "guest"
 
-    LaunchedEffect(userid, setupState) {
-        if (!isGuest && userid.isNotEmpty() && (setupState == null || setupState?.memberSince == null)) {
-            if (email.isNotEmpty()) {
-                setupViewModel.activateUserAccount(email, preferredLanguage)
-            }
-        }
-    }
-
     LaunchedEffect(email, setupState) {
         if (!isGuest && email.isNotEmpty()) {
             notificationViewModel.loadNotifications(email)
@@ -201,7 +193,10 @@ fun HomeScreen(
                     ),
                     shape = RoundedCornerShape(8.dp),
                     onClick = {
-                        if (isGuest && (route.contains("setup") || route.contains("leagues_screen"))) {
+                        if (isGuest && (route.contains("setup") || 
+                                       route.contains("leagues_screen") || 
+                                       route.contains("competitions_screen") ||
+                                       route.contains("contact_screen"))) {
                             showLoginRequiredDialog = true
                         } else {
                             navController.navigate(route)

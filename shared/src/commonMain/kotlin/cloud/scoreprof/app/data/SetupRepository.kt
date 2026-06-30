@@ -1,7 +1,7 @@
 package cloud.scoreprof.app.data
 
 import cloud.scoreprof.app.data.local.TokenManager
-import cloud.scoreprof.app.domain.model.Setup
+import cloud.scoreprof.app.domain.model.*
 import cloud.scoreprof.app.Platform
 import cloud.scoreprof.app.domain.model.ActivateAccountRequest
 import cloud.scoreprof.app.domain.model.JoinLeagueRequest
@@ -34,11 +34,10 @@ interface SetupRepository {
     suspend fun upsertSetup(setup: Setup)
     suspend fun updateUserCompetition(competitionid: String, isSelected: Boolean)
     suspend fun updateUserProfile(name: String, email: String, language: String)
-    suspend fun activateAccount(email: String, preferredLanguage: String)
     suspend fun logout()
     suspend fun updateUserLeague(leagueid: String, owneruserid: String, isSelected: Boolean)
-    suspend fun sendSupportEmail(userEmail: String, category: String, subject: String, description: String): Boolean
-    suspend fun updateUserPrivacy(receiveEmail: Boolean)
+    suspend fun sendSupportMessage(category: String, subject: String, details: String): Boolean
+    suspend fun updateUserPrivacy(receiveEmail: Boolean, receiveNotifications: Boolean)
     suspend fun requestJoinLeague(joinCode: String)
     suspend fun updateAdsRemoved(isRemoved: Boolean)
     suspend fun updateAllUserCompetitions(isSelected: Boolean)
@@ -115,16 +114,15 @@ class SetupRepositoryImpl(
         // dao.updateUserLeagueSelection(leagueid, owneruserid, isSelected) // owneruserid is UUID in DAO, needs fix
     }
 
-    override suspend fun sendSupportEmail(userEmail: String, category: String, subject: String, description: String): Boolean {
+    override suspend fun sendSupportMessage(category: String, subject: String, details: String): Boolean {
         try {
-            httpClient.post("https://api.scoreprof.cloud/send-support") {
+            httpClient.post("https://www.scoreprof.cloud/rpc/log_contact_message") {
                 contentType(ContentType.Application.Json)
-                setBody(SendSupportEmailRequest(
-                    userEmail = userEmail,
-                    category = category,
-                    subject = "Support Request; $category - $subject",
-                    description = description,
-                    authKey = authKey
+                setBody(ContactMessageRequest(
+                    user_token = tokenManager.getToken() ?: "",
+                    _category = category,
+                    _subject = subject,
+                    _details = details
                 ))
             }
         } catch (e: Exception) {
@@ -165,21 +163,6 @@ class SetupRepositoryImpl(
             }
         } catch (e: Exception) {
 
-        }
-    }
-
-    override suspend fun activateAccount(email: String, preferredLanguage: String) {
-        try {
-            httpClient.post("https://www.scoreprof.cloud/rpc/activate_pending_user") {
-                contentType(ContentType.Application.Json)
-                setBody(ActivateAccountRequest(
-                    user_token = tokenManager.getToken() ?: "",
-                    _email = email,
-                    _language = preferredLanguage
-                ))
-            }
-        } catch (e: Exception) {
-            logError(e.message.toString(), e.stackTraceToString(), platform.version.toString())
         }
     }
 
@@ -228,13 +211,14 @@ class SetupRepositoryImpl(
         }
     }
 
-    override suspend fun updateUserPrivacy(receiveEmail: Boolean) {
+    override suspend fun updateUserPrivacy(receiveEmail: Boolean, receiveNotifications: Boolean) {
         try {
             httpClient.post("https://www.scoreprof.cloud/rpc/update_user_privacy") {
                 contentType(ContentType.Application.Json)
                 setBody(UpdateUserPrivacyRequest(
                     user_token = tokenManager.getToken() ?: "",
-                    _receive_email = receiveEmail
+                    _receive_email = receiveEmail,
+                    _receive_notifications = receiveNotifications
                 ))
             }
         } catch (e: Exception) {

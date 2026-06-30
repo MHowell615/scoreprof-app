@@ -39,4 +39,12 @@ class TokenManager(private val settings: Settings = Settings()) {
     fun getEmail(): String? {
         return settings.getStringOrNull("email")
     }
+
+    fun getLastNotifiedId(): Int {
+        return settings.getInt("last_notified_id", -1)
+    }
+
+    fun saveLastNotifiedId(id: Int) {
+        settings.putInt("last_notified_id", id)
+    }
 }

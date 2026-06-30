@@ -7,6 +7,7 @@ interface Platform {
     val language: String
     fun shareText(text: String)
     fun setLanguage(languageCode: String)
+    fun showSystemNotification(title: String, message: String)
 }
 
 expect fun getPlatform(): Platform

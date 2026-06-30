@@ -20,6 +20,7 @@ data class Setup(
     val competitions: List<UserCompetitionSelection>,
     val leagues: List<UserLeagueSelection>,
     val receive_email: Boolean = true,
+    val receive_notifications: Boolean = true,
     val is_ads_removed: Boolean = false
 )
 

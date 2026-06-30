@@ -19,6 +19,9 @@ import cloud.scoreprof.app.Res
 import cloud.scoreprof.app.privacy_settings
 import cloud.scoreprof.app.remove_ads_btn
 import cloud.scoreprof.app.remove_ads_desc
+import cloud.scoreprof.app.receive_emails
+import cloud.scoreprof.app.receive_notifications
+import cloud.scoreprof.app.receive_notifications_desc
 import cloud.scoreprof.app.allow_analytics
 import cloud.scoreprof.app.allow_analytics_desc
 import cloud.scoreprof.app.legal_docs_title
@@ -27,6 +30,7 @@ import cloud.scoreprof.app.legal_notice_title
 import cloud.scoreprof.app.request_deletion_title
 import cloud.scoreprof.app.deletion_desc
 import cloud.scoreprof.app.account_mgmt_title
+import cloud.scoreprof.app.google_privacy_policy_label
 import cloud.scoreprof.app.premium_title
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 import org.jetbrains.compose.resources.stringResource
@@ -115,6 +119,61 @@ fun SetupPrivacyScreen(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
+                            text = stringResource(Res.string.receive_emails),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Switch(
+                            checked = setupState?.receive_email ?: true,
+                            onCheckedChange = { 
+                                setupViewModel.onPrivacySettingsChanged(
+                                    receiveEmail = it,
+                                    receiveNotifications = setupState?.receive_notifications ?: true
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
+            item {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.receive_notifications),
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Switch(
+                            checked = setupState?.receive_notifications ?: true,
+                            onCheckedChange = {
+                                setupViewModel.onPrivacySettingsChanged(
+                                    receiveEmail = setupState?.receive_email ?: true,
+                                    receiveNotifications = it
+                                )
+                            }
+                        )
+                    }
+                    Text(
+                        text = stringResource(Res.string.receive_notifications_desc),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            item {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
                             text = stringResource(Res.string.allow_analytics),
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.weight(1f)
@@ -152,6 +211,21 @@ fun SetupPrivacyScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(stringResource(Res.string.privacy_policy_title), style = MaterialTheme.typography.bodyLarge)
+                        Spacer(Modifier.weight(1f))
+                        Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
+                    }
+                }
+
+                TextButton(
+                    onClick = { uriHandler.openUri("https://business.safety.google/privacy/") },
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(Res.string.google_privacy_policy_label), style = MaterialTheme.typography.bodyLarge)
                         Spacer(Modifier.weight(1f))
                         Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
                     }

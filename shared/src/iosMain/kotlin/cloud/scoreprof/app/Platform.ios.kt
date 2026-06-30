@@ -36,6 +36,10 @@ class IOSPlatform: Platform {
             completion = null
         )
     }
+
+    override fun showSystemNotification(title: String, message: String) {
+        // To be implemented using UserNotifications framework on a real Mac
+    }
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()

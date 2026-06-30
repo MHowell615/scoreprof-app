@@ -120,6 +120,8 @@
     <string name="privacy">Privacy</string>
     <string name="privacy_settings">Privacy Settings</string>
     <string name="receive_emails">Receive game notifications via email</string>
+    <string name="receive_notifications">Show notifications on this device</string>
+    <string name="receive_notifications_desc">Receive real-time alerts for match results and league updates.</string>
     <string name="allow_analytics">Allow anonymous analytics collection</string>
     <string name="league_created">League created</string>
     <string name="league_code">League code</string>
@@ -157,6 +159,7 @@
     <string name="request_deletion_title">Request Account Deletion</string>
     <string name="deletion_desc">In accordance with GDPR, you have the right to be forgotten. To request the permanent removal of your account and all associated data, please contact support@muntjac-solutions.com.</string>
     <string name="privacy_policy_label">Privacy Policy</string>
+    <string name="google_privacy_policy_label">Google Privacy Policy (Ads)</string>
     <string name="legal_notice_label">Legal Notice (Mentions Légales)</string>
     <string name="notif_invited_title">You\'ve been invited!</string>
     <string name="notif_invite_msg_body">You have a pending invitation from %1$s to join the league: %2$s. To participate, confirm your acceptance in the Setup Leagues section.</string>
