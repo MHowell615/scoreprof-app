@@ -14,6 +14,10 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 
 import android.app.PendingIntent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import androidx.core.content.ContextCompat
 
 class AndroidPlatform : Platform {
     private val context = getAppContext()
@@ -60,7 +64,8 @@ class AndroidPlatform : Platform {
         )
 
         val notification = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // System icon is safer for 'smallIcon' template
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setColor(0xFF1A0841.toInt()) // Brand purple
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -70,6 +75,21 @@ class AndroidPlatform : Platform {
             .build()
 
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+    }
+
+    private fun getResBitmap(context: Context, resId: Int): Bitmap? {
+        val drawable = ContextCompat.getDrawable(context, resId) ?: return null
+        if (drawable is BitmapDrawable) return drawable.bitmap
+        
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth.coerceAtLeast(1),
+            drawable.intrinsicHeight.coerceAtLeast(1),
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 
     override fun shareText(text: String) {
