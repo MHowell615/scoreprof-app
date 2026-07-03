@@ -113,23 +113,6 @@ class ListSetupViewModel(
     }
 
     fun loadInitialDataForUser(userid: String) {
-        if (userid == "guest") {
-            _setup.value = Setup(
-                id = 0,
-                version = 1,
-                email = "guest@scoreprof.cloud",
-                name = "Guest User",
-                userid = "guest",
-                memberSince = null,
-                preferred_language = platform.language,
-                competitions = emptyList(),
-                leagues = emptyList(),
-                receive_email = false,
-                is_ads_removed = false
-            )
-            return
-        }
-
         viewModelScope.launch {
             setupRepository.getSetup(userid).collect { setupFromDb ->
                 if (setupFromDb != null) {

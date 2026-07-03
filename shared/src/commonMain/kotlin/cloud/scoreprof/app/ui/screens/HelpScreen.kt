@@ -13,7 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import cloud.scoreprof.app.*
+import scoreprof_resources.*
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.theme.dropdown_background

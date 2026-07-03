@@ -42,8 +42,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.runtime.CompositionLocalProvider
 import org.jetbrains.compose.resources.stringResource
-import cloud.scoreprof.app.Res
-import cloud.scoreprof.app.vs
+import scoreprof_resources.Res
+import scoreprof_resources.vs
 
 @Composable
 fun MatchCard(

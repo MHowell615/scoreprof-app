@@ -16,11 +16,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import cloud.scoreprof.app.Res
-import cloud.scoreprof.app.points
-import cloud.scoreprof.app.win_percentage
-import cloud.scoreprof.app.jump_to_top
-import cloud.scoreprof.app.find_me
+import scoreprof_resources.Res
+import scoreprof_resources.points
+import scoreprof_resources.win_percentage
+import scoreprof_resources.jump_to_top
+import scoreprof_resources.find_me
 import cloud.scoreprof.app.ui.components.LeagueCard
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.view_models.ListLeagueViewModel

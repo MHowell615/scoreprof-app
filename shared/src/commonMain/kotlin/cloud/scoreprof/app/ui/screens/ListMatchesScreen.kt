@@ -7,11 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -25,12 +21,15 @@ import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.rememberCoroutineScope
-import cloud.scoreprof.app.Res
-import cloud.scoreprof.app.competition_screen_text
+import scoreprof_resources.Res
+import scoreprof_resources.competition_screen_text
 import cloud.scoreprof.app.domain.model.Match
-import cloud.scoreprof.app.no_upcoming_matches
-import cloud.scoreprof.app.retry
+import scoreprof_resources.no_upcoming_matches
+import scoreprof_resources.retry
+import scoreprof_resources.login
+import scoreprof_resources.close_btn
+import scoreprof_resources.login_required_title
+import scoreprof_resources.login_required_msg
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.components.MatchCard
 import cloud.scoreprof.app.ui.view_models.ListMatchesViewModel
@@ -51,8 +50,39 @@ fun ListMatchesScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by matchesViewModel.uiState.collectAsState()
     val setupState by setupViewModel.setup.collectAsState()
+    val isGuest = setupState?.userid == "00000000-0000-0000-0000-000000000000"
+    var showLoginDialog by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    if (showLoginDialog) {
+        AlertDialog(
+            onDismissRequest = { showLoginDialog = false },
+            title = { Text(stringResource(Res.string.login_required_title)) },
+            text = { Text(stringResource(Res.string.login_required_msg)) },
+            confirmButton = {
+                Button(onClick = {
+                    showLoginDialog = false
+                    scope.launch {
+                        setupViewModel.logout {
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    }
+                }) {
+                    Text(stringResource(Res.string.login))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLoginDialog = false }) {
+                    Text(stringResource(Res.string.close_btn))
+                }
+            }
+        )
+    }
 
     LaunchedEffect(key1 = true) {
         matchesViewModel.eventFlow.collectLatest { event ->
@@ -150,7 +180,9 @@ fun ListMatchesScreen(
                                     }
                                 }
                             }
-                            MatchesList(state.groupedMatches, matchesViewModel, listState)
+                            MatchesList(state.groupedMatches, matchesViewModel, listState, isGuest) {
+                                showLoginDialog = true
+                            }
                         } else {
                             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                 Text(text = stringResource(Res.string.no_upcoming_matches), style = MaterialTheme.typography.titleMedium)
@@ -174,7 +206,9 @@ fun ListMatchesScreen(
 fun MatchesList(
     groupedMatches: Map<LocalDate, List<Match>>,
     matchesViewModel: ListMatchesViewModel,
-    lazyListState: LazyListState
+    lazyListState: LazyListState,
+    isGuest: Boolean,
+    onGuestAction: () -> Unit
 ) {
     Column(modifier = Modifier.padding(horizontal = 8.dp)) {
         Text(
@@ -197,7 +231,11 @@ fun MatchesList(
                 }
                 items(matchesOnDate) { match ->
                     MatchCard(match, onPredictionClick = { c1, c2 ->
-                        matchesViewModel.onEvent(ListMatchesViewModel.MatchEvent.OnPredictionMade(match, c1, c2))
+                        if (isGuest) {
+                            onGuestAction()
+                        } else {
+                            matchesViewModel.onEvent(ListMatchesViewModel.MatchEvent.OnPredictionMade(match, c1, c2))
+                        }
                     })
                     Spacer(modifier = Modifier.height(8.dp))
                 }

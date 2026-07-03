@@ -18,7 +18,7 @@ room {
 
 compose {
     resources {
-        packageOfResClass = "cloud.scoreprof.app"
+        packageOfResClass = "scoreprof_resources"
     }
 }
 

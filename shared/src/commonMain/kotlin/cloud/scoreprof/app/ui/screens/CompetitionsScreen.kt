@@ -23,9 +23,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
-import cloud.scoreprof.app.Res
-import cloud.scoreprof.app.matches
-import cloud.scoreprof.app.show_forthcoming_only
+import scoreprof_resources.Res
+import scoreprof_resources.matches
+import scoreprof_resources.show_forthcoming_only
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.theme.dropdown_background

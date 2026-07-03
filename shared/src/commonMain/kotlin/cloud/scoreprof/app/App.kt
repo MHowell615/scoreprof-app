@@ -64,7 +64,7 @@ fun AppNavigation(setupViewModel: ListSetupViewModel) {
         ForcedUpdateScreen(updateUrl)
     } else {
         val isLoggedIn = tokenManager.hasToken() && tokenManager.getUserId() != null && tokenManager.getEmail() != null
-        val isGuest = tokenManager.getUserId() == "guest"
+        val isGuest = tokenManager.getUserId() == "00000000-0000-0000-0000-000000000000"
         
         val startDestination = if (isLoggedIn || isGuest) {
             val userid = tokenManager.getUserId()!!
@@ -78,12 +78,14 @@ fun AppNavigation(setupViewModel: ListSetupViewModel) {
         NavHost(navController = navController, startDestination = startDestination) {
             composable("login") {
                 LoginScreen(onLoginSuccess = { userid, email ->
-                    if (userid == "guest") {
-                        tokenManager.saveUserId("guest")
-                        tokenManager.saveEmail("guest@scoreprof.cloud")
-                    }
-                    val encodedEmail = email.replace("@", "%40")
-                    navController.navigate("main_graph/$userid/$encodedEmail") {
+                    val targetUserId = if (userid == "guest") "00000000-0000-0000-0000-000000000000" else userid
+                    val targetEmail = if (userid == "guest") "guest@scoreprof.cloud" else email
+                    
+                    tokenManager.saveUserId(targetUserId)
+                    tokenManager.saveEmail(targetEmail)
+                    
+                    val encodedEmail = targetEmail.replace("@", "%40")
+                    navController.navigate("main_graph/$targetUserId/$encodedEmail") {
                         popUpTo("login") { inclusive = true }
                     }
                 }, navController = navController)

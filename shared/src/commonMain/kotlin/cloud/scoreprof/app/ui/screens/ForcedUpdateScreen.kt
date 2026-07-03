@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalUriHandler
-import cloud.scoreprof.app.Res
+import scoreprof_resources.Res
+import scoreprof_resources.retry
 import org.jetbrains.compose.resources.stringResource
-import cloud.scoreprof.app.retry
 
 @Composable
 fun ForcedUpdateScreen(updateUrl: String) {

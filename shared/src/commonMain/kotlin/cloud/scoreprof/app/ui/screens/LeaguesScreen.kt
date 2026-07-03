@@ -33,10 +33,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import cloud.scoreprof.app.Res
-import cloud.scoreprof.app.leagues
-import cloud.scoreprof.app.public_leagues
-import cloud.scoreprof.app.private_leagues
+import scoreprof_resources.Res
+import scoreprof_resources.leagues
+import scoreprof_resources.public_leagues
+import scoreprof_resources.private_leagues
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.view_models.ListLeaguesViewModel

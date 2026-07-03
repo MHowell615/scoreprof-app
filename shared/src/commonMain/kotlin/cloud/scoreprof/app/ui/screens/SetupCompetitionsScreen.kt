@@ -36,8 +36,8 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateMapOf
-import cloud.scoreprof.app.Res
-import cloud.scoreprof.app.competitions
+import scoreprof_resources.Res
+import scoreprof_resources.competitions
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.utils.SelectableRowWithCheckboxes
 import cloud.scoreprof.app.ui.theme.dropdown_background

@@ -64,7 +64,8 @@ class MatchRepositoryImpl(
 
     override suspend fun loadAndCacheMatchesFromJson(competitionId: String, userid: String, lang: String?) {
         try {
-            val token = if (userid == "guest") "guest_token" else tokenManager.getToken() ?: ""
+            val isGuest = userid == "00000000-0000-0000-0000-000000000000"
+            val token = if (isGuest) "guest_token" else tokenManager.getToken() ?: ""
             val language = lang ?: platform.language
 
             val url = "https://www.scoreprof.cloud/rpc/getmatchesbycomp?competition_id=$competitionId&lang=$language&user_token=$token"

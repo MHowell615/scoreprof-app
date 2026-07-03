@@ -78,7 +78,8 @@ class LeaguesRepositoryImpl(
         return withContext(Dispatchers.IO) {
             var localLeagues = dao.getLeagues()
             try {
-                val token = if (userid == "guest") "guest_token" else tokenManager.getToken() ?: ""
+                val isGuest = userid == "00000000-0000-0000-0000-000000000000"
+                val token = if (isGuest) "guest_token" else tokenManager.getToken() ?: ""
                 val language = platform.language
                 val url = "https://www.scoreprof.cloud/rpc/getleagues?user_token=$token"
                 val responseString: String = httpClient.get(url).body()
@@ -112,9 +113,10 @@ class LeaguesRepositoryImpl(
         jumpToTop: Boolean
     ): Flow<List<LeagueTable>> {
         val userid = tokenManager.getUserId() ?: ""
+        val isGuest = userid == "00000000-0000-0000-0000-000000000000"
         return flow {
             try {
-                val token = if (userid == "guest") "guest_token" else tokenManager.getToken() ?: ""
+                val token = if (isGuest) "guest_token" else tokenManager.getToken() ?: ""
                 val url = "https://www.scoreprof.cloud/rpc/getleaguetable_v2"
                 val body = buildJsonObject {
                     put("_leagueid", leagueid)

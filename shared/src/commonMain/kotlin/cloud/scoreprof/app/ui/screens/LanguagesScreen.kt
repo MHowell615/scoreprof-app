@@ -21,9 +21,9 @@ import androidx.navigation.NavHostController
 import cloud.scoreprof.app.ui.utils.SelectableRowWithCheckboxes
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 import cloud.scoreprof.app.ui.components.AdBanner
-import cloud.scoreprof.app.Res
-import cloud.scoreprof.app.preferred_language
-import cloud.scoreprof.app.language_screen_text
+import scoreprof_resources.Res
+import scoreprof_resources.preferred_language
+import scoreprof_resources.language_screen_text
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.painterResource
 
