@@ -143,4 +143,8 @@
     <string name="find_me">Finde mich</string>
     <string name="public_leagues">Öffentliche Ligen</string>
     <string name="private_leagues">Private Ligen</string>
+    <string name="continue_as_guest">Als Gast fortfahren</string>
+    <string name="guest_user">Gastbenutzer</string>
+    <string name="login_required_title">Anmeldung erforderlich</string>
+    <string name="login_required_msg">Bitte melden Sie sich an oder registrieren Sie sich, um diese Funktion zu nutzen.</string>
 </resources>

@@ -79,7 +79,7 @@ fun HomeScreen(
     }
 
     val preferredLanguage = setupState?.preferred_language ?: "en"
-    val isGuest = userid == "guest"
+    val isGuest = userid == "00000000-0000-0000-0000-000000000000"
 
     LaunchedEffect(email, setupState) {
         if (!isGuest && email.isNotEmpty()) {
@@ -136,145 +136,150 @@ fun HomeScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            HomeTopBar(
-                navController = navController,
-                onLogoutClick = {
-                    scope.launch {
-                        setupViewModel.logout {
-                            navController.navigate("login") {
-                                popUpTo(0) { inclusive = true }
+    if (!isGuest && setupState == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+        }
+    } else {
+        Scaffold(
+            topBar = {
+                HomeTopBar(
+                    navController = navController,
+                    onLogoutClick = {
+                        scope.launch {
+                            setupViewModel.logout {
+                                navController.navigate("login") {
+                                    popUpTo(0) { inclusive = true }
+                                }
                             }
                         }
                     }
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(
-            Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (setupState?.is_ads_removed == false) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(130.dp)
-                        .padding(vertical = 8.dp)
-                ) {
-                    AdBanner(
+                )
+            }
+        ) { innerPadding ->
+            Column(
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (setupState?.is_ads_removed == false) {
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(100.dp),
-                        isMediumRectangle = false
-                    )
+                            .height(130.dp)
+                            .padding(vertical = 8.dp)
+                    ) {
+                        AdBanner(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp),
+                            isMediumRectangle = false
+                        )
+                    }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            val navItems = listOf(
-                Res.string.matches to "competitions_screen/$userid",
-                Res.string.leagues to "leagues_screen/$userid",
-                Res.string.setup to "setup_screen/$userid",
-                Res.string.help to "help_screen",
-                Res.string.contact to "contact_screen"
-            )
+                val navItems = listOf(
+                    Res.string.matches to "competitions_screen/$userid",
+                    Res.string.leagues to "leagues_screen/$userid",
+                    Res.string.setup to "setup_screen/$userid",
+                    Res.string.help to "help_screen",
+                    Res.string.contact to "contact_screen"
+                )
 
-            navItems.forEach { (label, route) ->
-                Button(
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = button_background,
-                        contentColor = MaterialTheme.colorScheme.primary
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    onClick = {
-                        if (isGuest && (route.contains("setup") || 
-                                       route.contains("leagues_screen") || 
-                                       route.contains("competitions_screen") ||
-                                       route.contains("contact_screen"))) {
-                            showLoginRequiredDialog = true
-                        } else {
-                            navController.navigate(route)
-                        }
-                    },
+                navItems.forEach { (label, route) ->
+                    Button(
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = button_background,
+                            contentColor = MaterialTheme.colorScheme.primary
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+                        onClick = {
+                            if (isGuest && (route.contains("setup") || 
+                                           route.contains("leagues_screen") || 
+                                           route.contains("contact_screen"))) {
+                                showLoginRequiredDialog = true
+                            } else {
+                                navController.navigate(route)
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            stringResource(label),
+                            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, null)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                val resIds = listOf(
+                    Res.string.home_text_1,
+                    Res.string.home_text_2,
+                    Res.string.home_text_3,
+                    Res.string.home_text_4,
+                    Res.string.home_text_5
+                )
+
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                        .padding(horizontal = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    resIds.forEach { resId ->
+                        Text(
+                            text = stringResource(resId),
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                lineHeight = 18.sp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        stringResource(label),
-                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
-                        modifier = Modifier.weight(1f)
+                        text = stringResource(Res.string.privacy_policy_title),
+                        style = footerStyle.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.clickable {
+                            val url = if (preferredLanguage == "fr") "https://www.muntjac-solutions.fr/privacy" else "https://www.muntjac-solutions.com/privacy"
+                            uriHandler.openUri(url)
+                        }
                     )
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, null)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            val resIds = listOf(
-                Res.string.home_text_1,
-                Res.string.home_text_2,
-                Res.string.home_text_3,
-                Res.string.home_text_4,
-                Res.string.home_text_5
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                resIds.forEach { resId ->
+                    Text(text = " | ", style = footerStyle, modifier = Modifier.padding(horizontal = 4.dp))
                     Text(
-                        text = stringResource(resId),
-                        textAlign = TextAlign.Center,
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 18.sp,
-                            color = MaterialTheme.colorScheme.primary
-                        )
+                        text = stringResource(Res.string.legal_notice_title),
+                        style = footerStyle.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.clickable {
+                            val url = if (preferredLanguage == "fr") "https://www.muntjac-solutions.fr/legal" else "https://www.muntjac-solutions.com/legal"
+                            uriHandler.openUri(url)
+                        }
                     )
                 }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
                 Text(
-                    text = stringResource(Res.string.privacy_policy_title),
-                    style = footerStyle.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.clickable {
-                        val url = if (preferredLanguage == "fr") "https://www.muntjac-solutions.fr/privacy" else "https://www.muntjac-solutions.com/privacy"
-                        uriHandler.openUri(url)
-                    }
-                )
-                Text(text = " | ", style = footerStyle, modifier = Modifier.padding(horizontal = 4.dp))
-                Text(
-                    text = stringResource(Res.string.legal_notice_title),
-                    style = footerStyle.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.clickable {
-                        val url = if (preferredLanguage == "fr") "https://www.muntjac-solutions.fr/legal" else "https://www.muntjac-solutions.com/legal"
-                        uriHandler.openUri(url)
-                    }
+                    text = stringResource(Res.string.copyright),
+                    style = footerStyle,
+                    modifier = Modifier.padding(bottom = 24.dp)
                 )
             }
-            Text(
-                text = stringResource(Res.string.copyright),
-                style = footerStyle,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
         }
     }
 }

@@ -47,4 +47,14 @@ class TokenManager(private val settings: Settings = Settings()) {
     fun saveLastNotifiedId(id: Int) {
         settings.putInt("last_notified_id", id)
     }
+
+    fun checkCacheVersion(currentVersion: Int, onClear: () -> Unit) {
+        val lastVersion = settings.getInt("last_app_version", -1)
+        // If coming from a version before the package rename (e.g., version 18 or lower)
+        if (lastVersion != -1 && lastVersion < currentVersion && lastVersion <= 18) {
+            clear()
+            onClear()
+        }
+        settings.putInt("last_app_version", currentVersion)
+    }
 }

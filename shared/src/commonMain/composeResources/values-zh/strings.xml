@@ -174,4 +174,8 @@
     <string name="find_me">找到我</string>
     <string name="public_leagues">公共联赛</string>
     <string name="private_leagues">私人联赛</string>
+    <string name="continue_as_guest">以访客身份继续</string>
+    <string name="guest_user">访客用户</string>
+    <string name="login_required_title">需要登录</string>
+    <string name="login_required_msg">请登录或注册以使用此功能。</string>
 </resources>

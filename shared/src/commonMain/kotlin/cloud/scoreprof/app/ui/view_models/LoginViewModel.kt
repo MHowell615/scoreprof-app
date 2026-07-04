@@ -14,6 +14,8 @@ import cloud.scoreprof.app.domain.model.ResetPwRequest
 import io.ktor.client.*
 import io.ktor.client.call.body
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import kotlinx.serialization.json.Json
 import io.ktor.http.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -66,37 +68,59 @@ class LoginViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response: LoginResponse = httpClient.post("https://www.scoreprof.cloud/rpc/new_login") {
+                val httpResponse = httpClient.post("https://www.scoreprof.cloud/rpc/new_login") {
                     contentType(ContentType.Application.Json)
                     header("Accept", "application/vnd.pgrst.object+json")
                     setBody(LoginRequest(
                         email_input = currentEmail,
                         pass_input = currentPassword,
                         lang_input = platform.language,
-                        v_input = 14, // TODO: Get from platform
-                        is_adult_input = true // TODO: Need prompt
+                        v_input = 14, 
+                        is_adult_input = true
                     ))
-                }.body()
-                println("Login response: $response")
+                }
 
-                tokenManager.saveToken(response.token)
-                tokenManager.saveUserId(response.u_id)
+                val responseBody = httpResponse.bodyAsText()
+                println("Login response body: $responseBody")
+
+                if (httpResponse.status.value !in 200..299) {
+                    // Log the actual server error message (e.g., from Postgres)
+                    println("Server Error 400 details: $responseBody")
+                    
+                    // Force log to database via existing repository method
+                    repository.logError(
+                        "Signup 400: $responseBody", 
+                        "Status: ${httpResponse.status.value}", 
+                        "LoginViewModel"
+                    )
+
+                    _eventFlow.emit(UiEvent.Error("Server error ${httpResponse.status.value}: $responseBody"))
+                    return@launch
+                }
+
+                if (responseBody.trim() == "{}" || responseBody.isBlank() || responseBody == "null") {
+                    _eventFlow.emit(UiEvent.Error("Account error: No data returned from server."))
+                    return@launch
+                }
+
+                val loginResponse = Json { ignoreUnknownKeys = true }.decodeFromString<LoginResponse>(responseBody)
+
+                tokenManager.saveToken(loginResponse.token)
+                tokenManager.saveUserId(loginResponse.u_id)
                 tokenManager.saveEmail(currentEmail)
 
                 // Update server-side profile language immediately after login
                 val currentLang = platform.language
-                println("Login successful. Syncing language to server: $currentLang")
                 try {
                     repository.updateLanguage(currentLang)
-                    println("Language sync call finished. Now navigating.")
                 } catch (e: Exception) {
                     println("Failed to sync language after login: ${e.message}")
                 }
 
-                _eventFlow.emit(UiEvent.LoginSuccess(response.u_id, currentEmail))
+                _eventFlow.emit(UiEvent.LoginSuccess(loginResponse.u_id, currentEmail))
             } catch (e: Exception) {
                 println("Login failed: ${e.message}")
-                _eventFlow.emit(UiEvent.Error("Login failed: ${e.message}"))
+                _eventFlow.emit(UiEvent.Error("Connection failed. Please try again."))
             } finally {
                 _isLoading.value = false
             }

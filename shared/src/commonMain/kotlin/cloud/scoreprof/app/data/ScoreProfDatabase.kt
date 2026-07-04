@@ -24,7 +24,7 @@ import kotlinx.coroutines.IO
         UserPredictions::class,
         UserLeagueUsers::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

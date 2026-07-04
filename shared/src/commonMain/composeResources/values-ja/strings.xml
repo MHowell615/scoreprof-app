@@ -174,4 +174,8 @@
     <string name="find_me">私を見つけてください</string>
     <string name="public_leagues">パブリックリーグ</string>
     <string name="private_leagues">プライベートリーグ</string>
+    <string name="continue_as_guest">ゲストとして続行</string>
+    <string name="guest_user">ゲストユーザー</string>
+    <string name="login_required_title">ログインが必要です</string>
+    <string name="login_required_msg">この機能を利用するには、ログインまたは新規登録を行ってください。</string>
 </resources>

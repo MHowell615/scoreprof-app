@@ -9,5 +9,5 @@ actual fun getDatabaseBuilder(): RoomDatabase.Builder<ScoreProfDatabase> {
     val dbFile = NSHomeDirectory() + "/scoreprof.db"
     return Room.databaseBuilder<ScoreProfDatabase>(
         name = dbFile
-    )
+    ).fallbackToDestructiveMigration(true)
 }

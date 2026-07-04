@@ -25,6 +25,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -81,7 +82,16 @@ class ListSetupViewModel(
     private val _showOnlyUpcoming = MutableStateFlow(false)
     val showOnlyUpcoming = _showOnlyUpcoming.asStateFlow()
 
+    private var initialDataJob: Job? = null
+
     init {
+        tokenManager.checkCacheVersion(platform.version) {
+            viewModelScope.launch {
+                dao.deleteSetup()
+                _navigationEvents.emit(NavigationEvent.ToLogin)
+            }
+        }
+
         loadInitialDataForUser(userid)
 
         viewModelScope.launch {
@@ -113,22 +123,38 @@ class ListSetupViewModel(
     }
 
     fun loadInitialDataForUser(userid: String) {
-        viewModelScope.launch {
-            setupRepository.getSetup(userid).collect { setupFromDb ->
-                if (setupFromDb != null) {
-                    _setup.value = setupFromDb
-                    loadSelectionListsFromDb(setupFromDb)
+        if (initialDataJob?.isActive == true) return
+        
+        initialDataJob = viewModelScope.launch {
+            try {
+                setupRepository.getSetup(userid).collect { setupFromDb ->
+                    if (setupFromDb != null) {
+                        _setup.value = setupFromDb
+                        loadSelectionListsFromDb(setupFromDb)
+                    }
+                }
+            } catch (e: Exception) {
+                println("Fatal Database Load Error: ${e.message}")
+                setupRepository.logError("HomeScreen Init Fail: ${e.message}", e.stackTraceToString(), platform.version.toString())
+                // Auto-recovery: If we can't load the user, force a logout to clear the stuck state
+                logout { 
+                    viewModelScope.launch {
+                        _navigationEvents.emit(NavigationEvent.ToLogin) 
+                    }
                 }
             }
         }
 
         viewModelScope.launch {
             try {
-                if (userid == "guest") return@launch
+                if (userid == "00000000-0000-0000-0000-000000000000") {
+                    // Pre-fetch matches for guest to ensure they see something
+                    setupRepository.refreshSetupFromServer(userid)
+                    return@launch
+                }
 
                 // Ensure server is updated with current platform language before refreshing
                 val currentLang = platform.language
-                println("HomeScreen loaded. Ensuring server lang sync: $currentLang")
                 setupRepository.updateLanguage(currentLang)
                 
                 // Now refresh from server using the current platform language
@@ -136,6 +162,8 @@ class ListSetupViewModel(
             } catch (e: Exception) {
                 if (e.message == "SESSION_EXPIRED") {
                     _navigationEvents.emit(NavigationEvent.ToLogin)
+                } else {
+                    println("Background refresh failed: ${e.message}")
                 }
             }
         }
