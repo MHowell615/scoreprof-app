@@ -158,7 +158,8 @@ fun HomeScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (setupState?.is_ads_removed == false) {
+            // Show ads immediately for guests OR if profile is loaded and ads are NOT removed
+            if (isGuest || setupState?.is_ads_removed == false) {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier

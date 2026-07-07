@@ -26,6 +26,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -83,6 +84,7 @@ class ListSetupViewModel(
     val showOnlyUpcoming = _showOnlyUpcoming.asStateFlow()
 
     private var initialDataJob: Job? = null
+    private var watchdogJob: Job? = null
 
     init {
         tokenManager.checkCacheVersion(platform.version) {
@@ -93,6 +95,7 @@ class ListSetupViewModel(
         }
 
         loadInitialDataForUser(userid)
+        startWatchdogTimer()
 
         viewModelScope.launch {
             billingManager.purchaseSuccess.collect { success ->
@@ -105,6 +108,38 @@ class ListSetupViewModel(
 
     fun toggleUpcomingFilter(enabled: Boolean) {
         _showOnlyUpcoming.value = enabled
+    }
+
+    private fun startWatchdogTimer() {
+        watchdogJob?.cancel()
+        watchdogJob = viewModelScope.launch {
+            // Default 60 seconds if we can't fetch the setting
+            var thresholdSeconds = 60
+            try {
+                val serverThreshold = setupRepository.getSetting("circular_wait_threshold_seconds")
+                if (serverThreshold != null) {
+                    thresholdSeconds = serverThreshold.toInt()
+                }
+            } catch (e: Exception) {
+                println("Watchdog: Could not fetch threshold, using default 60s")
+            }
+
+            delay(thresholdSeconds * 1000L)
+
+            // If we are still waiting for setup data and NOT a guest
+            if (_setup.value == null && userid != "00000000-0000-0000-0000-000000000000") {
+                val errorMessage = "HomeScreen Hang: Spinning for > $thresholdSeconds seconds"
+                println("Watchdog: $errorMessage")
+                setupRepository.logError(
+                    errorMessage,
+                    "User stuck on turning circle. UserID: $userid",
+                    platform.version.toString()
+                )
+                
+                // Optional: Force a retry or logout if it's really stuck
+                // logout { viewModelScope.launch { _navigationEvents.emit(NavigationEvent.ToLogin) } }
+            }
+        }
     }
 
     private fun onAdsRemovedSuccessfully() {
@@ -124,6 +159,8 @@ class ListSetupViewModel(
 
     fun loadInitialDataForUser(userid: String) {
         if (initialDataJob?.isActive == true) return
+        
+        startWatchdogTimer() // Restart timer whenever we try to load data
         
         initialDataJob = viewModelScope.launch {
             try {

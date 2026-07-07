@@ -43,6 +43,7 @@ interface SetupRepository {
     suspend fun updateAllUserCompetitions(isSelected: Boolean)
     suspend fun logError(errorMessage: String, stackTrace: String, appVersion: String)
     suspend fun updateLanguage(language: String)
+    suspend fun getSetting(key: String): String?
 }
 
 class SetupRepositoryImpl(
@@ -264,6 +265,24 @@ println("Token = $token")
         } catch (e: Exception) {
             println("update_language server call failed: ${e.message}")
             logError(e.message.toString(), e.stackTraceToString(), platform.version.toString())
+        }
+    }
+
+    override suspend fun getSetting(key: String): String? {
+        return try {
+            val response = httpClient.post("https://www.scoreprof.cloud/rpc/get_setting") {
+                contentType(ContentType.Application.Json)
+                setBody(buildJsonObject {
+                    put("setting_key", key)
+                })
+            }
+            if (response.status.value in 200..299) {
+                val body: String = response.body()
+                // PostgREST RPC returning a single value might be wrapped in quotes or JSON
+                body.trim('"')
+            } else null
+        } catch (e: Exception) {
+            null
         }
     }
 }
