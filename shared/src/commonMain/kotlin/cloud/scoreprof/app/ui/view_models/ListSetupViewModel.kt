@@ -160,8 +160,17 @@ class ListSetupViewModel(
                 // Now refresh from server using the current platform language
                 setupRepository.refreshSetupFromServer(userid, currentLang)
             } catch (e: Exception) {
-                if (e.message == "SESSION_EXPIRED") {
-                    _navigationEvents.emit(NavigationEvent.ToLogin)
+                println("Critical Setup Error: ${e.message}")
+                if (e.message?.contains("SESSION_EXPIRED") == true || 
+                    e.message?.contains("Invalid Session") == true ||
+                    e.message?.contains("401") == true) {
+                    
+                    // Auto-recovery: Clear local data and send to login
+                    logout { 
+                        viewModelScope.launch {
+                            _navigationEvents.emit(NavigationEvent.ToLogin) 
+                        }
+                    }
                 } else {
                     println("Background refresh failed: ${e.message}")
                 }

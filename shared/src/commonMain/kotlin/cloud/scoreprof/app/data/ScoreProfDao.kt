@@ -184,6 +184,9 @@ interface ScoreProfDao {
     @Query("DELETE FROM setup")
     suspend fun deleteSetup()
 
+    @Query("DELETE FROM matches")
+    suspend fun deleteAllMatches()
+
     @Query("SELECT * FROM User_League_Users WHERE leagueid = :leagueid AND owneruserid = :owneruserid")
     suspend fun getLeagueUserStatuses(leagueid: String, owneruserid: String): List<UserLeagueUsers>
 
