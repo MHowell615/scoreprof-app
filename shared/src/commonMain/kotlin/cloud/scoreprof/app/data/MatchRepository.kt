@@ -75,7 +75,7 @@ class MatchRepositoryImpl(
             if (responseString.isNotBlank() && responseString != "null") {
                 val matchHeader = json.decodeFromString<MatchHeader>(responseString)
                 withContext(Dispatchers.IO) {
-                    dao.insertMatchesIgnore(matchHeader.matches)
+                    dao.upsertMatches(matchHeader.matches)
                     matchHeader.matches.forEach { match ->
                         dao.updateMatchResults(
                             matchid = match.id,

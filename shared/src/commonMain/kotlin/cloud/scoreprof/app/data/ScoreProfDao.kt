@@ -129,6 +129,9 @@ interface ScoreProfDao {
     @Upsert
     suspend fun upsertMatches(matches: List<Match>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMatchesReplace(matches: List<Match>)
+
     @Query("SELECT * FROM language ORDER BY languageName ASC")
     fun getLanguages(): Flow<List<LanguageEntity>>
 

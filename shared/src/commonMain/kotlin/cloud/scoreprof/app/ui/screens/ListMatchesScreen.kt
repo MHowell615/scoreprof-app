@@ -50,7 +50,7 @@ fun ListMatchesScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by matchesViewModel.uiState.collectAsState()
     val setupState by setupViewModel.setup.collectAsState()
-    val isGuest = setupState?.userid == "00000000-0000-0000-0000-000000000000"
+    val isGuest = setupViewModel.userid == "00000000-0000-0000-0000-000000000000"
     var showLoginDialog by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     
@@ -156,10 +156,26 @@ fun ListMatchesScreen(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(text = state.message, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { matchesViewModel.retryLoading() }) {
-                                Text(stringResource(Res.string.retry))
+                            if (isGuest) {
+                                Text(
+                                    text = stringResource(Res.string.login_required_msg),
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Button(onClick = { showLoginDialog = true }) {
+                                    Text(stringResource(Res.string.login))
+                                }
+                            } else {
+                                Text(
+                                    text = state.message,
+                                    color = MaterialTheme.colorScheme.error,
+                                    textAlign = TextAlign.Center
+                                )
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Button(onClick = { matchesViewModel.retryLoading() }) {
+                                    Text(stringResource(Res.string.retry))
+                                }
                             }
                         }
                     }

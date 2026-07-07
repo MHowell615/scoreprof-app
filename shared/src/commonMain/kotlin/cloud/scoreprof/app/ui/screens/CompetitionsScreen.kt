@@ -46,6 +46,7 @@ fun CompetitionsScreen(
     val userid = remember(setupState?.userid, passedUserId) {
         setupState?.userid ?: passedUserId ?: ""
     }
+    val isGuest = userid == "00000000-0000-0000-0000-000000000000"
     val competitionsState by setupViewModel.competitions.collectAsState()
     val showOnlyUpcoming by setupViewModel.showOnlyUpcoming.collectAsState()
     val comparator = remember { getStringComparator() }
@@ -58,9 +59,9 @@ fun CompetitionsScreen(
         }
     }
 
-    val groupedData = remember(displayedCompetitions) {
+    val groupedData = remember(displayedCompetitions, isGuest) {
         displayedCompetitions
-            .filter { it.isSelected }
+            .filter { it.isSelected || isGuest } // Show all for guest
             .groupBy { it.item.sport_type ?: "Other" }
             .mapValues { sportEntry ->
                 val byRegion = sportEntry.value.groupBy { it.item.region ?: "International" }
@@ -78,6 +79,12 @@ fun CompetitionsScreen(
 
     val expandedSports = remember { mutableStateMapOf<String, Boolean>() }
     val expandedRegions = remember { mutableStateMapOf<String, Boolean>() }
+
+    LaunchedEffect(userid) {
+        if (userid.isNotEmpty()) {
+            setupViewModel.loadInitialDataForUser(userid)
+        }
+    }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->

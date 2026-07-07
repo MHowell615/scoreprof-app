@@ -48,17 +48,18 @@ class ListSetupViewModel(
     private val platform: Platform
 ) : ViewModel() {
 
-    val userid: String = try {
+    private var _userid: String = try {
         val id = savedStateHandle.get<String>("userid")
         if (!id.isNullOrBlank()) {
             id
         } else {
-            tokenManager.getUserId() ?: throw IllegalArgumentException("User ID missing")
+            tokenManager.getUserId() ?: "00000000-0000-0000-0000-000000000000"
         }
     } catch (e: Exception) {
         println("ScoreProf Fatal Init Error: ${e.message}")
         "00000000-0000-0000-0000-000000000000"
     }
+    val userid: String get() = _userid
 
     private val _setup = MutableStateFlow<Setup?>(null)
     val setup = _setup.asStateFlow()
@@ -158,12 +159,30 @@ class ListSetupViewModel(
     }
 
     fun loadInitialDataForUser(userid: String) {
-        if (initialDataJob?.isActive == true) return
+        _userid = userid
+        initialDataJob?.cancel()
         
-        startWatchdogTimer() // Restart timer whenever we try to load data
+        val isGuestUser = userid == "00000000-0000-0000-0000-000000000000"
+        
+        startWatchdogTimer()
         
         initialDataJob = viewModelScope.launch {
             try {
+                // 1. Clear room of data before getting new data either way
+                _setup.value = null
+                dao.deleteSetup()
+                dao.deleteAllMatches()
+                
+                // 2. Fetch fresh data from server
+                val currentLang = platform.language
+                
+                if (!isGuestUser) {
+                    setupRepository.updateLanguage(currentLang)
+                }
+                
+                setupRepository.refreshSetupFromServer(userid, currentLang)
+
+                // 3. Observe the database (Room) for the results
                 setupRepository.getSetup(userid).collect { setupFromDb ->
                     if (setupFromDb != null) {
                         _setup.value = setupFromDb
@@ -171,57 +190,30 @@ class ListSetupViewModel(
                     }
                 }
             } catch (e: Exception) {
-                println("Fatal Database Load Error: ${e.message}")
-                setupRepository.logError("HomeScreen Init Fail: ${e.message}", e.stackTraceToString(), platform.version.toString())
-                // Auto-recovery: If we can't load the user, force a logout to clear the stuck state
-                logout { 
-                    viewModelScope.launch {
-                        _navigationEvents.emit(NavigationEvent.ToLogin) 
-                    }
-                }
-            }
-        }
-
-        viewModelScope.launch {
-            try {
-                if (userid == "00000000-0000-0000-0000-000000000000") {
-                    // Pre-fetch matches for guest to ensure they see something
-                    setupRepository.refreshSetupFromServer(userid)
-                    return@launch
-                }
-
-                // Ensure server is updated with current platform language before refreshing
-                val currentLang = platform.language
-                setupRepository.updateLanguage(currentLang)
-                
-                // Now refresh from server using the current platform language
-                setupRepository.refreshSetupFromServer(userid, currentLang)
-            } catch (e: Exception) {
                 println("Critical Setup Error: ${e.message}")
                 if (e.message?.contains("SESSION_EXPIRED") == true || 
                     e.message?.contains("Invalid Session") == true ||
                     e.message?.contains("401") == true) {
                     
-                    // Auto-recovery: Clear local data and send to login
-                    logout { 
-                        viewModelScope.launch {
-                            _navigationEvents.emit(NavigationEvent.ToLogin) 
+                    // ONLY kick out real users. Guests should stay on Home even if server fails.
+                    if (!isGuestUser) {
+                        logout { 
+                            viewModelScope.launch {
+                                _navigationEvents.emit(NavigationEvent.ToLogin) 
+                            }
                         }
                     }
-                } else {
-                    println("Background refresh failed: ${e.message}")
                 }
             }
         }
     }
 
     fun refreshData() {
-        val userId = _setup.value?.userid ?: return
+        val userIdToUse = userid // Use the current class-level userid
         
         viewModelScope.launch {
             try {
-                // Use platform.language here as it's the most up-to-date choice
-                setupRepository.refreshSetupFromServer(userId, platform.language)
+                setupRepository.refreshSetupFromServer(userIdToUse, platform.language)
             } catch (e: Exception) {
                 println("Refresh failed: ${e.message}")
             }
