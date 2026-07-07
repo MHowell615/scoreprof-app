@@ -44,8 +44,8 @@ android {
         applicationId = "cloud.scoreprof.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 33
-        versionName = "2.1.7"
+        versionCode = 34
+        versionName = "2.1.8"
     }
     packaging {
         resources {

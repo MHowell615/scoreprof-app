@@ -43,8 +43,8 @@ fun ListMatchesScreen(
     competitionid: String,
     competitionName: String,
     navController: NavController,
+    setupViewModel: ListSetupViewModel,
     matchesViewModel: ListMatchesViewModel = koinViewModel(),
-    setupViewModel: ListSetupViewModel = koinViewModel(),
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }

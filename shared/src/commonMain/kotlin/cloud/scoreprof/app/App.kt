@@ -259,6 +259,7 @@ fun AppNavigation(setupViewModel: ListSetupViewModel) {
                                 competitionid = competitionId,
                                 competitionName = competitionName,
                                 navController = navController,
+                                setupViewModel = setupViewModel,
                                 matchesViewModel = viewModel,
                                 modifier = Modifier.fillMaxSize()
                             )
@@ -336,7 +337,6 @@ fun AppNavigation(setupViewModel: ListSetupViewModel) {
                 }
 
                 composable("contact_screen") {
-                    val setupViewModel: ListSetupViewModel = koinViewModel()
                     ContactScreen(
                         navController = navController,
                         setupViewModel = setupViewModel,

@@ -2,11 +2,19 @@ package cloud.scoreprof.app.data
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
-import platform.Foundation.NSHomeDirectory
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSUserDomainMask
 
 actual fun getDatabaseBuilder(): RoomDatabase.Builder<ScoreProfDatabase> {
-    val dbFile = NSHomeDirectory() + "/scoreprof.db"
+    val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
+        directory = NSDocumentDirectory,
+        inDomain = NSUserDomainMask,
+        appropriateForURL = null,
+        create = false,
+        error = null
+    )
+    val dbFile = documentDirectory?.path + "/scoreprof.db"
     return Room.databaseBuilder<ScoreProfDatabase>(
         name = dbFile
     ).fallbackToDestructiveMigration(true)
