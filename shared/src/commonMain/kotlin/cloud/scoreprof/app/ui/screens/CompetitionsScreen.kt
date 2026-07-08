@@ -80,12 +80,6 @@ fun CompetitionsScreen(
     val expandedSports = remember { mutableStateMapOf<String, Boolean>() }
     val expandedRegions = remember { mutableStateMapOf<String, Boolean>() }
 
-    LaunchedEffect(userid) {
-        if (userid.isNotEmpty()) {
-            setupViewModel.loadInitialDataForUser(userid)
-        }
-    }
-
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {

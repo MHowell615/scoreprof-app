@@ -117,12 +117,6 @@ fun AppNavigation(setupViewModel: ListSetupViewModel) {
                         }
                     }
 
-                    LaunchedEffect(useridString) {
-                        useridString?.let {
-                            setupViewModel.loadInitialDataForUser(it)
-                        }
-                    }
-
                     HomeScreen(
                         setupViewModel = setupViewModel,
                         navController = navController,
