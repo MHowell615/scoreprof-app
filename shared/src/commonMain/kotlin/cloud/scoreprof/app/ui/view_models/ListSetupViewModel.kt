@@ -162,18 +162,16 @@ class ListSetupViewModel(
         _userid = userid
         initialDataJob?.cancel()
         
-        val isGuestUser = userid == "00000000-0000-0000-0000-000000000000"
-        
         startWatchdogTimer()
         
         initialDataJob = viewModelScope.launch {
             try {
-                // 1. Clear room of data before getting new data either way
+                // Wipe local cache to ensure a clean slate as requested
                 _setup.value = null
                 dao.deleteSetup()
                 dao.deleteAllMatches()
                 
-                // 2. Fetch fresh data from server
+                val isGuestUser = userid == "00000000-0000-0000-0000-000000000000"
                 val currentLang = platform.language
                 
                 if (!isGuestUser) {
@@ -182,7 +180,7 @@ class ListSetupViewModel(
                 
                 setupRepository.refreshSetupFromServer(userid, currentLang)
 
-                // 3. Observe the database (Room) for the results
+                // Observe the database (Room) for the results
                 setupRepository.getSetup(userid).collect { setupFromDb ->
                     if (setupFromDb != null) {
                         _setup.value = setupFromDb
@@ -195,8 +193,8 @@ class ListSetupViewModel(
                     e.message?.contains("Invalid Session") == true ||
                     e.message?.contains("401") == true) {
                     
-                    // ONLY kick out real users. Guests should stay on Home even if server fails.
-                    if (!isGuestUser) {
+                    // ONLY kick out real users.
+                    if (userid != "00000000-0000-0000-0000-000000000000") {
                         logout { 
                             viewModelScope.launch {
                                 _navigationEvents.emit(NavigationEvent.ToLogin) 

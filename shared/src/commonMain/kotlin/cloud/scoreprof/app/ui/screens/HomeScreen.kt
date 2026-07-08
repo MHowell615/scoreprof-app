@@ -90,20 +90,20 @@ fun HomeScreen(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                if (!isGuest && userid.isNotEmpty()) {
-                    setupViewModel.refreshData()
+                if (userid.isNotEmpty()) {
+                    // If we have no data at all, do a full initialization
+                    if (setupState == null) {
+                        setupViewModel.loadInitialDataForUser(userid)
+                    } else if (!isGuest) {
+                        // If we already have data, do a silent background refresh
+                        setupViewModel.refreshData()
+                    }
                 }
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-    LaunchedEffect(userid) {
-        if (userid.isNotEmpty()) {
-            setupViewModel.loadInitialDataForUser(userid)
         }
     }
 
