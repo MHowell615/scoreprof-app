@@ -147,4 +147,6 @@
     <string name="guest_user">Usuário convidado</string>
     <string name="login_required_title">Login necessário</string>
     <string name="login_required_msg">Faça login ou registe-se para utilizar este recurso.</string>
+    <string name="age_certification">Certifico que tenho 18 anos de idade ou mais.</string>
+    <string name="age_limited">Para se inscrever, precisa de ter 18 anos de idade ou mais.</string>
 </resources>

@@ -147,4 +147,6 @@
     <string name="guest_user">Utente ospite</string>
     <string name="login_required_title">Accesso richiesto</string>
     <string name="login_required_msg">Accedi o registrati per utilizzare questa funzionalità.</string>
+    <string name="age_certification">Dichiaro di avere almeno 18 anni.</string>
+    <string name="age_limited">Per registrarsi è necessario avere almeno 18 anni.</string>
 </resources>

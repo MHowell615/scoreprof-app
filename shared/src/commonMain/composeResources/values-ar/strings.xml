@@ -145,4 +145,6 @@
     <string name="guest_user">مستخدم ضيف</string>
     <string name="login_required_title">تسجيل الدخول مطلوب</string>
     <string name="login_required_msg">يرجى تسجيل الدخول أو الاشتراك لاستخدام هذه الميزة.</string>
+    <string name="age_certification">أُقرُّ بأنني أبلغ من العمر 18 عاماً أو أكثر.</string>
+    <string name="age_limited">للتسجيل، يجب أن تبلغ من العمر 18 عاماً أو أكثر.</string>
 </resources>

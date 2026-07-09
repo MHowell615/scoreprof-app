@@ -178,4 +178,6 @@
     <string name="guest_user">访客用户</string>
     <string name="login_required_title">需要登录</string>
     <string name="login_required_msg">请登录或注册以使用此功能。</string>
+    <string name="age_certification">我确认自己已年满 18 岁。</string>
+    <string name="age_limited">您必须年满 18 岁方可注册。</string>
 </resources>

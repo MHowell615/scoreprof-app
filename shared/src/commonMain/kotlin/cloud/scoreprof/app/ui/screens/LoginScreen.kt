@@ -35,6 +35,8 @@ import scoreprof_resources.email
 import scoreprof_resources.password
 import scoreprof_resources.scoreprof_launcher_round
 import scoreprof_resources.continue_as_guest
+import scoreprof_resources.age_certification
+import scoreprof_resources.age_limited
 import cloud.scoreprof.app.ui.view_models.LoginViewModel
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -63,9 +65,11 @@ fun LoginScreen(
     val isLoginMode by viewModel.isLoginMode.collectAsState()
     var confirmPasswordInput by remember { mutableStateOf("") }
     val passwordsMatch = passwordInput == confirmPasswordInput || isLoginMode
+    var isAdultChecked by remember { mutableStateOf(false) }
 
     var showFields by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -220,10 +224,12 @@ fun LoginScreen(
                         value = confirmPasswordInput,
                         onValueChange = { confirmPasswordInput = it },
                         label = { Text(stringResource(Res.string.confirm_password)) },
-                        isError = hasAttemptedLogin && !passwordsMatch,
+                        isError = hasAttemptedLogin && (!passwordsMatch || !isAdultChecked),
                         supportingText = {
                             if (hasAttemptedLogin && !passwordsMatch) {
                                 Text(stringResource(Res.string.password_mismatch), color = MaterialTheme.colorScheme.error)
+                            } else if (hasAttemptedLogin && !isAdultChecked) {
+                                Text(stringResource(Res.string.age_limited), color = MaterialTheme.colorScheme.error)
                             }
                         },
                         singleLine = true,
@@ -231,6 +237,21 @@ fun LoginScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = isAdultChecked,
+                            onCheckedChange = { isAdultChecked = it }
+                        )
+                        Text(
+                            text = stringResource(Res.string.age_certification),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (hasAttemptedLogin && !isAdultChecked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))

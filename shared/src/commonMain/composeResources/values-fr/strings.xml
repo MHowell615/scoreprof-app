@@ -179,4 +179,6 @@
     <string name="guest_user">Utilisateur invité</string>
     <string name="login_required_title">Connexion requise</string>
     <string name="login_required_msg">Veuillez vous connecter ou vous inscrire pour utiliser cette fonctionnalité.</string>
+    <string name="age_certification">Je certifie être âgé de 18 ans ou plus.</string>
+    <string name="age_limited">Pour vous inscrire, vous devez être âgé de 18 ans ou plus.</string>
 </resources>
