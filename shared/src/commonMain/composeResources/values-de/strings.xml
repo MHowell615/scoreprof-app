@@ -147,4 +147,6 @@
     <string name="guest_user">Gastbenutzer</string>
     <string name="login_required_title">Anmeldung erforderlich</string>
     <string name="login_required_msg">Bitte melden Sie sich an oder registrieren Sie sich, um diese Funktion zu nutzen.</string>
+    <string name="age_certification">Ich bestätige, dass ich 18 Jahre oder älter bin.</string>
+    <string name="age_limited">Um sich anzumelden, müssen Sie mindestens 18 Jahre alt sein.</string>
 </resources>

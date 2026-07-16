@@ -147,4 +147,6 @@
     <string name="guest_user">अतिथि उपयोगकर्ता</string>
     <string name="login_required_title">लॉगिन आवश्यक है</string>
     <string name="login_required_msg">इस फ़ीचर का इस्तेमाल करने के लिए कृपया लॉग इन या साइन अप करें।</string>
+    <string name="age_certification">मैं प्रमाणित करता हूँ कि मेरी आयु 18 वर्ष या उससे अधिक है।</string>
+    <string name="age_limited">साइन अप करने के लिए आपकी उम्र 18 साल या उससे ज़्यादा होनी चाहिए।</string>
 </resources>

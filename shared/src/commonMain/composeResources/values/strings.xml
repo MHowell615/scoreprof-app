@@ -181,4 +181,6 @@
     <string name="guest_user">Guest User</string>
     <string name="login_required_title">Login Required</string>
     <string name="login_required_msg">Please log in or sign up to use this feature.</string>
+    <string name="age_certification">I certify that I am 18 years of age or older</string>
+    <string name="age_limited">To sign up you must be 18 years of age or older</string>
 </resources>
