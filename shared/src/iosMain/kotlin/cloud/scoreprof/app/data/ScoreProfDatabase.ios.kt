@@ -24,5 +24,5 @@ actual fun getDatabaseBuilder(): RoomDatabase.Builder<ScoreProfDatabase> {
     return Room.databaseBuilder<ScoreProfDatabase>(
         name = dbFile
     ).fallbackToDestructiveMigration(true)
-     .setJournalMode(RoomDatabase.JournalMode.DELETE) // Use DELETE mode for better stability on iOS
+     .setJournalMode(RoomDatabase.JournalMode.TRUNCATE) // Use TRUNCATE mode for better stability on iOS
 }
