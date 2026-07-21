@@ -22,7 +22,7 @@ struct iOSApp: App {
             // Execute on main thread for Firebase operations
             DispatchQueue.main.async {
                 if let app = FirebaseApp.app(), app.options.apiKey != key {
-                    app.delete(completion: { success in
+                    app.delete({ success in
                         if success {
                             if let plistPath = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
                                let options = FirebaseOptions(contentsOfFile: plistPath) {
