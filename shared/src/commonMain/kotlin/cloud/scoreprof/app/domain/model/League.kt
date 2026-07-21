@@ -39,14 +39,12 @@ data class LeagueHeader(
 @Serializable
 @Entity(
     tableName = "League_Table",
-    primaryKeys = ["leagueid", "owneruserid"]
+    primaryKeys = ["leagueid", "owneruserid", "userid"]
 )
 data class LeagueTable(
     val leagueid: String,
-    
     val owneruserid: String,
     val rank: Int,
-    
     val userid: String,
     val username: String,
     val matches_played: Int,

@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.konan.target.HostManager
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -39,6 +40,17 @@ kotlin {
 
     val isIosEnabled = project.findProperty("isIosEnabled") == "true" && HostManager.hostIsMac
     
+    // Read the key from local.properties
+    val sprofAuthKey = project.rootProject.file("local.properties").let { file ->
+        if (file.exists()) {
+            val properties = Properties()
+            file.inputStream().use { properties.load(it) }
+            properties.getProperty("SPROF_AUTH_KEY") ?: "dev_default_key"
+        } else {
+            "dev_default_key"
+        }
+    }
+
     if (isIosEnabled) {
         listOf(
             iosArm64(),
@@ -50,8 +62,23 @@ kotlin {
             }
         }
     }
-    
+
     sourceSets {
+        commonMain {
+            // This logic runs during Gradle Sync/Build to create the file
+            val outputDir = project.layout.buildDirectory.dir("generated/sprof/kotlin").get().asFile
+            val configFile = File(outputDir, "cloud/scoreprof/app/SprofConfig.kt")
+            configFile.parentFile.mkdirs()
+            configFile.writeText("""
+                package cloud.scoreprof.app
+                
+                object SprofConfig {
+                    const val AUTH_KEY = "$sprofAuthKey"
+                }
+            """.trimIndent())
+            
+            kotlin.srcDir(outputDir)
+        }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -74,6 +101,7 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.multiplatformSettings)
             implementation(libs.multiplatformSettings.no.arg)
+            implementation(libs.multiplatformSettings.serialization)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
         }

@@ -35,12 +35,16 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
+import cloud.scoreprof.app.data.FirebaseManager
 
 class MainActivity : ComponentActivity() {
 
     // These will be provided by Koin now
     private val dao: ScoreProfDao by inject()
     private val tokenManager: TokenManager by inject()
+    private val firebaseManager: FirebaseManager by inject()
 
     private val updateLauncher = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
@@ -124,6 +128,7 @@ class MainActivity : ComponentActivity() {
 
         checkNotificationPermission()
         scheduleNotificationWorker()
+        initializeDynamicFirebase()
 
         setContent {
             MaterialTheme {
@@ -171,6 +176,27 @@ class MainActivity : ComponentActivity() {
         }
         MobileAds.initialize(this) { initializationStatus ->
             Log.d("MainActivity", "Ads SDK Initialized: $initializationStatus")
+        }
+    }
+
+    private fun initializeDynamicFirebase() {
+        firebaseManager.initialize { apiKey ->
+            if (apiKey.isBlank()) return@initialize
+
+            val options = FirebaseOptions.Builder()
+                .setApiKey(apiKey)
+                .setApplicationId("1:83878056850:android:37cedb3b8966a784f6274b")
+                .setProjectId("pikawin-d677b")
+                .build()
+
+            try {
+                if (FirebaseApp.getApps(this).isEmpty()) {
+                    FirebaseApp.initializeApp(this, options)
+                    Log.d("MainActivity", "Firebase initialized dynamically with key from server")
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Error initializing Firebase dynamically: ${e.message}")
+            }
         }
     }
 }

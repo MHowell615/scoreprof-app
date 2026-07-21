@@ -18,7 +18,10 @@ import androidx.compose.ui.unit.dp
 import cloud.scoreprof.app.domain.model.LeagueTable
 
 @Composable
-fun LeagueCard(leagueTable: LeagueTable, modifier: Modifier ?= null) {
+fun LeagueCard(
+    leagueTable: LeagueTable,
+    modifier: Modifier? = null
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -45,6 +48,7 @@ fun LeagueCard(leagueTable: LeagueTable, modifier: Modifier ?= null) {
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.weight(1f)
             )
+            
             Text(
                 text = "${leagueTable.points}",
                 modifier = Modifier.width(40.dp),
@@ -52,13 +56,9 @@ fun LeagueCard(leagueTable: LeagueTable, modifier: Modifier ?= null) {
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.primary
             )
-            val winPercentage: Float = if (leagueTable.matches_played > 0) {
-                (leagueTable.points.toFloat() / leagueTable.matches_played.toFloat()) * 100
-            } else {
-                0f
-            }
+            
             Text(
-                text = winPercentage.toString().take(4),
+                text = leagueTable.win_percentage.toString().take(4),
                 modifier = Modifier.width(60.dp),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,

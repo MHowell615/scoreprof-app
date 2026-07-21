@@ -7,6 +7,11 @@
     <string name="password">密码</string>
     <string name="competitions">锦标赛</string>
     <string name="username">用户名</string>
+    <string name="username_mandatory_msg">必须填写用户名才能在联赛排名中显示。</string>
+    <string name="username_prompt_title">添加用户名</string>
+    <string name="username_prompt_msg">请添加一个用户名（例如你喜欢的动物名称），以便在联赛排名中显示并跟踪你的分数。</string>
+    <string name="username_invalid_msg">此用户名包含受限词。请选择其他名称。</string>
+    <string name="username_taken_msg">此用户名已被占用。请选择其他名称。</string>
     <string name="email">电子邮件地址</string>
     <string name="create_new_league">创建新联赛</string>
     <string name="invite_others">邀请其他人</string>

@@ -8,6 +8,11 @@
     <string name="password">Mot de passe</string>
     <string name="competitions">Compétitions</string>
     <string name="username">Nom d\'utilisateur</string>
+    <string name="username_mandatory_msg">Un nom d\'utilisateur est obligatoire pour apparaître dans les classements.</string>
+    <string name="username_prompt_title">Ajouter un nom d\'utilisateur</string>
+    <string name="username_prompt_msg">Veuillez ajouter un nom d\'utilisateur (par exemple, votre animal préféré) pour apparaître dans les classements et suivre vos scores.</string>
+    <string name="username_invalid_msg">Ce nom d\'utilisateur contient des mots restreints. Veuillez en choisir un autre.</string>
+    <string name="username_taken_msg">Ce nom d\'utilisateur est déjà utilisé. Veuillez en choisir un autre.</string>
     <string name="email">Adresse e-mail</string>
     <string name="create_new_league">Créer une nouvelle ligue</string>
     <string name="invite_others">Inviter d\'autre personnes</string>

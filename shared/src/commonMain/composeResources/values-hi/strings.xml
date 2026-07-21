@@ -8,6 +8,11 @@
     <string name="password">पासवर्ड</string>
     <string name="competitions">प्रतियोगिताएँ</string>
     <string name="username">उपयोगकर्ता नाम</string>
+    <string name="username_mandatory_msg">लीग तालिका में दिखने के लिए उपयोगकर्ता नाम अनिवार्य है।</string>
+    <string name="username_prompt_title">उपयोगकर्ता नाम जोड़ें</string>
+    <string name="username_prompt_msg">लीگ तालिका में दिखने और अपने स्कोर को ट्रैक करने के लिए कृपया एक उपयोगकर्ता नाम (जैसे आपका पसंदीदा जानवर) जोड़ें।</string>
+    <string name="username_invalid_msg">इस उपयोगकर्ता नाम में प्रतिबंधित शब्द हैं। कृपया दूसरा चुनें।</string>
+    <string name="username_taken_msg">यह उपयोगकर्ता नाम पहले से ही उपयोग में है। कृपया दूसरा चुनें।</string>
     <string name="email">ईमेल पता</string>
     <string name="create_new_league">नई लीग बनाएँ</string>
     <string name="invite_others">अन्य को आमंत्रित करें</string>

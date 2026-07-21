@@ -7,6 +7,11 @@
     <string name="password">Password</string>
     <string name="competitions">Competitions</string>
     <string name="username">Username</string>
+    <string name="username_mandatory_msg">A username is mandatory to appear in league tables.</string>
+    <string name="username_prompt_title">Add a Username</string>
+    <string name="username_prompt_msg">Please add a username (e.g. your favorite animal) to appear in league tables and track your scores.</string>
+    <string name="username_invalid_msg">This username contains restricted words. Please choose another.</string>
+    <string name="username_taken_msg">This username is already in use. Please choose another.</string>
     <string name="email">Email Address</string>
     <string name="create_new_league">Create New League</string>
     <string name="invite_others">Invite Others</string>

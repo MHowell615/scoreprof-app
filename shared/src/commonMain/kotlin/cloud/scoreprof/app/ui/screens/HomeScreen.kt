@@ -31,6 +31,7 @@ import scoreprof_resources.Res
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.painterResource
 import cloud.scoreprof.app.domain.model.NotificationType
+import cloud.scoreprof.app.domain.model.AppNotification
 import scoreprof_resources.matches
 import scoreprof_resources.leagues
 import scoreprof_resources.setup
@@ -49,6 +50,8 @@ import scoreprof_resources.login_required_title
 import scoreprof_resources.login_required_msg
 import scoreprof_resources.login
 import scoreprof_resources.close_btn
+import scoreprof_resources.username_prompt_title
+import scoreprof_resources.username_prompt_msg
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
@@ -81,6 +84,9 @@ fun HomeScreen(
     val preferredLanguage = setupState?.preferred_language ?: "en"
     val isGuest = userid == "00000000-0000-0000-0000-000000000000"
 
+    val notifications by notificationViewModel.notifications.collectAsState()
+    val unreadCount by notificationViewModel.unreadCount.collectAsState()
+
     LaunchedEffect(email, setupState) {
         if (!isGuest && email.isNotEmpty()) {
             notificationViewModel.loadNotifications(email)
@@ -108,6 +114,34 @@ fun HomeScreen(
     }
 
     var showLoginRequiredDialog by remember { mutableStateOf(false) }
+    var showUsernamePrompt by remember { mutableStateOf(false) }
+
+    LaunchedEffect(setupState) {
+        if (!isGuest && setupState != null && setupState?.name.isNullOrBlank()) {
+            showUsernamePrompt = true
+        }
+    }
+
+    if (showUsernamePrompt) {
+        AlertDialog(
+            onDismissRequest = { showUsernamePrompt = false },
+            title = { Text(stringResource(Res.string.username_prompt_title)) },
+            text = { Text(stringResource(Res.string.username_prompt_msg)) },
+            confirmButton = {
+                Button(onClick = {
+                    showUsernamePrompt = false
+                    navController.navigate("setup_screen/$userid")
+                }) {
+                    Text(stringResource(Res.string.setup))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showUsernamePrompt = false }) {
+                    Text(stringResource(Res.string.close_btn))
+                }
+            }
+        )
+    }
 
     if (showLoginRequiredDialog) {
         AlertDialog(
@@ -139,6 +173,8 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopBar(
+                unreadCount = unreadCount,
+                notifications = notifications,
                 navController = navController,
                 onLogoutClick = {
                     scope.launch {
@@ -178,13 +214,15 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            val navItems = listOf(
-                Res.string.matches to "competitions_screen/$userid",
-                Res.string.leagues to "leagues_screen/$userid",
-                Res.string.setup to "setup_screen/$userid",
-                Res.string.help to "help_screen",
-                Res.string.contact to "contact_screen"
-            )
+            val navItems = remember(userid) {
+                listOf(
+                    Res.string.matches to "competitions_screen/$userid",
+                    Res.string.leagues to "leagues_screen/$userid",
+                    Res.string.setup to "setup_screen/$userid",
+                    Res.string.help to "help_screen",
+                    Res.string.contact to "contact_screen"
+                )
+            }
 
             navItems.forEach { (label, route) ->
                 Button(
@@ -217,13 +255,15 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            val resIds = listOf(
-                Res.string.home_text_1,
-                Res.string.home_text_2,
-                Res.string.home_text_3,
-                Res.string.home_text_4,
-                Res.string.home_text_5
-            )
+            val resIds = remember {
+                listOf(
+                    Res.string.home_text_1,
+                    Res.string.home_text_2,
+                    Res.string.home_text_3,
+                    Res.string.home_text_4,
+                    Res.string.home_text_5
+                )
+            }
 
             Column(
                 modifier = Modifier
@@ -281,11 +321,11 @@ fun HomeScreen(
 
 @Composable
 fun HomeTopBar(
-    notificationViewModel: NotificationViewModel = koinViewModel(),
+    unreadCount: Int,
+    notifications: List<AppNotification>,
     navController: NavController,
     onLogoutClick: () -> Unit
 ) {
-    val unreadCount by notificationViewModel.unreadCount.collectAsState()
     var showMenu by remember { mutableStateOf(false) }
     val logoBackgroundColor = Color(0xFF1A0841)
 
@@ -332,7 +372,6 @@ fun HomeTopBar(
                     onDismissRequest = { showMenu = false },
                     modifier = Modifier.width(280.dp)
                 ) {
-                    val notifications by notificationViewModel.notifications.collectAsState()
                     if (notifications.isEmpty()) {
                         DropdownMenuItem(text = { Text("No new notifications") }, onClick = { showMenu = false })
                     } else {

@@ -166,19 +166,21 @@ class ListSetupViewModel(
         
         initialDataJob = viewModelScope.launch {
             try {
-                // Wipe local cache to ensure a clean slate as requested
-                _setup.value = null
-                dao.deleteSetup()
-                dao.deleteAllMatches()
-                
                 val isGuestUser = userid == "00000000-0000-0000-0000-000000000000"
-                val currentLang = platform.language
                 
-                if (!isGuestUser) {
-                    setupRepository.updateLanguage(currentLang)
+                // Only wipe and refresh if we don't have local data yet
+                val cachedSetup = dao.getSetup().firstOrNull()
+                if (cachedSetup == null) {
+                    _setup.value = null
+                    dao.deleteSetup()
+                    dao.deleteAllMatches()
+                    
+                    val currentLang = platform.language
+                    if (!isGuestUser) {
+                        setupRepository.updateLanguage(currentLang)
+                    }
+                    setupRepository.refreshSetupFromServer(userid, currentLang)
                 }
-                
-                setupRepository.refreshSetupFromServer(userid, currentLang)
 
                 // Observe the database (Room) for the results
                 setupRepository.getSetup(userid).collect { setupFromDb ->
@@ -457,16 +459,42 @@ class ListSetupViewModel(
         }
     }
 
-    fun saveSetupScreenChanges() {
+    fun saveSetupScreenChanges(onSuccess: (() -> Unit)? = null) {
         val currentSetup = _setup.value ?: return
+        if (currentSetup.name.isNullOrBlank()) {
+            _uiState.value = HomeUiState.Error("Username is mandatory.")
+            return
+        }
+        
+        _isLoading.value = true
         viewModelScope.launch {
-            val selectedLanguage = currentSetup.preferred_language
-            setupRepository.upsertSetup(currentSetup)
-            setupRepository.updateUserProfile(
-                name = currentSetup.name?.ifBlank { currentSetup.email.substringBefore('@') } ?: "",
-                email = currentSetup.email,
-                language = selectedLanguage
-            )
+            try {
+                val selectedLanguage = currentSetup.preferred_language
+                val result = setupRepository.updateUserProfile(
+                    name = currentSetup.name,
+                    email = currentSetup.email,
+                    language = selectedLanguage
+                )
+                
+                result.onSuccess {
+                    setupRepository.upsertSetup(currentSetup)
+                    _uiState.value = HomeUiState.Idle
+                    onSuccess?.invoke()
+                }.onFailure { error ->
+                    val errorMsg = error.message ?: ""
+                    if (errorMsg.contains("restricted", ignoreCase = true)) {
+                        _uiState.value = HomeUiState.Error("This username contains restricted words.")
+                    } else if (errorMsg.contains("taken", ignoreCase = true) || errorMsg.contains("already in use", ignoreCase = true)) {
+                        _uiState.value = HomeUiState.Error("This username is already in use.")
+                    } else {
+                        _uiState.value = HomeUiState.Error("Failed to update profile.")
+                    }
+                }
+            } catch (e: Exception) {
+                _uiState.value = HomeUiState.Error("Connection error.")
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 

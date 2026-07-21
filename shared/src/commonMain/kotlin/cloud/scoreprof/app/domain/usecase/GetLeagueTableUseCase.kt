@@ -9,8 +9,9 @@ class GetLeagueTableUseCase(private val repository: LeaguesRepository) {
         leagueid: String,
         owneruserid: String,
         sortBy: String,
-        jumpToTop: Boolean = false
+        jumpToTop: Boolean = false,
+        showCurrentSeason: Boolean = false
     ): Flow<List<LeagueTable>> {
-        return repository.getLeagueTable(leagueid, owneruserid, sortBy, jumpToTop)
+        return repository.getLeagueTable(leagueid, owneruserid, sortBy, jumpToTop, showCurrentSeason)
     }
 }

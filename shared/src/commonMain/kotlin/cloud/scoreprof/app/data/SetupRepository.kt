@@ -33,7 +33,7 @@ interface SetupRepository {
     suspend fun refreshSetupFromServer(userid: String, lang: String? = null)
     suspend fun upsertSetup(setup: Setup)
     suspend fun updateUserCompetition(competitionid: String, isSelected: Boolean)
-    suspend fun updateUserProfile(name: String, email: String, language: String)
+    suspend fun updateUserProfile(name: String, email: String, language: String): Result<Unit>
     suspend fun logout()
     suspend fun updateUserLeague(leagueid: String, owneruserid: String, isSelected: Boolean)
     suspend fun sendSupportMessage(category: String, subject: String, details: String): Boolean
@@ -44,6 +44,7 @@ interface SetupRepository {
     suspend fun logError(errorMessage: String, stackTrace: String, appVersion: String)
     suspend fun updateLanguage(language: String)
     suspend fun getSetting(key: String): String?
+    suspend fun getFirebaseKey(): String?
 }
 
 class SetupRepositoryImpl(
@@ -176,9 +177,9 @@ println("Token = $token")
         }
     }
 
-    override suspend fun updateUserProfile(name: String, email: String, language: String) {
-        try {
-            httpClient.post("https://www.scoreprof.cloud/rpc/update_user_profile") {
+    override suspend fun updateUserProfile(name: String, email: String, language: String): Result<Unit> {
+        return try {
+            val response = httpClient.post("https://www.scoreprof.cloud/rpc/update_user_profile") {
                 contentType(ContentType.Application.Json)
                 setBody(UpdateUserProfileRequest(
                     user_token = tokenManager.getToken() ?: "",
@@ -187,8 +188,15 @@ println("Token = $token")
                     _language = language
                 ))
             }
+            if (response.status.value in 200..299) {
+                Result.success(Unit)
+            } else {
+                val errorMsg = response.body<String>()
+                Result.failure(Exception(errorMsg))
+            }
         } catch (e: Exception) {
             logError(e.message.toString(), e.stackTraceToString(), platform.version.toString())
+            Result.failure(e)
         }
     }
 
@@ -273,16 +281,21 @@ println("Token = $token")
             val response = httpClient.post("https://www.scoreprof.cloud/rpc/get_setting") {
                 contentType(ContentType.Application.Json)
                 setBody(buildJsonObject {
-                    put("setting_key", key)
+                    put("_auth_key", authKey) // Now sending the shared secret
+                    put("_setting_key", key)
                 })
             }
             if (response.status.value in 200..299) {
                 val body: String = response.body()
-                // PostgREST RPC returning a single value might be wrapped in quotes or JSON
                 body.trim('"')
             } else null
         } catch (e: Exception) {
             null
         }
+    }
+
+    override suspend fun getFirebaseKey(): String? {
+        val platformKey = if (platform.name.contains("iOS", ignoreCase = true)) "ios_firebase_key" else "android_firebase_key"
+        return getSetting(platformKey)
     }
 }

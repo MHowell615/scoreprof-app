@@ -39,6 +39,7 @@ actual fun AdBanner(
                 loadAd(adRequest)
             }
         },
-        update = { /* No update logic needed */ }
+        update = { /* No update logic needed */ },
+        onRelease = { it.destroy() }
     )
 }

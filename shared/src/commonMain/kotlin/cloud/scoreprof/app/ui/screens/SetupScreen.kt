@@ -39,6 +39,7 @@ import scoreprof_resources.setup_text_2
 import scoreprof_resources.email
 import scoreprof_resources.password
 import scoreprof_resources.username
+import scoreprof_resources.username_mandatory_msg
 import cloud.scoreprof.app.ui.theme.button_background
 import cloud.scoreprof.app.ui.components.AdBanner
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
@@ -83,8 +84,9 @@ fun SetupScreen(
                 IconButton(
                     enabled = !isLoading,
                     onClick = {
-                        setupViewModel.saveSetupScreenChanges()
-                        navController.popBackStack()
+                        setupViewModel.saveSetupScreenChanges {
+                            navController.popBackStack()
+                        }
                     }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -181,9 +183,19 @@ fun SetupScreen(
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+                val isNameBlank = currentSetup?.name.isNullOrBlank()
                 OutlinedTextField(
                     value = currentSetup?.name ?: "",
                     label = { Text(stringResource(Res.string.username)) },
+                    isError = isNameBlank,
+                    supportingText = {
+                        if (isNameBlank) {
+                            Text(
+                                stringResource(Res.string.username_mandatory_msg),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    },
                     onValueChange = { newName ->
                         setupViewModel.onSetupDetailChanged(
                             email = currentSetup?.email ?: "",
@@ -217,12 +229,17 @@ fun SetupScreen(
 
             item {
                 Button(
+                    enabled = !isLoading,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = button_background,
                         contentColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(8.dp),
-                    onClick = { navController.navigate("setup_competitions_screen/$userid") },
+                    onClick = { 
+                        setupViewModel.saveSetupScreenChanges {
+                            navController.navigate("setup_competitions_screen/$userid") 
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
@@ -246,13 +263,16 @@ fun SetupScreen(
 
             item {
                 Button(
+                    enabled = !isLoading,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = button_background,
                         contentColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(8.dp),
                     onClick = {
-                        navController.navigate("setup_leagues_screen/$userid")
+                        setupViewModel.saveSetupScreenChanges {
+                            navController.navigate("setup_leagues_screen/$userid")
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -276,13 +296,16 @@ fun SetupScreen(
             }
             item {
                 Button(
+                    enabled = !isLoading,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = button_background,
                         contentColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(8.dp),
                     onClick = {
-                        navController.navigate("setup_privacy_screen/$userid")
+                        setupViewModel.saveSetupScreenChanges {
+                            navController.navigate("setup_privacy_screen/$userid")
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()

@@ -32,7 +32,8 @@ interface LeaguesRepository {
         leagueid: String,
         owneruserid: String,
         sortBy: String,
-        jumpToTop: Boolean = false
+        jumpToTop: Boolean = false,
+        showCurrentSeason: Boolean = false
     ): Flow<List<LeagueTable>>
     suspend fun upsertLeagueInDb(league: League, leagues: Leagues)
     suspend fun insertLeagues(leagues: Leagues)
@@ -110,20 +111,22 @@ class LeaguesRepositoryImpl(
         leagueid: String,
         owneruserid: String,
         sortBy: String,
-        jumpToTop: Boolean
+        jumpToTop: Boolean,
+        showCurrentSeason: Boolean
     ): Flow<List<LeagueTable>> {
         val userid = tokenManager.getUserId() ?: ""
         val isGuest = userid == "00000000-0000-0000-0000-000000000000"
         return flow {
             try {
                 val token = if (isGuest) "guest_token" else tokenManager.getToken() ?: ""
-                val url = "https://www.scoreprof.cloud/rpc/getleaguetable_v2"
+                val url = "https://www.scoreprof.cloud/rpc/getleaguetable_v3"
                 val body = buildJsonObject {
                     put("_leagueid", leagueid)
                     put("_owneruserid", owneruserid)
                     put("user_token", token)
                     put("_sort_by", sortBy)
                     put("_jump_to_top", jumpToTop)
+                    put("_current_season_only", showCurrentSeason)
                 }
 
                 val responseString: String = httpClient.post(url) {

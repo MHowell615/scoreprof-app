@@ -7,6 +7,11 @@
     <string name="password">パスワード</string>
     <string name="competitions">トーナメント</string>
     <string name="username">ユーザー名</string>
+    <string name="username_mandatory_msg">リーグテーブルに表示されるにはユーザー名が必須です。</string>
+    <string name="username_prompt_title">ユーザー名を追加</string>
+    <string name="username_prompt_msg">リーグテーブルに表示され、スコアを追跡するために、ユーザー名（例：好きな動物の名前）を追加してください。</string>
+    <string name="username_invalid_msg">このユーザー名には禁止用語が含まれています。別の名前を選んでください。</string>
+    <string name="username_taken_msg">このユーザー名は既に使用されています。別の名前を選んでください。</string>
     <string name="email">メールアドレス</string>
     <string name="create_new_league">新しいリーグを作成する</string>
     <string name="invite_others">他の人を招待する</string>

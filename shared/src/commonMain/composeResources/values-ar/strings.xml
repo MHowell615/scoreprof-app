@@ -8,6 +8,11 @@
     <string name="password">كلمة المرور</string>
     <string name="competitions">المسابقات</string>
     <string name="username">اسم المستخدم</string>
+    <string name="username_mandatory_msg">اسم المستخدم إلزامي للظهور في جداول الدوري.</string>
+    <string name="username_prompt_title">أضف اسم مستخدم</string>
+    <string name="username_prompt_msg">يرجى إضافة اسم مستخدم (مثل حيوانك المفضل) للظهور في جداول الدوري وتتبع نتائجك.</string>
+    <string name="username_invalid_msg">يحتوي اسم المستخدم هذا على كلمات محظورة. يرجى اختيار اسم آخر.</string>
+    <string name="username_taken_msg">اسم المستخدم هذا مستخدم بالفعل. يرجى اختيار اسم آخر.</string>
     <string name="email">عنوان البريد الإلكتروني</string>
     <string name="create_new_league">إنشاء دوري جديد</string>
     <string name="invite_others">ادعُ الآخرين</string>

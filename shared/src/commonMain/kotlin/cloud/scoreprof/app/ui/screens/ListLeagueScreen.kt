@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,13 +44,25 @@ fun ListLeagueScreen(
     var sortBy by remember { mutableStateOf("points") }
     var isViewingTop by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    var showCurrentSeason by remember { mutableStateOf(false) }
 
-    LaunchedEffect(key1 = leagueid, key2 = sortBy, key3 = isViewingTop) {
+    // Use a single stable key (leagueid) to trigger the initial load
+    // Subsequent loads are handled by the separate sort/filter effect
+    LaunchedEffect(leagueid, sortBy, isViewingTop, showCurrentSeason) {
+        val effectiveSortBy = if (showCurrentSeason) {
+            if (sortBy == "points") "points_current_season" else "win_pct_current_season"
+        } else {
+            sortBy
+        }
+        
+        println("ScoreProf Debug: Loading table for $leagueid. Sort: $effectiveSortBy, Season: $showCurrentSeason")
+
         leagueViewModel.onEvent(ListLeagueViewModel.LeagueEvent.LoadLeagueTable(
             leagueid = leagueid,
             owneruserid = owneruserid,
-            sortBy = sortBy,
-            jumpToTop = isViewingTop
+            sortBy = effectiveSortBy,
+            jumpToTop = isViewingTop,
+            showCurrentSeason = showCurrentSeason
         ))
     }
 
@@ -61,7 +74,7 @@ fun ListLeagueScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .statusBarsPadding() // Modern Edge-to-Edge fix
+                    .statusBarsPadding()
                     .height(56.dp)
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -80,6 +93,7 @@ fun ListLeagueScreen(
                     maxLines = 1,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
+
                 if (isViewingTop || (leagueTable.isNotEmpty() && leagueTable.first().rank != 1)) {
                     TextButton(onClick = {
                         isViewingTop = !isViewingTop
@@ -99,6 +113,31 @@ fun ListLeagueScreen(
                 .padding(horizontal = 8.dp)
                 .fillMaxSize()
         ) {
+            // Filter and Info Row - Only show if NOT the "All Leagues" table
+            if (!leagueid.equals("All", ignoreCase = true)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Current Season Only",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Switch(
+                            checked = showCurrentSeason,
+                            onCheckedChange = { showCurrentSeason = it },
+                            modifier = Modifier.scale(0.8f)
+                        )
+                    }
+                }
+            }
+
             // Ranking Headers
             Row(
                 modifier = Modifier

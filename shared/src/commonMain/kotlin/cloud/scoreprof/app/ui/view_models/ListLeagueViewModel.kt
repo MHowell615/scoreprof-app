@@ -39,11 +39,12 @@ class ListLeagueViewModel(
         leagueid: String,
         owneruserid: String,
         sortBy: String = "points",
-        jumpToTop: Boolean = false
+        jumpToTop: Boolean = false,
+        showCurrentSeason: Boolean = false
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                leaguesUseCases.getLeagueTable(leagueid, owneruserid, sortBy, jumpToTop)
+                leaguesUseCases.getLeagueTable(leagueid, owneruserid, sortBy, jumpToTop, showCurrentSeason)
                     .collect { freshList ->
                         dao.updateLeagueTableCache(leagueid, owneruserid, freshList)
                         _leagueTable.value = freshList
@@ -62,7 +63,13 @@ class ListLeagueViewModel(
     suspend fun onEvent(event: LeagueEvent) {
         when(event) {
             is LeagueEvent.LoadLeagueTable -> {
-                loadLeagueTable(event.leagueid, event.owneruserid, event.sortBy, event.jumpToTop)
+                loadLeagueTable(
+                    event.leagueid,
+                    event.owneruserid,
+                    event.sortBy,
+                    event.jumpToTop,
+                    event.showCurrentSeason
+                )
             }
         }
     }
@@ -77,7 +84,8 @@ class ListLeagueViewModel(
             val leagueid: String,
             val owneruserid: String,
             val sortBy: String = "points",
-            val jumpToTop: Boolean = false
+            val jumpToTop: Boolean = false,
+            val showCurrentSeason: Boolean = false
         ) : LeagueEvent()
     }
 }

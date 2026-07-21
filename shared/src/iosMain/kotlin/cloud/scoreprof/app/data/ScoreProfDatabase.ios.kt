@@ -9,15 +9,20 @@ import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class)
 actual fun getDatabaseBuilder(): RoomDatabase.Builder<ScoreProfDatabase> {
-    val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
+    val fileManager = NSFileManager.defaultManager
+    val documentDirectory = fileManager.URLForDirectory(
         directory = NSDocumentDirectory,
         inDomain = NSUserDomainMask,
         appropriateForURL = null,
-        create = false,
+        create = true, // Ensure the directory is created if missing
         error = null
     )
-    val dbFile = documentDirectory?.path + "/scoreprof.db"
+    
+    val path = documentDirectory?.path ?: throw IllegalStateException("Failed to locate Documents directory on iOS")
+    val dbFile = "$path/scoreprof.db"
+
     return Room.databaseBuilder<ScoreProfDatabase>(
         name = dbFile
     ).fallbackToDestructiveMigration(true)
+     .setJournalMode(RoomDatabase.JournalMode.DELETE) // Use DELETE mode for better stability on iOS
 }

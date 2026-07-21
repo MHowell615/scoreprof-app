@@ -1,5 +1,6 @@
 package cloud.scoreprof.app.di
 
+import cloud.scoreprof.app.SprofConfig
 import cloud.scoreprof.app.data.*
 import cloud.scoreprof.app.data.local.TokenManager
 import cloud.scoreprof.app.domain.usecase.*
@@ -11,9 +12,10 @@ import org.koin.dsl.module
 val appModule = module {
     // Services
     single { TokenManager(get()) }
+    single { FirebaseManager(get(), get()) }
     
     // Repositories
-    single<SetupRepository> { SetupRepositoryImpl(get(), get(), get(), get(), "YOUR_SPROF_AUTH_KEY") }
+    single<SetupRepository> { SetupRepositoryImpl(get(), get(), get(), get(), SprofConfig.AUTH_KEY) }
     single<VersionRepository> { VersionRepositoryImpl(get(), get()) }
     single<LeaguesRepository> { LeaguesRepositoryImpl(get(), get(), get(), get(), get()) }
     single<MatchRepository> { MatchRepositoryImpl(get(), get(), get(), get()) }

@@ -11,6 +11,11 @@
     <string name="password">Contraseña</string>
     <string name="competitions">Concursos</string>
     <string name="username">Nombre de usuario</string>
+    <string name="username_mandatory_msg">Es obligatorio un nombre de usuario para aparecer en las tablas de la liga.</string>
+    <string name="username_prompt_title">Añadir un nombre de usuario</string>
+    <string name="username_prompt_msg">Por favor, añade un nombre de usuario (por ejemplo, tu animal favorito) para aparecer en las tablas de la liga y seguir tus puntuaciones.</string>
+    <string name="username_invalid_msg">Este nombre de usuario contiene palabras restringidas. Por favor, elige otro.</string>
+    <string name="username_taken_msg">Este nombre de usuario ya está en uso. Por favor, elige otro.</string>
     <string name="email">Dirección de correo electrónico</string>
     <string name="create_new_league">Crear una nueva liga</string>
     <string name="invite_others">Invita a otras personas</string>
