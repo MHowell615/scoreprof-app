@@ -1,6 +1,7 @@
 import SwiftUI
 import Shared
 import FirebaseCore
+import FirebaseAnalytics
 
 @main
 struct iOSApp: App {
@@ -28,6 +29,7 @@ struct iOSApp: App {
                                let options = FirebaseOptions(contentsOfFile: plistPath) {
                                 options.apiKey = key
                                 FirebaseApp.configure(options: options)
+                                Analytics.setAnalyticsCollectionEnabled(true)
                                 print("Firebase key swapped to: \(key)")
                             }
                         }
