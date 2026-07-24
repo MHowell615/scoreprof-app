@@ -38,6 +38,8 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import cloud.scoreprof.app.data.FirebaseManager
+import cloud.scoreprof.app.data.BillingManager
+import cloud.scoreprof.app.data.BillingManagerImpl
 
 class MainActivity : ComponentActivity() {
 
@@ -45,6 +47,7 @@ class MainActivity : ComponentActivity() {
     private val dao: ScoreProfDao by inject()
     private val tokenManager: TokenManager by inject()
     private val firebaseManager: FirebaseManager by inject()
+    private val billingManager: BillingManager by inject()
 
     private val updateLauncher = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
@@ -129,6 +132,9 @@ class MainActivity : ComponentActivity() {
         checkNotificationPermission()
         scheduleNotificationWorker()
         initializeDynamicFirebase()
+        
+        // Setup billing activity
+        (billingManager as? BillingManagerImpl)?.currentActivity = this
 
         setContent {
             MaterialTheme {
@@ -198,5 +204,10 @@ class MainActivity : ComponentActivity() {
                 Log.e("MainActivity", "Error initializing Firebase dynamically: ${e.message}")
             }
         }
+    }
+
+    override fun onDestroy() {
+        (billingManager as? BillingManagerImpl)?.currentActivity = null
+        super.onDestroy()
     }
 }

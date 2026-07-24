@@ -13,6 +13,8 @@ class BillingManagerImpl(
     private val context: Context
 ) : BillingManager, PurchasesUpdatedListener {
 
+    var currentActivity: Activity? = null
+
     private val _purchaseSuccess = MutableSharedFlow<Boolean>()
     override val purchaseSuccess = _purchaseSuccess.asSharedFlow()
 
@@ -36,6 +38,12 @@ class BillingManagerImpl(
                 startConnection()
             }
         })
+    }
+
+    override fun purchasePremium(productId: String) {
+        currentActivity?.let { activity ->
+            launchPurchaseFlow(activity, productId)
+        }
     }
 
     fun launchPurchaseFlow(activity: Activity, productId: String) {

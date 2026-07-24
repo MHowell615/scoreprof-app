@@ -11,4 +11,8 @@ class IOSBillingManager : BillingManager {
     override fun queryPurchases() {
         // TODO: Implement iOS In-App Purchases
     }
+
+    override fun purchasePremium(productId: String) {
+        // TODO: Implement StoreKit 2 flow
+    }
 }

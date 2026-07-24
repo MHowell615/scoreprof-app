@@ -45,6 +45,7 @@ interface SetupRepository {
     suspend fun updateLanguage(language: String)
     suspend fun getSetting(key: String): String?
     suspend fun getFirebaseKey(): String?
+    suspend fun deleteAccount(): Result<Unit>
 }
 
 class SetupRepositoryImpl(
@@ -297,5 +298,25 @@ println("Token = $token")
     override suspend fun getFirebaseKey(): String? {
         val platformKey = if (platform.name.contains("iOS", ignoreCase = true)) "ios_firebase_key" else "android_firebase_key"
         return getSetting(platformKey)
+    }
+
+    override suspend fun deleteAccount(): Result<Unit> {
+        return try {
+            val response = httpClient.post("https://www.scoreprof.cloud/rpc/soft_delete_user") {
+                contentType(ContentType.Application.Json)
+                setBody(buildJsonObject {
+                    put("user_token", tokenManager.getToken() ?: "")
+                })
+            }
+            if (response.status.value in 200..299) {
+                Result.success(Unit)
+            } else {
+                val errorMsg = response.body<String>()
+                Result.failure(Exception(errorMsg))
+            }
+        } catch (e: Exception) {
+            logError(e.message.toString(), e.stackTraceToString(), platform.version.toString())
+            Result.failure(e)
+        }
     }
 }

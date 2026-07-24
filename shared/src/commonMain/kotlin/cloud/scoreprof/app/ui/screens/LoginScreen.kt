@@ -53,7 +53,7 @@ fun LoginScreen(
     var passwordInput by remember { mutableStateOf("") }
     val isLoading by viewModel.isLoading
     var passwordVisible by remember { mutableStateOf(false) }
-    val isPasswordTooShort = password.isNotEmpty() && password.length < 6
+    val isPasswordTooShort = passwordInput.isNotEmpty() && passwordInput.length < 6
     
     // Simple regex for email validation in KMP
     val isEmailValid = remember(email) {
@@ -204,7 +204,7 @@ fun LoginScreen(
                 OutlinedTextField(
                     value = passwordInput,
                     label = { Text(stringResource(Res.string.password)) },
-                    isError = isPasswordTooShort,
+                    isError = hasAttemptedLogin && (passwordInput.isEmpty() || isPasswordTooShort),
                     onValueChange = { passwordInput = it },
                     singleLine = true,
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -262,7 +262,10 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             hasAttemptedLogin = true
-                            if (isEmailValid && !isPasswordTooShort && email.isNotEmpty() && passwordsMatch) {
+                            val signupValid = !isLoginMode && isEmailValid && !isPasswordTooShort && passwordInput.isNotEmpty() && passwordsMatch && isAdultChecked
+                            val loginValid = isLoginMode && isEmailValid && passwordInput.isNotEmpty()
+
+                            if (signupValid || loginValid) {
                                 viewModel.onPasswordChange(passwordInput.trim())
                                 viewModel.login()
                             }

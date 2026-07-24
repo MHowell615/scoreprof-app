@@ -161,7 +161,11 @@
     <string name="allow_analytics_desc">Helps us improve ScoreProf with anonymous usage data.</string>
     <string name="legal_docs_title">Legal Documents</string>
     <string name="account_mgmt_title">Account Management</string>
-    <string name="request_deletion_title">Request Account Deletion</string>
+    <string name="request_deletion_title">Delete Account</string>
+    <string name="delete_account_confirm_title">Delete Account</string>
+    <string name="delete_account_confirm_msg">Are you sure you want to permanently delete your account and all associated data? This action cannot be undone.</string>
+    <string name="delete_btn">Delete</string>
+    <string name="cancel_btn">Cancel</string>
     <string name="deletion_desc">In accordance with GDPR, you have the right to be forgotten. To request the permanent removal of your account and all associated data, please contact support@muntjac-solutions.com.</string>
     <string name="privacy_policy_label">Privacy Policy</string>
     <string name="google_privacy_policy_label">Google Privacy Policy (Ads)</string>

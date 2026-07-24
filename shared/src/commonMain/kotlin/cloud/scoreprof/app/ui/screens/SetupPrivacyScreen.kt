@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalUriHandler
@@ -42,9 +43,18 @@ fun SetupPrivacyScreen(
     modifier: Modifier = Modifier
 ) {
     val setupState by setupViewModel.setup.collectAsState()
+    val uiState by setupViewModel.uiState.collectAsState()
     val uriHandler = LocalUriHandler.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState) {
+        if (uiState is ListSetupViewModel.HomeUiState.Error) {
+            snackbarHostState.showSnackbar((uiState as ListSetupViewModel.HomeUiState.Error).message)
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             Row(
                 modifier = Modifier
@@ -89,7 +99,7 @@ fun SetupPrivacyScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     ElevatedButton(
                         onClick = {
-                            // TODO: Multiplatform billing
+                            setupViewModel.purchasePremium()
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
@@ -256,14 +266,56 @@ fun SetupPrivacyScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(Res.string.request_deletion_title),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.error
-                )
+
+                var showDeleteDialog by remember { mutableStateOf(false) }
+
+                if (showDeleteDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showDeleteDialog = false },
+                        title = { Text("Delete Account") },
+                        text = { Text("Are you sure you want to permanently delete your account and all associated data? This action cannot be undone.") },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    showDeleteDialog = false
+                                    setupViewModel.deleteAccount {
+                                        navController.navigate("login") {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    }
+                                },
+                                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                            ) {
+                                Text("Delete")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showDeleteDialog = false }) {
+                                Text("Cancel")
+                            }
+                        }
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = { showDeleteDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.error),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text(
+                        text = stringResource(Res.string.request_deletion_title),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
                 Text(
                     text = stringResource(Res.string.deletion_desc),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }

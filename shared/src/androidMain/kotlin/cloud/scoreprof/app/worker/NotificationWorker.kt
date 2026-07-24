@@ -31,30 +31,25 @@ class NotificationWorker(
         }
 
         try {
-            // Check privacy setting first
-            val setup = setupRepository.getSetup(userId).firstOrNull()
-            if (setup?.receive_notifications != true) {
-                return Result.success()
-            }
-
-            // Fetch current unread notifications from DB to compare
-            // Note: Since we want to detect *new* ones, we could just look at what's about to be fetched.
-            // But fetchNotifications also updates the DB.
-            
+            // 1. ALWAYS fetch from server to update the "In-App" local database
             val fetched = notificationRepository.fetchNotifications(token, email)
-            
-            val lastNotifiedId = tokenManager.getLastNotifiedId()
-            val newUnread = fetched.filter { !it.isread && it.notificationid > lastNotifiedId }
-            
-            if (newUnread.isNotEmpty()) {
-                newUnread.forEach { notification ->
-                    platform.showSystemNotification(
-                        notification.title ?: "ScoreProf",
-                        notification.message ?: "You have a new message."
-                    )
+
+            // 2. Check privacy setting before showing a "Phone/System" notification
+            val setup = setupRepository.getSetup(userId).firstOrNull()
+            if (setup?.receive_notifications == true) {
+                val lastNotifiedId = tokenManager.getLastNotifiedId()
+                val newUnread = fetched.filter { !it.isread && it.notificationid > lastNotifiedId }
+
+                if (newUnread.isNotEmpty()) {
+                    newUnread.forEach { notification ->
+                        platform.showSystemNotification(
+                            notification.title ?: "ScoreProf",
+                            notification.message ?: "You have a new message."
+                        )
+                    }
+                    val maxId = newUnread.maxOf { it.notificationid }
+                    tokenManager.saveLastNotifiedId(maxId)
                 }
-                val maxId = newUnread.maxOf { it.notificationid }
-                tokenManager.saveLastNotifiedId(maxId)
             }
 
             return Result.success()

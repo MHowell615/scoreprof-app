@@ -30,6 +30,7 @@ dependencies {
     implementation("com.google.android.play:app-update-ktx:2.1.0")
     implementation("com.google.android.gms:play-services-ads:23.0.0")
     implementation("com.google.android.ump:user-messaging-platform:2.2.0")
+    implementation(libs.billing)
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-crashlytics")
@@ -44,8 +45,8 @@ android {
         applicationId = "cloud.scoreprof.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 42
-        versionName = "2.1.16"
+        versionCode = 43
+        versionName = "2.1.17"
     }
     packaging {
         resources {

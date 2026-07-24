@@ -232,6 +232,30 @@ class ListSetupViewModel(
         }
     }
 
+    fun deleteAccount(onComplete: () -> Unit) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val result = setupRepository.deleteAccount()
+                result.onSuccess {
+                    // Send notification as backup
+                    setupRepository.sendSupportMessage(
+                        category = "Account",
+                        subject = "DELETION COMPLETED",
+                        details = "User ${tokenManager.getUserId()} self-deleted via App."
+                    )
+                    logout { onComplete() }
+                }.onFailure { error ->
+                    _uiState.value = HomeUiState.Error(error.message ?: "Failed to delete account.")
+                }
+            } catch (e: Exception) {
+                _uiState.value = HomeUiState.Error("Connection error.")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
     fun softDeleteLeague(league: Leagues) {
         viewModelScope.launch {
             try {
@@ -552,6 +576,10 @@ class ListSetupViewModel(
                 println("Privacy update failed: ${e.message}")
             }
         }
+    }
+
+    fun purchasePremium() {
+        billingManager.purchasePremium("remove_ads_premium")
     }
 
     sealed class HomeUiState {
