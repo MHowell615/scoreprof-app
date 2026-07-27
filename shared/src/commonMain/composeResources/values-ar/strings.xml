@@ -118,7 +118,7 @@
     <string name="six_digit_code">رمز مكون من 6 أرقام</string>
     <string name="no_upcoming_matches">لا توجد مباريات قادمة</string>
     <string name="premium_title">فئة مميزة</string>
-    <string name="remove_ads_btn">إزالة جميع الإعلانات (اشتراك شهري)</string>
+    <string name="remove_ads_btn">إزالة جميع الإعلانات (0.99 € / شهر)</string>
     <string name="remove_ads_desc">استمتع بتجربة تصفح نظيفة وخالية من الإعلانات، وساهم في دعم تكاليف صيانة موقع ScoreProf وتكاليف الخادم.</string>
     <string name="receive_emails_desc">إدارة دعوات الانضمام إلى الدوريات وتحديثات المباريات المرسلة إلى بريدك الإلكتروني.</string>
     <string name="allow_analytics_desc">يساعدنا ذلك على تحسين ScoreProf من خلال بيانات الاستخدام المجهولة.</string>

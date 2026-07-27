@@ -120,7 +120,7 @@
     <string name="six_digit_code">Código de 6 dígitos</string>
     <string name="no_upcoming_matches">Não há jogos agendados</string>
     <string name="premium_title">Premium</string>
-    <string name="remove_ads_btn">Remover todos os anúncios (Assinatura mensal)</string>
+    <string name="remove_ads_btn">Remover todos os anúncios (0,99 € / mês)</string>
     <string name="remove_ads_desc">Desfrute de uma experiência limpa e sem anúncios, ao mesmo tempo que contribui para cobrir os custos de manutenção e de servidor do ScoreProf.</string>
     <string name="receive_emails_desc">Gerir os convites para ligas e as atualizações de jogos enviadas para o seu e-mail.</string>
     <string name="allow_analytics_desc">Ajude-nos a melhorar o ScoreProf com dados de utilização anónimos.</string>

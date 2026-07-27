@@ -153,7 +153,7 @@
     <string name="six_digit_code">6桁のコード</string>
     <string name="no_upcoming_matches">今後の試合はありません</string>
     <string name="premium_title">プレミアム</string>
-    <string name="remove_ads_btn">広告をすべて削除（月額購読）</string>
+    <string name="remove_ads_btn">すべての広告を削除 (0.99 € / 月)</string>
     <string name="remove_ads_desc">ScoreProfの維持管理費とサーバー費用を支援しながら、広告なしの快適な体験をお楽しみください。</string>
     <string name="receive_emails_desc">リーグへの招待や試合の最新情報がメールで送信されるので、それらを管理できます。</string>
     <string name="allow_analytics_desc">匿名化された利用データを提供することで、ScoreProfの改善に役立てることができます。</string>

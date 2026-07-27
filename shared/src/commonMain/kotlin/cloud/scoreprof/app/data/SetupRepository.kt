@@ -66,39 +66,45 @@ class SetupRepositoryImpl(
     }
 
     override suspend fun refreshSetupFromServer(userid: String, lang: String?) {
-        val isGuest = userid == "00000000-0000-0000-0000-000000000000"
-        val token = if (isGuest) "guest_token" else tokenManager.getToken() ?: ""
-println("Token = $token")
-        if (!isGuest && token.isBlank()) throw IllegalStateException("SESSION_EXPIRED")
+        try {
+            val isGuest = userid == "00000000-0000-0000-0000-000000000000"
+            val token = if (isGuest) "guest_token" else tokenManager.getToken() ?: ""
+            println("Token = $token")
+            if (!isGuest && token.isBlank()) throw IllegalStateException("SESSION_EXPIRED")
 
-        val language = lang ?: platform.language
-        val currentVersion = platform.version
+            val language = lang ?: platform.language
+            val currentVersion = platform.version
 
-        val url = if (currentVersion > 7) {
-            "https://www.scoreprof.cloud/rpc/getsetupdata?user_token=$token&lang=$language"
-        } else {
-            "https://www.scoreprof.cloud/rpc/getsetupdata?user_token=$token"
-        }
-        println("Fetching setup data from: $url")
-        val httpResponse = httpClient.get(url)
-        val responseString: String = httpResponse.body()
-        println("Setup response received. Status: ${httpResponse.status}, Sample: ${responseString.take(100)}")
-
-        if (httpResponse.status.value == 401 || httpResponse.status.value == 403 || responseString.contains("Invalid Session")) {
-            throw IllegalStateException("SESSION_EXPIRED")
-        }
-
-        if (httpResponse.status.value !in 200..299) {
-            throw IllegalStateException("SERVER_ERROR_${httpResponse.status.value}")
-        }
-
-        if (responseString.isNotBlank() && responseString != "null") {
-            val setupData = json.decodeFromString<Setup>(responseString)
-            withContext(Dispatchers.IO) {
-                dao.upsertSetup(setupData)
-                dao.upsertSetupCompetitions(setupData.competitions)
-                dao.upsertSetupLeagues(setupData.leagues)
+            val url = if (currentVersion > 7) {
+                "https://www.scoreprof.cloud/rpc/getsetupdata?user_token=$token&lang=$language"
+            } else {
+                "https://www.scoreprof.cloud/rpc/getsetupdata?user_token=$token"
             }
+            println("Fetching setup data from: $url")
+            val httpResponse = httpClient.get(url)
+            val responseString: String = httpResponse.body()
+            println("Setup response received. Status: ${httpResponse.status}, Sample: ${responseString.take(100)}")
+
+            if (httpResponse.status.value == 401 || httpResponse.status.value == 403 || responseString.contains("Invalid Session")) {
+                throw IllegalStateException("SESSION_EXPIRED")
+            }
+
+            if (httpResponse.status.value !in 200..299) {
+                throw IllegalStateException("SERVER_ERROR_${httpResponse.status.value}")
+            }
+
+            if (responseString.isNotBlank() && responseString != "null") {
+                val setupData = json.decodeFromString<Setup>(responseString)
+                withContext(Dispatchers.IO) {
+                    dao.upsertSetup(setupData)
+                    dao.upsertSetupCompetitions(setupData.competitions)
+                    dao.upsertSetupLeagues(setupData.leagues)
+                }
+            }
+        } catch (e: Exception) {
+            println("RefreshSetup error: ${e.message}")
+            // Don't rethrow here to prevent fatal crash on network abort
+            if (e.message?.contains("SESSION_EXPIRED") == true) throw e
         }
     }
 

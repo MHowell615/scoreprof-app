@@ -88,7 +88,8 @@ class MatchRepositoryImpl(
                 }
             }
         } catch (e: Exception) {
-            throw e
+            println("LoadMatches error: ${e.message}")
+            // Catching all to prevent fatal crash
         }
     }
 }

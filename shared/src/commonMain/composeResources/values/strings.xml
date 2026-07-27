@@ -155,7 +155,7 @@
     <string name="six_digit_code">6-Digit Code</string>
     <string name="no_upcoming_matches">No upcoming matches</string>
     <string name="premium_title">Premium</string>
-    <string name="remove_ads_btn">Remove All Ads (Monthly subscription)</string>
+    <string name="remove_ads_btn">Remove All Ads (0.99 € / Month)</string>
     <string name="remove_ads_desc">Enjoy a clean, ad-free experience while supporting ScoreProf maintenance and server costs.</string>
     <string name="receive_emails_desc">Manage league invitations and game updates sent to your email.</string>
     <string name="allow_analytics_desc">Helps us improve ScoreProf with anonymous usage data.</string>

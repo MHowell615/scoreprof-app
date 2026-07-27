@@ -22,21 +22,25 @@ class PredictionUpdateRepositoryImpl(
 ) : PredictionUpdateRepository {
 
     override suspend fun updatePredictionOnServer(predictionUpdate: UserPredictionUpdate) {
-        withContext(Dispatchers.IO) {
-            val token = tokenManager.getToken() ?: ""
-            val url = "https://www.scoreprof.cloud/rpc/update_user_prediction"
+        try {
+            withContext(Dispatchers.IO) {
+                val token = tokenManager.getToken() ?: ""
+                val url = "https://www.scoreprof.cloud/rpc/update_user_prediction"
 
-            val body = buildJsonObject {
-                put("user_token", token)
-                put("_competitor1selected", predictionUpdate.competitor1selected)
-                put("_competitor2selected", predictionUpdate.competitor2selected)
-                put("_matchid", predictionUpdate.matchid)
-            }
+                val body = buildJsonObject {
+                    put("user_token", token)
+                    put("_competitor1selected", predictionUpdate.competitor1selected)
+                    put("_competitor2selected", predictionUpdate.competitor2selected)
+                    put("_matchid", predictionUpdate.matchid)
+                }
 
-            httpClient.post(url) {
-                contentType(ContentType.Application.Json)
-                setBody(body)
+                httpClient.post(url) {
+                    contentType(ContentType.Application.Json)
+                    setBody(body)
+                }
             }
+        } catch (e: Exception) {
+            println("UpdatePrediction server error: ${e.message}")
         }
     }
 }

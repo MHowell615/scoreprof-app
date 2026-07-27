@@ -120,7 +120,7 @@
     <string name="six_digit_code">छह अंकों का कोड</string>
     <string name="no_upcoming_matches">कोई आगामी मैच नहीं</string>
     <string name="premium_title">प्रीमियम</string>
-    <string name="remove_ads_btn">सभी विज्ञापन हटाएँ (मासिक सदस्यता)</string>
+    <string name="remove_ads_btn">सभी विज्ञापन हटाएँ (0.99 € / महीना)</string>
     <string name="remove_ads_desc">ScoreProf के रखरखाव और सर्वर लागत का समर्थन करते हुए एक स्वच्छ, विज्ञापन-मुक्त अनुभव का आनंद लें।</string>
     <string name="receive_emails_desc">अपने ईमेल पर भेजे गए लीग निमंत्रणों और गेम अपडेट्स को प्रबंधित करें।</string>
     <string name="allow_analytics_desc">अनाम उपयोग डेटा के साथ ScoreProf को बेहतर बनाने में हमारी मदद करता है।</string>
