@@ -169,6 +169,7 @@
 		};
 		EEE9DA203009583B00D5BBD4 /* Firebase Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
