@@ -8,6 +8,7 @@ interface Platform {
     fun shareText(text: String)
     fun setLanguage(languageCode: String)
     fun showSystemNotification(title: String, message: String)
+    fun logEvent(name: String, params: Map<String, String>? = null)
 }
 
 expect fun getPlatform(): Platform

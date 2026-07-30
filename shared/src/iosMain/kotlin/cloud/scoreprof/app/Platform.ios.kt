@@ -13,6 +13,10 @@ import platform.Foundation.NSBundle
 import platform.Foundation.compare
 
 class IOSPlatform: Platform {
+    companion object {
+        var eventLogger: ((String, Map<String, String>?) -> Unit)? = null
+    }
+
     override val name: String = UIDevice.currentDevice.systemName + " " + UIDevice.currentDevice.systemVersion
     override val version: Int = (NSBundle.mainBundle.infoDictionary?.get("CFBundleVersion") as? String)?.toIntOrNull() ?: 0
     override val deviceModel: String = UIDevice.currentDevice.model
@@ -39,6 +43,10 @@ class IOSPlatform: Platform {
 
     override fun showSystemNotification(title: String, message: String) {
         // To be implemented using UserNotifications framework on a real Mac
+    }
+
+    override fun logEvent(name: String, params: Map<String, String>?) {
+        eventLogger?.invoke(name, params)
     }
 }
 

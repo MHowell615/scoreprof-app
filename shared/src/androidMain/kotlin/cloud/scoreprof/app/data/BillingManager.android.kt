@@ -20,7 +20,8 @@ class BillingManagerImpl(
 
     private var billingClient: BillingClient = BillingClient.newBuilder(context)
         .setListener(this)
-        .enablePendingPurchases()
+        .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+        .enableAutoServiceReconnection()
         .build()
 
     init {
@@ -35,7 +36,8 @@ class BillingManagerImpl(
                 }
             }
             override fun onBillingServiceDisconnected() {
-                startConnection()
+                // With enableAutoServiceReconnection(), we might not need to manually restart here, 
+                // but it's safe to keep a listener for logging or UI updates.
             }
         })
     }
@@ -56,22 +58,25 @@ class BillingManagerImpl(
 
         val params = QueryProductDetailsParams.newBuilder().setProductList(productList).build()
 
-        billingClient.queryProductDetailsAsync(params) { billingResult, productDetailsList ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && productDetailsList.isNotEmpty()) {
-                val productDetails = productDetailsList[0]
-                val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken ?: ""
+        billingClient.queryProductDetailsAsync(params) { billingResult, queryProductDetailsResult ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                val detailsList = queryProductDetailsResult.productDetailsList
+                if (detailsList.isNotEmpty()) {
+                    val productDetails = detailsList[0]
+                    val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken ?: ""
 
-                val flowParams = BillingFlowParams.newBuilder()
-                    .setProductDetailsParamsList(
-                        listOf(
-                            BillingFlowParams.ProductDetailsParams.newBuilder()
-                                .setProductDetails(productDetails)
-                                .setOfferToken(offerToken)
-                                .build()
+                    val flowParams = BillingFlowParams.newBuilder()
+                        .setProductDetailsParamsList(
+                            listOf(
+                                BillingFlowParams.ProductDetailsParams.newBuilder()
+                                    .setProductDetails(productDetails)
+                                    .setOfferToken(offerToken)
+                                    .build()
+                            )
                         )
-                    )
-                    .build()
-                billingClient.launchBillingFlow(activity, flowParams)
+                        .build()
+                    billingClient.launchBillingFlow(activity, flowParams)
+                }
             }
         }
     }

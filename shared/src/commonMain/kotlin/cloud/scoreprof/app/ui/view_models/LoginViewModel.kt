@@ -109,6 +109,11 @@ class LoginViewModel(
                 tokenManager.saveUserId(loginResponse.u_id)
                 tokenManager.saveEmail(currentEmail)
 
+                // Log Analytics Event
+                val isLogin = _isLoginMode.value
+                val eventName = if (isLogin) "login" else "sign_up_complete"
+                platform.logEvent(eventName, mapOf("method" to "email"))
+
                 // Update server-side profile language immediately after login
                 val currentLang = platform.language
                 try {

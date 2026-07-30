@@ -115,6 +115,8 @@ kotlin {
             implementation(libs.androidx.work.runtime.ktx)
             implementation("com.google.android.gms:play-services-ads:23.0.0")
             implementation("com.google.code.gson:gson:2.10.1")
+            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.1.0"))
+            implementation("com.google.firebase:firebase-analytics")
         }
         if (isIosEnabled) {
             iosMain.dependencies {

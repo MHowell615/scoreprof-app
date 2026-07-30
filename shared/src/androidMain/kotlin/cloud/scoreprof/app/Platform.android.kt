@@ -18,9 +18,12 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import androidx.core.content.ContextCompat
+import com.google.firebase.analytics.FirebaseAnalytics
+import android.os.Bundle
 
 class AndroidPlatform : Platform {
     private val context = getAppContext()
+    private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
 
     override val version: Int = try {
@@ -103,6 +106,14 @@ class AndroidPlatform : Platform {
         context.startActivity(Intent.createChooser(intent, null).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         })
+    }
+
+    override fun logEvent(name: String, params: Map<String, String>?) {
+        val bundle = Bundle()
+        params?.forEach { (key, value) ->
+            bundle.putString(key, value)
+        }
+        firebaseAnalytics.logEvent(name, bundle)
     }
 }
 
