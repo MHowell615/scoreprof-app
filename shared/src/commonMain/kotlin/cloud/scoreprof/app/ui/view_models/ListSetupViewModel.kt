@@ -81,6 +81,9 @@ class ListSetupViewModel(
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents = _navigationEvents.asSharedFlow()
 
+    private val _messageEvents = MutableSharedFlow<String>()
+    val messageEvents = _messageEvents.asSharedFlow()
+
     private val _showOnlyUpcoming = MutableStateFlow(false)
     val showOnlyUpcoming = _showOnlyUpcoming.asStateFlow()
 
@@ -100,8 +103,12 @@ class ListSetupViewModel(
 
         viewModelScope.launch {
             billingManager.purchaseSuccess.collect { success ->
+                _isLoading.value = false
                 if (success) {
                     onAdsRemovedSuccessfully()
+                    _messageEvents.emit("Success: Ads removed!") 
+                } else {
+                    _messageEvents.emit("Action could not be completed. Check store connection.")
                 }
             }
         }
@@ -144,6 +151,7 @@ class ListSetupViewModel(
     }
 
     private fun onAdsRemovedSuccessfully() {
+        _isLoading.value = false
         val currentSetup = _setup.value ?: return
         val updatedSetup = currentSetup.copy(is_ads_removed = true)
         _setup.value = updatedSetup
@@ -152,6 +160,7 @@ class ListSetupViewModel(
             try {
                 dao.insertSetup(updatedSetup)
                 setupRepository.updateAdsRemoved(true)
+                _uiState.value = HomeUiState.Idle // Clear any error/loading
             } catch (e: Exception) {
                 println("Failed to sync ad removal status: ${e.message}")
             }
@@ -579,10 +588,36 @@ class ListSetupViewModel(
     }
 
     fun purchasePremium() {
+        println("ViewModel: purchasePremium clicked")
+        _isLoading.value = true
+        
+        // Add a safety timeout to stop the spinner if the platform billing fails to respond
+        viewModelScope.launch {
+            delay(30000) // 30 seconds
+            if (_isLoading.value) {
+                println("ViewModel: Purchase flow timeout")
+                _isLoading.value = false
+                _messageEvents.emit("Connection timed out. Please try again.")
+            }
+        }
+        
         billingManager.purchasePremium(billingManager.premiumProductId)
     }
 
     fun restorePurchases() {
+        println("ViewModel: restorePurchases clicked")
+        _isLoading.value = true
+
+        // Add a safety timeout for restore as well
+        viewModelScope.launch {
+            delay(30000) // 30 seconds
+            if (_isLoading.value) {
+                println("ViewModel: Restore flow timeout")
+                _isLoading.value = false
+                _messageEvents.emit("Restore timed out. No active subscription found.")
+            }
+        }
+
         billingManager.restorePurchases()
     }
 

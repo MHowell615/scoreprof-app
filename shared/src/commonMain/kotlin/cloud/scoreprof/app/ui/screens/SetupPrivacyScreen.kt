@@ -46,8 +46,15 @@ fun SetupPrivacyScreen(
 ) {
     val setupState by setupViewModel.setup.collectAsState()
     val uiState by setupViewModel.uiState.collectAsState()
+    val isLoading by setupViewModel.isLoading.collectAsState()
     val uriHandler = LocalUriHandler.current
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        setupViewModel.messageEvents.collect { message ->
+            snackbarHostState.showSnackbar(message)
+        }
+    }
 
     LaunchedEffect(uiState) {
         if (uiState is ListSetupViewModel.HomeUiState.Error) {
@@ -105,20 +112,30 @@ fun SetupPrivacyScreen(
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(8.dp),
+                        enabled = !isLoading,
                         colors = ButtonDefaults.elevatedButtonColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     ) {
-                        Icon(Icons.Default.Star, contentDescription = null)
-                        Spacer(Modifier.width(8.dp))
-                        Text(stringResource(Res.string.remove_ads_btn))
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Icon(Icons.Default.Star, contentDescription = null)
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringResource(Res.string.remove_ads_btn))
+                        }
                     }
                     TextButton(
                         onClick = {
                             setupViewModel.restorePurchases()
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading
                     ) {
                         Text(
                             text = stringResource(Res.string.restore_purchases_btn),

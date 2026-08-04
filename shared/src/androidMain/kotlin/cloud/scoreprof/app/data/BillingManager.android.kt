@@ -45,16 +45,22 @@ class BillingManagerImpl(
     }
 
     override fun purchasePremium(productId: String) {
+        println("Billing: purchasePremium called for $productId")
+        if (currentActivity == null) {
+            println("Billing: Error - currentActivity is NULL")
+        }
         currentActivity?.let { activity ->
             launchPurchaseFlow(activity, productId)
         }
     }
 
     override fun restorePurchases() {
+        println("Billing: restorePurchases called")
         queryPurchases()
     }
 
     fun launchPurchaseFlow(activity: Activity, productId: String) {
+        println("Billing: launchPurchaseFlow for $productId")
         val productList = listOf(
             QueryProductDetailsParams.Product.newBuilder()
                 .setProductId(productId)
@@ -65,8 +71,10 @@ class BillingManagerImpl(
         val params = QueryProductDetailsParams.newBuilder().setProductList(productList).build()
 
         billingClient.queryProductDetailsAsync(params) { billingResult, queryProductDetailsResult ->
+            println("Billing: queryProductDetailsAsync result: ${billingResult.responseCode} - ${billingResult.debugMessage}")
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 val detailsList = queryProductDetailsResult.productDetailsList
+                println("Billing: Found ${detailsList.size} products")
                 if (detailsList.isNotEmpty()) {
                     val productDetails = detailsList[0]
                     val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken ?: ""
@@ -81,7 +89,17 @@ class BillingManagerImpl(
                             )
                         )
                         .build()
+                    println("Billing: Launching billing flow")
                     billingClient.launchBillingFlow(activity, flowParams)
+                } else {
+                    println("Billing: No product details found for $productId. Check if the ID matches Play Console and if the user is a licensed tester.")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        _purchaseSuccess.emit(false) // Trigger UI to stop loading
+                    }
+                }
+            } else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    _purchaseSuccess.emit(false) // Trigger UI to stop loading on error
                 }
             }
         }
@@ -124,6 +142,11 @@ class BillingManagerImpl(
                 }
                 CoroutineScope(Dispatchers.IO).launch {
                     _purchaseSuccess.emit(hasPremium)
+                }
+            } else {
+                println("Billing: queryPurchasesAsync error: ${billingResult.responseCode}")
+                CoroutineScope(Dispatchers.IO).launch {
+                    _purchaseSuccess.emit(false)
                 }
             }
         }
