@@ -33,6 +33,8 @@ import scoreprof_resources.deletion_desc
 import scoreprof_resources.account_mgmt_title
 import scoreprof_resources.google_privacy_policy_label
 import scoreprof_resources.premium_title
+import scoreprof_resources.restore_purchases_btn
+import scoreprof_resources.terms_of_use_label
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 import org.jetbrains.compose.resources.stringResource
 
@@ -111,6 +113,17 @@ fun SetupPrivacyScreen(
                         Icon(Icons.Default.Star, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
                         Text(stringResource(Res.string.remove_ads_btn))
+                    }
+                    TextButton(
+                        onClick = {
+                            setupViewModel.restorePurchases()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.restore_purchases_btn),
+                            style = MaterialTheme.typography.labelLarge
+                        )
                     }
                     Text(
                         text = stringResource(Res.string.remove_ads_desc),
@@ -210,6 +223,21 @@ fun SetupPrivacyScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.height(12.dp))
+
+                TextButton(
+                    onClick = { uriHandler.openUri("https://www.apple.com/legal/internet-services/itunes/dev/stdeula/") },
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(Res.string.terms_of_use_label), style = MaterialTheme.typography.bodyLarge)
+                        Spacer(Modifier.weight(1f))
+                        Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
+                    }
+                }
 
                 TextButton(
                     onClick = { uriHandler.openUri("https://www.muntjac-solutions.com/privacy") },

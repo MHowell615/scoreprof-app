@@ -129,7 +129,9 @@
     <string name="request_deletion_title">खाता हटाने का अनुरोध</string>
     <string name="deletion_desc">GDPR के अनुसार, आपको भुलाए जाने का अधिकार है। अपने खाते और उससे संबंधित सभी डेटा को स्थायी रूप से हटाने का अनुरोध करने के लिए, कृपया support@muntjac-solutions.com पर संपर्क करें।</string>
     <string name="privacy_policy_label">गोपनीयता नीति</string>
+    <string name="terms_of_use_label">उपयोग की शर्तें (EULA)</string>
     <string name="legal_notice_label">कानूनी सूचना (कानूनी उल्लेख)</string>
+    <string name="restore_purchases_btn">खरीदारी पुनर्स्थापित करें</string>
     <string name="notif_invited_title">आपको आमंत्रित किया गया है!</string>
     <string name="notif_invite_msg_body">आपके पास %1$s से लीग %2$s में शामिल होने का एक लंबित निमंत्रण है। भाग लेने के लिए, सेटअप लीग्स अनुभाग में अपनी स्वीकृति की पुष्टि करें।</string>
     <string name="go_to_setup_leagues_btn">लीग सेटअप पर जाएं</string>

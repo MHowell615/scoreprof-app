@@ -2,13 +2,16 @@
 *.jks
 *.keystore
 *.log
+*.aab
 .kotlin
 .gradle
 **/build/
+**/release/
 **/local.properties
 **/gradle.properties
 xcuserdata
 !src/**/build/
+!src/**/release/
 **/google-services.json
 local.properties
 gradle.properties

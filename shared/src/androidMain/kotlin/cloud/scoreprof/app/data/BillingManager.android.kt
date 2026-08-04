@@ -18,6 +18,8 @@ class BillingManagerImpl(
     private val _purchaseSuccess = MutableSharedFlow<Boolean>()
     override val purchaseSuccess = _purchaseSuccess.asSharedFlow()
 
+    override val premiumProductId: String = "remove_ads_premium"
+
     private var billingClient: BillingClient = BillingClient.newBuilder(context)
         .setListener(this)
         .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
@@ -46,6 +48,10 @@ class BillingManagerImpl(
         currentActivity?.let { activity ->
             launchPurchaseFlow(activity, productId)
         }
+    }
+
+    override fun restorePurchases() {
+        queryPurchases()
     }
 
     fun launchPurchaseFlow(activity: Activity, productId: String) {
@@ -113,7 +119,7 @@ class BillingManagerImpl(
         billingClient.queryPurchasesAsync(params) { billingResult, purchases ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 val hasPremium = purchases.any { purchase ->
-                    purchase.products.contains("remove_ads_premium") &&
+                    purchase.products.contains(premiumProductId) &&
                             purchase.purchaseState == Purchase.PurchaseState.PURCHASED
                 }
                 CoroutineScope(Dispatchers.IO).launch {

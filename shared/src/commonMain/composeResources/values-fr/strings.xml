@@ -161,7 +161,10 @@
     <string name="request_deletion_title">Demander la suppression de mon compte</string>
     <string name="deletion_desc">Conformément au RGPD, vous disposez d\'un droit à l\'oubli. Pour demander la suppression définitive de votre compte et de toutes les données associées, veuillez contacter support@muntjac-solutions.com.</string>
     <string name="privacy_policy_label">Politique de confidentialité</string>
+    <string name="terms_of_use_label">Conditions d\'utilisation (EULA)</string>
+    <string name="google_privacy_policy_label">Politique de confidentialité Google (Ads)</string>
     <string name="legal_notice_label">Mentions légales</string>
+    <string name="restore_purchases_btn">Restaurer les achats</string>
     <string name="notif_invited_title">Vous êtes invité !</string>
     <string name="notif_invite_msg_body">Vous avez reçu une invitation de %1$s pour rejoindre la ligue : %2$s. Pour y participer, confirmez votre adhésion dans la section « Configurer les ligues ».</string>
     <string name="go_to_setup_leagues_btn">Aller à la configuration des ligues</string>

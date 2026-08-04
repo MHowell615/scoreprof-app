@@ -162,7 +162,9 @@
     <string name="request_deletion_title">アカウント削除依頼</string>
     <string name="deletion_desc">GDPR（一般データ保護規則）に基づき、お客様には「忘れられる権利」があります。アカウントおよび関連するすべてのデータの完全削除をご希望の場合は、support@muntjac-solutions.comまでご連絡ください。</string>
     <string name="privacy_policy_label">プライバシーポリシー</string>
+    <string name="terms_of_use_label">利用規約 (EULA)</string>
     <string name="legal_notice_label">法的通知</string>
+    <string name="restore_purchases_btn">購入を復元</string>
     <string name="notif_invited_title">ご招待しました！</string>
     <string name="notif_invite_msg_body">%1$s からリーグ参加の招待が届いています。参加するには、「リーグ設定」セクションで参加を承認してください。</string>
     <string name="go_to_setup_leagues_btn">リーグ設定へ移動</string>

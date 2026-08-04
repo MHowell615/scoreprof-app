@@ -579,7 +579,11 @@ class ListSetupViewModel(
     }
 
     fun purchasePremium() {
-        billingManager.purchasePremium("remove_ads_premium")
+        billingManager.purchasePremium(billingManager.premiumProductId)
+    }
+
+    fun restorePurchases() {
+        billingManager.restorePurchases()
     }
 
     sealed class HomeUiState {

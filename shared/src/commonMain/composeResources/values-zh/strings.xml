@@ -162,7 +162,9 @@
     <string name="request_deletion_title">请求删除帐户</string>
     <string name="deletion_desc">根据《通用数据保护条例》(GDPR)，您有权被遗忘。如需永久删除您的帐户及所有相关数据，请联系 support@muntjac-solutions.com。</string>
     <string name="privacy_policy_label">隐私政策</string>
+    <string name="terms_of_use_label">使用条款 (EULA)</string>
     <string name="legal_notice_label">法律声明</string>
+    <string name="restore_purchases_btn">恢复购买</string>
     <string name="notif_invited_title">您已收到邀请！</string>
     <string name="notif_invite_msg_body">您已收到来自 %1$s 的加入联赛的邀请。如需参加，请在“设置联赛”部分确认接受邀请。</string>
     <string name="go_to_setup_leagues_btn">前往“设置联赛”页面</string>
