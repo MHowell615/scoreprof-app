@@ -150,6 +150,8 @@
     <string name="help_answer13">انتقل إلى "الإعدادات" > "الخصوصية" وانقر على الزر للاشتراك في الخيار المميز الذي يمنع عرض الإعلانات في التطبيق.</string>
     <string name="continue_as_guest">المتابعة كزائر</string>
     <string name="guest_user">مستخدم ضيف</string>
+    <string name="manage_subscription_btn">إدارة الاشتراك</string>
+    <string name="premium_active_msg">بريميوم مفعل: تمت إزالة الإعلانات</string>
     <string name="login_required_title">تسجيل الدخول مطلوب</string>
     <string name="login_required_msg">يرجى تسجيل الدخول أو الاشتراك لاستخدام هذه الميزة.</string>
     <string name="age_certification">أُقرُّ بأنني أبلغ من العمر 18 عاماً أو أكثر.</string>

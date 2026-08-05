@@ -152,6 +152,8 @@
     <string name="private_leagues">निजी लीग</string>
     <string name="continue_as_guest">अतिथि के रूप में जारी रखें</string>
     <string name="guest_user">अतिथि उपयोगकर्ता</string>
+    <string name="manage_subscription_btn">सदस्यता प्रबंधित करें</string>
+    <string name="premium_active_msg">प्रीमियम सक्रिय: विज्ञापन हटा दिए गए</string>
     <string name="login_required_title">लॉगिन आवश्यक है</string>
     <string name="login_required_msg">इस फ़ीचर का इस्तेमाल करने के लिए कृपया लॉग इन या साइन अप करें।</string>
     <string name="age_certification">मैं प्रमाणित करता हूँ कि मेरी आयु 18 वर्ष या उससे अधिक है।</string>

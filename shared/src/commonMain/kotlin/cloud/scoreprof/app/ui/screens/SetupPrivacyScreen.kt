@@ -35,6 +35,8 @@ import scoreprof_resources.google_privacy_policy_label
 import scoreprof_resources.premium_title
 import scoreprof_resources.restore_purchases_btn
 import scoreprof_resources.terms_of_use_label
+import scoreprof_resources.manage_subscription_btn
+import scoreprof_resources.premium_active_msg
 import cloud.scoreprof.app.ui.view_models.ListSetupViewModel
 import org.jetbrains.compose.resources.stringResource
 
@@ -47,6 +49,7 @@ fun SetupPrivacyScreen(
     val setupState by setupViewModel.setup.collectAsState()
     val uiState by setupViewModel.uiState.collectAsState()
     val isLoading by setupViewModel.isLoading.collectAsState()
+    val formattedPrice by setupViewModel.formattedPrice.collectAsState()
     val uriHandler = LocalUriHandler.current
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -127,7 +130,14 @@ fun SetupPrivacyScreen(
                         } else {
                             Icon(Icons.Default.Star, contentDescription = null)
                             Spacer(Modifier.width(8.dp))
-                            Text(stringResource(Res.string.remove_ads_btn))
+                            Text(
+                                text = if (formattedPrice != null) {
+                                    stringResource(Res.string.remove_ads_btn)
+                                        .replace("0.99 € / Month", "$formattedPrice / Month")
+                                } else {
+                                    stringResource(Res.string.remove_ads_btn)
+                                }
+                            )
                         }
                     }
                     TextButton(
@@ -146,6 +156,41 @@ fun SetupPrivacyScreen(
                         text = stringResource(Res.string.remove_ads_desc),
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = 4.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
+                item {
+                    Text(
+                        text = stringResource(Res.string.premium_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    OutlinedButton(
+                        onClick = {
+                            val url = if (setupViewModel.platform.name.contains("Android", ignoreCase = true)) {
+                                "https://play.google.com/store/account/subscriptions?package=cloud.scoreprof.app"
+                            } else {
+                                "https://apps.apple.com/account/subscriptions"
+                            }
+                            uriHandler.openUri(url)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                    ) {
+                        Icon(Icons.Default.Star, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(Res.string.manage_subscription_btn))
+                    }
+                    
+                    Text(
+                        text = stringResource(Res.string.premium_active_msg),
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 8.dp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

@@ -6,7 +6,11 @@ import com.android.billingclient.api.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class BillingManagerImpl(
@@ -17,6 +21,9 @@ class BillingManagerImpl(
 
     private val _purchaseSuccess = MutableSharedFlow<Boolean>()
     override val purchaseSuccess = _purchaseSuccess.asSharedFlow()
+
+    private val _formattedPrice = MutableStateFlow<String?>(null)
+    override val formattedPrice = _formattedPrice.asStateFlow()
 
     override val premiumProductId: String = "remove_ads_premium"
 
@@ -77,6 +84,11 @@ class BillingManagerImpl(
                 println("Billing: Found ${detailsList.size} products")
                 if (detailsList.isNotEmpty()) {
                     val productDetails = detailsList[0]
+                    
+                    // Capture the localized price string
+                    val price = productDetails.subscriptionOfferDetails?.firstOrNull()?.pricingPhases?.pricingPhaseList?.firstOrNull()?.formattedPrice
+                    _formattedPrice.value = price
+
                     val offerToken = productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken ?: ""
 
                     val flowParams = BillingFlowParams.newBuilder()

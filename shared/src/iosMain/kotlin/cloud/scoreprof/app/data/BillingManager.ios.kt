@@ -1,8 +1,11 @@
 package cloud.scoreprof.app.data
 
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import platform.StoreKit.*
 import platform.Foundation.*
 import platform.darwin.*
@@ -17,6 +20,10 @@ private var productsRequest: SKProductsRequest? = null
 class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
     private val _purchaseSuccess = MutableSharedFlow<Boolean>()
     override val purchaseSuccess: SharedFlow<Boolean> = _purchaseSuccess.asSharedFlow()
+
+    private val _formattedPrice = MutableStateFlow<String?>(null)
+    override val formattedPrice: StateFlow<String?> = _formattedPrice.asStateFlow()
+
     private val scope = CoroutineScope(Dispatchers.Main)
 
     override val premiumProductId: String = "Monthly_Ad_Removal_Subscription"
@@ -38,6 +45,12 @@ class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
             override fun productsRequest(request: SKProductsRequest, didReceiveResponse: SKProductsResponse) {
                 val product = didReceiveResponse.products.firstOrNull() as? SKProduct
                 if (product != null) {
+                    // Localized price for iOS
+                    val formatter = NSNumberFormatter()
+                    formatter.numberStyle = NSNumberFormatterCurrencyStyle
+                    formatter.locale = product.priceLocale
+                    _formattedPrice.value = formatter.stringFromNumber(product.price)
+
                     val payment = SKPayment.paymentWithProduct(product)
                     SKPaymentQueue.defaultQueue().addPayment(payment)
                 } else {

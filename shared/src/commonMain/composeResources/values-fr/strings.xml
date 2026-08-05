@@ -185,6 +185,8 @@
     <string name="private_leagues">Ligues privées</string>
     <string name="continue_as_guest">Continuer en tant qu'invité</string>
     <string name="guest_user">Utilisateur invité</string>
+    <string name="manage_subscription_btn">Gérer l\'abonnement</string>
+    <string name="premium_active_msg">Premium actif : publicités supprimées</string>
     <string name="login_required_title">Connexion requise</string>
     <string name="login_required_msg">Veuillez vous connecter ou vous inscrire pour utiliser cette fonctionnalité.</string>
     <string name="age_certification">Je certifie être âgé de 18 ans ou plus.</string>

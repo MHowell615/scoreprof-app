@@ -45,7 +45,7 @@ class ListSetupViewModel(
     private val billingManager: BillingManager,
     private val dao: ScoreProfDao,
     private val httpClient: HttpClient,
-    private val platform: Platform
+    val platform: Platform
 ) : ViewModel() {
 
     private var _userid: String = try {
@@ -77,6 +77,8 @@ class ListSetupViewModel(
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
+
+    val formattedPrice = billingManager.formattedPrice
 
     private val _navigationEvents = MutableSharedFlow<NavigationEvent>()
     val navigationEvents = _navigationEvents.asSharedFlow()

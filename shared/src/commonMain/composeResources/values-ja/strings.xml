@@ -183,6 +183,8 @@
     <string name="private_leagues">プライベートリーグ</string>
     <string name="continue_as_guest">ゲストとして続行</string>
     <string name="guest_user">ゲストユーザー</string>
+    <string name="manage_subscription_btn">サブスクリプションを管理</string>
+    <string name="premium_active_msg">プレミアム有効：広告削除済み</string>
     <string name="login_required_title">ログインが必要です</string>
     <string name="login_required_msg">この機能を利用するには、ログインまたは新規登録を行ってください。</string>
     <string name="age_certification">私は18歳以上であることを証明します。</string>

@@ -153,6 +153,8 @@
     <string name="private_leagues">Leghe private</string>
     <string name="continue_as_guest">Continua come ospite</string>
     <string name="guest_user">Utente ospite</string>
+    <string name="manage_subscription_btn">Gestisci abbonamento</string>
+    <string name="premium_active_msg">Premium attivo: annunci rimossi</string>
     <string name="login_required_title">Accesso richiesto</string>
     <string name="login_required_msg">Accedi o registrati per utilizzare questa funzionalità.</string>
     <string name="age_certification">Dichiaro di avere almeno 18 anni.</string>

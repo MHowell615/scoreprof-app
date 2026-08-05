@@ -183,6 +183,8 @@
     <string name="private_leagues">私人联赛</string>
     <string name="continue_as_guest">以访客身份继续</string>
     <string name="guest_user">访客用户</string>
+    <string name="manage_subscription_btn">管理订阅</string>
+    <string name="premium_active_msg">高级版已激活：广告已移除</string>
     <string name="login_required_title">需要登录</string>
     <string name="login_required_msg">请登录或注册以使用此功能。</string>
     <string name="age_certification">我确认自己已年满 18 岁。</string>

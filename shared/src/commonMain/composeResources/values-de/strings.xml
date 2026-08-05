@@ -153,6 +153,8 @@
     <string name="private_leagues">Private Ligen</string>
     <string name="continue_as_guest">Als Gast fortfahren</string>
     <string name="guest_user">Gastbenutzer</string>
+    <string name="manage_subscription_btn">Abonnement verwalten</string>
+    <string name="premium_active_msg">Premium aktiv: Werbung entfernt</string>
     <string name="login_required_title">Anmeldung erforderlich</string>
     <string name="login_required_msg">Bitte melden Sie sich an oder registrieren Sie sich, um diese Funktion zu nutzen.</string>
     <string name="age_certification">Ich bestätige, dass ich 18 Jahre oder älter bin.</string>
