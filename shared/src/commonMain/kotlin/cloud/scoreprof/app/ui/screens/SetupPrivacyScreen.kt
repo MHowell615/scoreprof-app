@@ -141,7 +141,7 @@ fun SetupPrivacyScreen(
                             )
                         }
                     }
-                    TextButton(
+                    /*TextButton(
                         onClick = {
                             setupViewModel.restorePurchases()
                         },
@@ -152,7 +152,7 @@ fun SetupPrivacyScreen(
                             text = stringResource(Res.string.restore_purchases_btn),
                             style = MaterialTheme.typography.labelLarge
                         )
-                    }
+                    }*/
                     Text(
                         text = stringResource(Res.string.remove_ads_desc),
                         style = MaterialTheme.typography.bodySmall,
