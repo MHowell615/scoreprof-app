@@ -22,7 +22,7 @@ class IOSBillingManager : BillingManager {
     private val _formattedPrice = MutableStateFlow<String?>(null)
     override val formattedPrice: StateFlow<String?> = _formattedPrice.asStateFlow()
 
-    override val premiumProductId: String = "Monthly_Ad_Removal_Subscription"
+    override val premiumProductId: String = "cloud.scoreprof.premium.monthly"
 
     private val scope = CoroutineScope(Dispatchers.Main)
     
