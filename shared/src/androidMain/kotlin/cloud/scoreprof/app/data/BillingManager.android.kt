@@ -19,8 +19,8 @@ class BillingManagerImpl(
 
     var currentActivity: Activity? = null
 
-    private val _purchaseSuccess = MutableSharedFlow<Boolean>()
-    override val purchaseSuccess = _purchaseSuccess.asSharedFlow()
+    private val _isPremium = MutableStateFlow<Boolean?>(null)
+    override val isPremium = _isPremium.asStateFlow()
 
     private val _formattedPrice = MutableStateFlow<String?>(null)
     override val formattedPrice = _formattedPrice.asStateFlow()
@@ -105,14 +105,10 @@ class BillingManagerImpl(
                     billingClient.launchBillingFlow(activity, flowParams)
                 } else {
                     println("Billing: No product details found for $productId. Check if the ID matches Play Console and if the user is a licensed tester.")
-                    CoroutineScope(Dispatchers.IO).launch {
-                        _purchaseSuccess.emit(false) // Trigger UI to stop loading
-                    }
+                    _isPremium.value = false
                 }
             } else {
-                CoroutineScope(Dispatchers.IO).launch {
-                    _purchaseSuccess.emit(false) // Trigger UI to stop loading on error
-                }
+                _isPremium.value = false
             }
         }
     }
@@ -133,9 +129,7 @@ class BillingManagerImpl(
 
             billingClient.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        _purchaseSuccess.emit(true)
-                    }
+                    _isPremium.value = true
                 }
             }
         }
@@ -152,14 +146,10 @@ class BillingManagerImpl(
                     purchase.products.contains(premiumProductId) &&
                             purchase.purchaseState == Purchase.PurchaseState.PURCHASED
                 }
-                CoroutineScope(Dispatchers.IO).launch {
-                    _purchaseSuccess.emit(hasPremium)
-                }
+                _isPremium.value = hasPremium
             } else {
                 println("Billing: queryPurchasesAsync error: ${billingResult.responseCode}")
-                CoroutineScope(Dispatchers.IO).launch {
-                    _purchaseSuccess.emit(false)
-                }
+                _isPremium.value = false
             }
         }
     }

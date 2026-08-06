@@ -18,8 +18,8 @@ import kotlin.native.concurrent.ThreadLocal
 private var productsRequest: SKProductsRequest? = null
 
 class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
-    private val _purchaseSuccess = MutableSharedFlow<Boolean>()
-    override val purchaseSuccess: SharedFlow<Boolean> = _purchaseSuccess.asSharedFlow()
+    private val _isPremium = MutableStateFlow<Boolean?>(null)
+    override val isPremium: StateFlow<Boolean?> = _isPremium.asStateFlow()
 
     private val _formattedPrice = MutableStateFlow<String?>(null)
     override val formattedPrice: StateFlow<String?> = _formattedPrice.asStateFlow()
@@ -72,13 +72,12 @@ class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
                 when (transaction.transactionState) {
                     SKPaymentTransactionState.SKPaymentTransactionStatePurchased,
                     SKPaymentTransactionState.SKPaymentTransactionStateRestored -> {
-                        scope.launch {
-                            _purchaseSuccess.emit(true)
-                        }
+                        _isPremium.value = true
                         SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                     }
                     SKPaymentTransactionState.SKPaymentTransactionStateFailed -> {
                         println("Purchase failed: ${transaction.error?.localizedDescription}")
+                        _isPremium.value = false
                         SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                     }
                     else -> {}

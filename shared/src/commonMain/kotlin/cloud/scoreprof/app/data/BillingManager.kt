@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 interface BillingManager {
-    val purchaseSuccess: SharedFlow<Boolean>
+    val isPremium: StateFlow<Boolean?>
     val premiumProductId: String
     val formattedPrice: StateFlow<String?>
     fun queryPurchases()

@@ -104,13 +104,29 @@ class ListSetupViewModel(
         startWatchdogTimer()
 
         viewModelScope.launch {
-            billingManager.purchaseSuccess.collect { success ->
-                _isLoading.value = false
-                if (success) {
-                    onAdsRemovedSuccessfully()
-                    _messageEvents.emit("Success: Ads removed!") 
-                } else {
-                    _messageEvents.emit("Action could not be completed. Check store connection.")
+            combine(billingManager.isPremium, _setup) { isPremium, setup ->
+                Pair(isPremium, setup)
+            }.collect { (isPremium, setup) ->
+                if (isPremium != null && setup != null) {
+                    val wasManualAction = _isLoading.value
+                    
+                    // Only sync if the local DB state is different from the Store state
+                    if (setup.is_ads_removed != isPremium) {
+                        _isLoading.value = false
+                        syncAdsRemovedStatus(isPremium)
+
+                        // Only show success/fail messages for manual actions
+                        if (wasManualAction) {
+                            if (isPremium) {
+                                _messageEvents.emit("Success: Ads removed!")
+                            } else {
+                                _messageEvents.emit("Action could not be completed. Check store connection.")
+                            }
+                        }
+                    } else if (wasManualAction) {
+                        // If state matches but it was a manual click, just stop loading
+                        _isLoading.value = false
+                    }
                 }
             }
         }
@@ -152,17 +168,20 @@ class ListSetupViewModel(
         }
     }
 
-    private fun onAdsRemovedSuccessfully() {
-        _isLoading.value = false
+    private fun syncAdsRemovedStatus(isRemoved: Boolean) {
         val currentSetup = _setup.value ?: return
-        val updatedSetup = currentSetup.copy(is_ads_removed = true)
+        
+        // Only trigger DB update if state changed
+        if (currentSetup.is_ads_removed == isRemoved) return
+
+        val updatedSetup = currentSetup.copy(is_ads_removed = isRemoved)
         _setup.value = updatedSetup
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 dao.insertSetup(updatedSetup)
-                setupRepository.updateAdsRemoved(true)
-                _uiState.value = HomeUiState.Idle // Clear any error/loading
+                setupRepository.updateAdsRemoved(isRemoved)
+                _uiState.value = HomeUiState.Idle
             } catch (e: Exception) {
                 println("Failed to sync ad removal status: ${e.message}")
             }
