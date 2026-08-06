@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.scoreprof.app.domain.model.LeagueTable
+import cloud.scoreprof.app.util.getFlagEmoji
 
 @Composable
 fun LeagueCard(
@@ -42,6 +43,14 @@ fun LeagueCard(
                 color = MaterialTheme.colorScheme.secondary,
                 textAlign = TextAlign.Start
             )
+            
+            // Added Flag Emoji here
+            Text(
+                text = getFlagEmoji(leagueTable.country_code),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+
             Text(
                 text = leagueTable.username,
                 style = MaterialTheme.typography.titleMedium,

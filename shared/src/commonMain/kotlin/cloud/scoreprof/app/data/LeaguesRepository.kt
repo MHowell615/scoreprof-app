@@ -119,7 +119,7 @@ class LeaguesRepositoryImpl(
         return flow {
             try {
                 val token = if (isGuest) "guest_token" else tokenManager.getToken() ?: ""
-                val url = "https://www.scoreprof.cloud/rpc/getleaguetable_v3"
+                val url = "https://www.scoreprof.cloud/rpc/getleaguetable_v4"
                 val body = buildJsonObject {
                     put("_leagueid", leagueid)
                     put("_owneruserid", owneruserid)

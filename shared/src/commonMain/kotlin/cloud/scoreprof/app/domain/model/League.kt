@@ -49,7 +49,8 @@ data class LeagueTable(
     val username: String,
     val matches_played: Int,
     val points: Int,
-    val win_percentage: Double
+    val win_percentage: Double,
+    val country_code: String? = null
 )
 
 @Serializable
