@@ -54,6 +54,7 @@ fun SetupPrivacyScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
+        setupViewModel.refreshBillingStatus()
         setupViewModel.messageEvents.collect { message ->
             snackbarHostState.showSnackbar(message)
         }

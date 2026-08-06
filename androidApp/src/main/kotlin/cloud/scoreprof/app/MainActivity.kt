@@ -70,6 +70,10 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
 
+        // Refresh billing status every time the app comes to foreground
+        // This catches cancellations/purchases made while the app was in background
+        billingManager.queryPurchases()
+
         val appUpdateManager = AppUpdateManagerFactory.create(this)
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {

@@ -642,6 +642,10 @@ class ListSetupViewModel(
         billingManager.restorePurchases()
     }
 
+    fun refreshBillingStatus() {
+        billingManager.queryPurchases()
+    }
+
     sealed class HomeUiState {
         data object Idle : HomeUiState()
         data object Loading : HomeUiState()
