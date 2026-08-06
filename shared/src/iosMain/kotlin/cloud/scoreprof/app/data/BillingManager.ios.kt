@@ -14,7 +14,7 @@ import kotlin.native.concurrent.ThreadLocal
 @ThreadLocal
 private var productsRequest: SKProductsRequest? = null
 
-class IOSBillingManager : NSObject(), BillingManager, SKPaymentTransactionObserverProtocol {
+class IOSBillingManager : BillingManager {
     
     private val _isPremium = MutableStateFlow<Boolean?>(null)
     override val isPremium: StateFlow<Boolean?> = _isPremium.asStateFlow()
@@ -25,13 +25,18 @@ class IOSBillingManager : NSObject(), BillingManager, SKPaymentTransactionObserv
     override val premiumProductId: String = "Monthly_Ad_Removal_Subscription"
 
     private val scope = CoroutineScope(Dispatchers.Main)
+    
+    // Use a separate observer to avoid mixing Kotlin and Obj-C supertypes
+    private val observer = TransactionObserver(
+        onSuccess = { _isPremium.value = true },
+        onFailure = { _isPremium.value = false }
+    )
 
     init {
-        SKPaymentQueue.defaultQueue().addTransactionObserver(this)
+        SKPaymentQueue.defaultQueue().addTransactionObserver(observer)
     }
 
     override fun queryPurchases() {
-        // In iOS, we check the receipt or restore transactions
         SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
     }
 
@@ -42,7 +47,6 @@ class IOSBillingManager : NSObject(), BillingManager, SKPaymentTransactionObserv
             override fun productsRequest(request: SKProductsRequest, didReceiveResponse: SKProductsResponse) {
                 val product = didReceiveResponse.products.firstOrNull() as? SKProduct
                 if (product != null) {
-                    // Localized price formatting
                     val formatter = NSNumberFormatter()
                     formatter.numberStyle = NSNumberFormatterCurrencyStyle
                     formatter.locale = product.priceLocale
@@ -67,9 +71,13 @@ class IOSBillingManager : NSObject(), BillingManager, SKPaymentTransactionObserv
     override fun restorePurchases() {
         SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
     }
+}
 
-    // SKPaymentTransactionObserverProtocol Implementation
-    // Note: Signature must match precisely for the KMP version on your Mac.
+private class TransactionObserver(
+    private val onSuccess: () -> Unit,
+    private val onFailure: () -> Unit
+) : NSObject(), SKPaymentTransactionObserverProtocol {
+
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun paymentQueue(queue: SKPaymentQueue, updatedTransactions: List<*>) {
         updatedTransactions.forEach { transaction ->
@@ -77,17 +85,17 @@ class IOSBillingManager : NSObject(), BillingManager, SKPaymentTransactionObserv
                 when (transaction.transactionState) {
                     SKPaymentTransactionState.SKPaymentTransactionStatePurchased,
                     SKPaymentTransactionState.SKPaymentTransactionStateRestored -> {
-                        _isPremium.value = true
+                        onSuccess()
                         SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                     }
                     SKPaymentTransactionState.SKPaymentTransactionStateFailed -> {
                         println("Purchase failed: ${transaction.error?.localizedDescription}")
-                        _isPremium.value = false
+                        onFailure()
                         SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                     }
                     SKPaymentTransactionState.SKPaymentTransactionStateDeferred,
                     SKPaymentTransactionState.SKPaymentTransactionStatePurchasing -> {
-                        // Still in progress
+                        // In progress
                     }
                     else -> {
                         SKPaymentQueue.defaultQueue().finishTransaction(transaction)
@@ -98,11 +106,11 @@ class IOSBillingManager : NSObject(), BillingManager, SKPaymentTransactionObserv
     }
 
     override fun paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
-        println("Restore finished successfully")
+        println("Restore finished")
     }
 
     override fun paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError: NSError) {
         println("Restore failed: ${restoreCompletedTransactionsFailedWithError.localizedDescription}")
-        _isPremium.value = false
+        onFailure()
     }
 }
