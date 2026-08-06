@@ -1,10 +1,7 @@
 package cloud.scoreprof.app.data
 
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import platform.StoreKit.*
 import platform.Foundation.*
@@ -17,24 +14,24 @@ import kotlin.native.concurrent.ThreadLocal
 @ThreadLocal
 private var productsRequest: SKProductsRequest? = null
 
-class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
+class IOSBillingManager : NSObject(), BillingManager, SKPaymentTransactionObserverProtocol {
+    
     private val _isPremium = MutableStateFlow<Boolean?>(null)
     override val isPremium: StateFlow<Boolean?> = _isPremium.asStateFlow()
 
     private val _formattedPrice = MutableStateFlow<String?>(null)
     override val formattedPrice: StateFlow<String?> = _formattedPrice.asStateFlow()
 
-    private val scope = CoroutineScope(Dispatchers.Main)
-
     override val premiumProductId: String = "Monthly_Ad_Removal_Subscription"
+
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     init {
         SKPaymentQueue.defaultQueue().addTransactionObserver(this)
     }
 
     override fun queryPurchases() {
-        // Trigger a restore check to verify if they already have it. 
-        // Note: Apple requires a "Restore" button specifically.
+        // In iOS, we check the receipt or restore transactions
         SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
     }
 
@@ -45,7 +42,7 @@ class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
             override fun productsRequest(request: SKProductsRequest, didReceiveResponse: SKProductsResponse) {
                 val product = didReceiveResponse.products.firstOrNull() as? SKProduct
                 if (product != null) {
-                    // Localized price for iOS
+                    // Localized price formatting
                     val formatter = NSNumberFormatter()
                     formatter.numberStyle = NSNumberFormatterCurrencyStyle
                     formatter.locale = product.priceLocale
@@ -55,7 +52,13 @@ class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
                     SKPaymentQueue.defaultQueue().addPayment(payment)
                 } else {
                     println("Product not found: $productId")
+                    _isPremium.value = false
                 }
+            }
+
+            override fun request(request: SKRequest, didFailWithError: NSError) {
+                println("Product request failed: ${didFailWithError.localizedDescription}")
+                _isPremium.value = false
             }
         })
         productsRequest?.start()
@@ -65,7 +68,9 @@ class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
         SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
     }
 
-    // SKPaymentTransactionObserverProtocol implementation
+    // SKPaymentTransactionObserverProtocol Implementation
+    // Note: Signature must match precisely for the KMP version on your Mac.
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun paymentQueue(queue: SKPaymentQueue, updatedTransactions: List<*>) {
         updatedTransactions.forEach { transaction ->
             if (transaction is SKPaymentTransaction) {
@@ -80,9 +85,24 @@ class IOSBillingManager : BillingManager, SKPaymentTransactionObserverProtocol {
                         _isPremium.value = false
                         SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                     }
-                    else -> {}
+                    SKPaymentTransactionState.SKPaymentTransactionStateDeferred,
+                    SKPaymentTransactionState.SKPaymentTransactionStatePurchasing -> {
+                        // Still in progress
+                    }
+                    else -> {
+                        SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+                    }
                 }
             }
         }
+    }
+
+    override fun paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
+        println("Restore finished successfully")
+    }
+
+    override fun paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError: NSError) {
+        println("Restore failed: ${restoreCompletedTransactionsFailedWithError.localizedDescription}")
+        _isPremium.value = false
     }
 }
