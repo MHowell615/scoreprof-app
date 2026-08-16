@@ -18,6 +18,7 @@ class IOSPlatform: Platform {
     }
 
     override val name: String = UIDevice.currentDevice.systemName + " " + UIDevice.currentDevice.systemVersion
+    override val isAndroid: Boolean = false
     override val version: Int = (NSBundle.mainBundle.infoDictionary?.get("CFBundleVersion") as? String)?.toIntOrNull() ?: 0
     override val deviceModel: String = UIDevice.currentDevice.model
     override val language: String get() = NSLocale.currentLocale.languageCode

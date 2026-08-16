@@ -5,6 +5,7 @@ interface Platform {
     val version: Int
     val deviceModel: String
     val language: String
+    val isAndroid: Boolean
     fun shareText(text: String)
     fun setLanguage(languageCode: String)
     fun showSystemNotification(title: String, message: String)

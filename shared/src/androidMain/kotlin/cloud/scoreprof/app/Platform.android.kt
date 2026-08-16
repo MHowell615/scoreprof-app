@@ -25,6 +25,7 @@ class AndroidPlatform : Platform {
     private val context = getAppContext()
     private val firebaseAnalytics = FirebaseAnalytics.getInstance(context)
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
+    override val isAndroid: Boolean = true
 
     override val version: Int = try {
         val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)

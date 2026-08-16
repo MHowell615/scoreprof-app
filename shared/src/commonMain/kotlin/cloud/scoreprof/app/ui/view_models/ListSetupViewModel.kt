@@ -7,6 +7,7 @@ import cloud.scoreprof.app.data.LeaguesRepository
 import cloud.scoreprof.app.data.ScoreProfDao
 import cloud.scoreprof.app.data.SetupRepository
 import cloud.scoreprof.app.data.BillingManager
+import cloud.scoreprof.app.data.BillingResult
 import cloud.scoreprof.app.domain.model.Competition
 import cloud.scoreprof.app.domain.model.Language
 import cloud.scoreprof.app.domain.model.LeagueHeader
@@ -104,28 +105,25 @@ class ListSetupViewModel(
         startWatchdogTimer()
 
         viewModelScope.launch {
+            billingManager.billingResults.collect { result ->
+                _isLoading.value = false
+                val message = when (result) {
+                    BillingResult.SUCCESS -> "Premium status restored successfully!"
+                    BillingResult.NOTHING_TO_RESTORE -> "No active premium subscription found."
+                    BillingResult.FAILURE -> "Action could not be completed. Please check your connection."
+                }
+                _messageEvents.emit(message)
+            }
+        }
+
+        viewModelScope.launch {
             combine(billingManager.isPremium, _setup) { isPremium, setup ->
                 Pair(isPremium, setup)
             }.collect { (isPremium, setup) ->
                 if (isPremium != null && setup != null) {
-                    val wasManualAction = _isLoading.value
-                    
                     // Only sync if the local DB state is different from the Store state
                     if (setup.is_ads_removed != isPremium) {
-                        _isLoading.value = false
                         syncAdsRemovedStatus(isPremium)
-
-                        // Only show success/fail messages for manual actions
-                        if (wasManualAction) {
-                            if (isPremium) {
-                                _messageEvents.emit("Success: Ads removed!")
-                            } else {
-                                _messageEvents.emit("Action could not be completed. Check store connection.")
-                            }
-                        }
-                    } else if (wasManualAction) {
-                        // If state matches but it was a manual click, just stop loading
-                        _isLoading.value = false
                     }
                 }
             }

@@ -17,8 +17,13 @@ interface VersionRepository {
 
 @Serializable
 data class VersionResponse(
-    val min_version: Int,
-    val update_url: String
+    val android_min_version: Int? = null,
+    val ios_min_version: Int? = null,
+    val android_update_url: String? = null,
+    val ios_update_url: String? = null,
+    // Keep old fields for backward compatibility if needed, or remove them
+    val min_version: Int? = null,
+    val update_url: String? = null
 )
 
 class VersionRepositoryImpl(
@@ -40,9 +45,22 @@ class VersionRepositoryImpl(
             val response: VersionResponse = httpClient.post(url) {
                 header("Accept", "application/vnd.pgrst.object+json")
             }.body()
-            if (response.update_url.isNotBlank()) {
-                _updateUrl.value = response.update_url
-                _isUpdateRequired.value = currentVersion < response.min_version
+
+            val minVersion = if (platform.isAndroid) {
+                response.android_min_version ?: response.min_version ?: 0
+            } else {
+                response.ios_min_version ?: response.min_version ?: 0
+            }
+
+            val updateUrl = if (platform.isAndroid) {
+                response.android_update_url ?: response.update_url ?: ""
+            } else {
+                response.ios_update_url ?: response.update_url ?: ""
+            }
+
+            if (updateUrl.isNotBlank()) {
+                _updateUrl.value = updateUrl
+                _isUpdateRequired.value = currentVersion < minVersion
             }
         } catch (e: Exception) {
             // Log error

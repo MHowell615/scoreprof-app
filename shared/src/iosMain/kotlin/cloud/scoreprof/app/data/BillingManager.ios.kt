@@ -1,8 +1,6 @@
 package cloud.scoreprof.app.data
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import platform.StoreKit.*
 import platform.Foundation.*
 import platform.darwin.*
@@ -22,14 +20,22 @@ class IOSBillingManager : BillingManager {
     private val _formattedPrice = MutableStateFlow<String?>(null)
     override val formattedPrice: StateFlow<String?> = _formattedPrice.asStateFlow()
 
+    private val _billingResults = MutableSharedFlow<BillingResult>()
+    override val billingResults: SharedFlow<BillingResult> = _billingResults.asSharedFlow()
+
     override val premiumProductId: String = "cloud.scoreprof.premium.monthly"
 
     private val scope = CoroutineScope(Dispatchers.Main)
     
-    // Use a separate observer to avoid mixing Kotlin and Obj-C supertypes
     private val observer = TransactionObserver(
-        onSuccess = { _isPremium.value = true },
-        onFailure = { _isPremium.value = false }
+        onSuccess = { 
+            _isPremium.value = true 
+            scope.launch { _billingResults.emit(BillingResult.SUCCESS) }
+        },
+        onFailure = { 
+            _isPremium.value = false 
+            scope.launch { _billingResults.emit(BillingResult.FAILURE) }
+        }
     )
 
     init {
@@ -47,22 +53,16 @@ class IOSBillingManager : BillingManager {
             override fun productsRequest(request: SKProductsRequest, didReceiveResponse: SKProductsResponse) {
                 val product = didReceiveResponse.products.firstOrNull() as? SKProduct
                 if (product != null) {
-                    val formatter = NSNumberFormatter()
-                    formatter.numberStyle = NSNumberFormatterCurrencyStyle
-                    formatter.locale = product.priceLocale
-                    _formattedPrice.value = formatter.stringFromNumber(product.price)
-
                     val payment = SKPayment.paymentWithProduct(product)
                     SKPaymentQueue.defaultQueue().addPayment(payment)
                 } else {
-                    println("Product not found: $productId")
                     _isPremium.value = false
+                    scope.launch { _billingResults.emit(BillingResult.FAILURE) }
                 }
             }
-
             override fun request(request: SKRequest, didFailWithError: NSError) {
-                println("Product request failed: ${didFailWithError.localizedDescription}")
                 _isPremium.value = false
+                scope.launch { _billingResults.emit(BillingResult.FAILURE) }
             }
         })
         productsRequest?.start()
@@ -89,28 +89,17 @@ private class TransactionObserver(
                         SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                     }
                     SKPaymentTransactionState.SKPaymentTransactionStateFailed -> {
-                        println("Purchase failed: ${transaction.error?.localizedDescription}")
                         onFailure()
                         SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                     }
-                    SKPaymentTransactionState.SKPaymentTransactionStateDeferred,
-                    SKPaymentTransactionState.SKPaymentTransactionStatePurchasing -> {
-                        // In progress
-                    }
-                    else -> {
-                        SKPaymentQueue.defaultQueue().finishTransaction(transaction)
-                    }
+                    else -> SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                 }
             }
         }
     }
 
     override fun paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
+        // If the queue finishes and no transactions were processed, we can assume nothing to restore
         println("Restore finished")
-    }
-
-    override fun paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError: NSError) {
-        println("Restore failed: ${restoreCompletedTransactionsFailedWithError.localizedDescription}")
-        onFailure()
     }
 }
