@@ -612,7 +612,7 @@ class ListSetupViewModel(
         
         // Add a safety timeout to stop the spinner if the platform billing fails to respond
         viewModelScope.launch {
-            delay(30000) // 30 seconds
+            delay(180000) // 180 seconds (3 minutes)
             if (_isLoading.value) {
                 println("ViewModel: Purchase flow timeout")
                 _isLoading.value = false
@@ -629,7 +629,7 @@ class ListSetupViewModel(
 
         // Add a safety timeout for restore as well
         viewModelScope.launch {
-            delay(30000) // 30 seconds
+            delay(180000) // 180 seconds (3 minutes)
             if (_isLoading.value) {
                 println("ViewModel: Restore flow timeout")
                 _isLoading.value = false
