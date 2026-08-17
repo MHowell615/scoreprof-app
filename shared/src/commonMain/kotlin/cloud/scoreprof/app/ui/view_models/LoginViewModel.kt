@@ -27,7 +27,8 @@ class LoginViewModel(
     private val repository: SetupRepository,
     private val tokenManager: TokenManager,
     private val httpClient: HttpClient,
-    private val platform: cloud.scoreprof.app.Platform
+    private val platform: cloud.scoreprof.app.Platform,
+    private val authKey: String
 ) : ViewModel() {
 
     private val _email = mutableStateOf("")
@@ -149,13 +150,11 @@ class LoginViewModel(
                         )
                     )
                 }
+                _eventFlow.emit(UiEvent.ResetPasswordSuccess("Reset password successful"))
             } catch (e: Exception) {
                 _eventFlow.emit(UiEvent.Error("Reset password failed: ${e.message}"))
             } finally {
                 _isLoading.value = false
-                viewModelScope.launch {
-                    _eventFlow.emit(UiEvent.ResetPasswordSuccess("Reset password successful"))
-                }
             }
         }
     }
@@ -173,16 +172,16 @@ class LoginViewModel(
                     setBody(PwResetRequest(
                         email_input = currentEmail,
                         language_input = platform.language,
-                        auth_key_input = "" // TODO: Find secure way to store/get SPROF_AUTH_KEY with KMP
+                        auth_key_input = authKey
                     ))
                 }.body()
+                
+                _eventFlow.emit(UiEvent.RequestResetSuccess("Reset request sent"))
             } catch (e: Exception) {
-                _eventFlow.emit(UiEvent.Error("Login failed: ${e.message}"))
+                println("Reset request failed: ${e.message}")
+                _eventFlow.emit(UiEvent.Error("Request failed: ${e.message}"))
             } finally {
                 _isLoading.value = false
-                viewModelScope.launch {
-                    _eventFlow.emit(UiEvent.RequestResetSuccess("Reset request sent"))
-                }
             }
         }
     }

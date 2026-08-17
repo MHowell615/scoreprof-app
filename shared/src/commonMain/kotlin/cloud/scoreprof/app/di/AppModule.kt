@@ -5,8 +5,10 @@ import cloud.scoreprof.app.data.*
 import cloud.scoreprof.app.data.local.TokenManager
 import cloud.scoreprof.app.domain.usecase.*
 import cloud.scoreprof.app.ui.view_models.*
+import io.ktor.client.HttpClient
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
@@ -47,7 +49,7 @@ val appModule = module {
     single { LanguagesUseCases(get(), get()) }
 
     // ViewModels
-    viewModelOf(::LoginViewModel)
+    viewModel { LoginViewModel(get<SetupRepository>(), get<TokenManager>(), get<HttpClient>(), get<cloud.scoreprof.app.Platform>(), SprofConfig.AUTH_KEY) }
     viewModelOf(::VersionViewModel)
     viewModelOf(::ListSetupViewModel)
     viewModelOf(::ListMatchesViewModel)
