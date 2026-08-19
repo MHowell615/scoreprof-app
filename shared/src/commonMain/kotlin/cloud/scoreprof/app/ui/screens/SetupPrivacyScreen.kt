@@ -101,7 +101,8 @@ fun SetupPrivacyScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            if (setupState?.is_ads_removed == false) {
+            // Change: Show buttons unless we are POSITIVE that ads are already removed
+            if (setupState?.is_ads_removed != true) {
                 item {
                     Text(
                         text = stringResource(Res.string.premium_title),

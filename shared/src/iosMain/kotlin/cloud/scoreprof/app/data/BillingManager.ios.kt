@@ -43,7 +43,29 @@ class IOSBillingManager : BillingManager {
     }
 
     override fun queryPurchases() {
+        // Fetch product details to get localized price and warm up the store
+        fetchProductDetails(premiumProductId)
         SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+    }
+
+    private fun fetchProductDetails(productId: String) {
+        val identifiers = NSSet.setWithObject(productId)
+        productsRequest = SKProductsRequest(productIdentifiers = identifiers)
+        productsRequest?.setDelegate(object : NSObject(), SKProductsRequestDelegateProtocol {
+            override fun productsRequest(request: SKProductsRequest, didReceiveResponse: SKProductsResponse) {
+                val product = didReceiveResponse.products.firstOrNull() as? SKProduct
+                if (product != null) {
+                    val formatter = NSNumberFormatter()
+                    formatter.numberStyle = NSNumberFormatterCurrencyStyle
+                    formatter.locale = product.priceLocale
+                    _formattedPrice.value = formatter.stringFromNumber(product.price)
+                }
+            }
+            override fun request(request: SKRequest, didFailWithError: NSError) {
+                println("ScoreProf IAP Error: ${didFailWithError.localizedDescription}")
+            }
+        })
+        productsRequest?.start()
     }
 
     override fun purchasePremium(productId: String) {
